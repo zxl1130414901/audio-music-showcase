@@ -1,0 +1,188 @@
+{
+  "id": "MTG__essentia",
+  "taglineZh": "C++ 音频分析库：频谱、调性与节拍描述符",
+  "summaryZh": "Essentia 是 MTG 的 C++ 音频分析库，覆盖频谱/时域/调性/高层音乐描述符，并提供 Python 绑定、Vamp 插件与 extractor。命令行 streaming_extractor_music 给一个音频文件就输出 yaml/json。限制在 Windows：官方明确不支持 Windows 的 Python 绑定，pip 只发 Linux x86_64/i686，Windows 只能 MinGW 交叉编译 C++ 或走 WSL；另外它只分析不产音频，AGPL 商用要授权。",
+  "whatItMakes": [
+    {
+      "type": "整曲描述符 json",
+      "exampleZh": "一首歌输出 tempo、key、loudness 等字段",
+      "strength": "核心能力"
+    },
+    {
+      "type": "帧级时间序列",
+      "exampleZh": "开 frame-level 后得逐帧 pitch 与能量",
+      "strength": "核心能力"
+    },
+    {
+      "type": "相似度 embedding",
+      "exampleZh": "discogs-effnet 出 1280 维向量做检索",
+      "strength": "附加能力"
+    },
+    {
+      "type": "批量 csv 特征表",
+      "exampleZh": "json_to_csv 把整目录结果合成一张表",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给音乐库批量打节拍/调性标签",
+      "whoZh": "音乐平台/曲库运营",
+      "whyZh": "命令行 extractor 能整目录跑，字段固定，适合离线批量",
+      "deliverableZh": "json/csv 标签表",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做音频数据集切分与标注",
+      "whoZh": "音频 ML 研究者",
+      "whyZh": "描述符与 embedding 都可脚本化，配合 models.yaml 还能上模型头",
+      "deliverableZh": "特征文件与标注",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "在 Windows 上原生 Python 调用",
+      "whoZh": "Windows 开发者",
+      "whyZh": "官方不支持 Windows Python 绑定，pip 只有 Linux 轮子",
+      "deliverableZh": "需 WSL 或交叉编译",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "做节拍/调性的可视化检查",
+      "whoZh": "音乐制作人",
+      "whyZh": "Vamp 插件可接 Sonic Visualiser，逐段看曲线",
+      "deliverableZh": "标注视图",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "预置提取器",
+      "descZh": "三套预置 profile 命令行"
+    },
+    {
+      "titleZh": "Vamp 插件",
+      "descZh": "接入 Sonic Visualiser 看曲线"
+    },
+    {
+      "titleZh": "模型脚本齐全",
+      "descZh": "musicnn/maest/crepe 权重脚本"
+    },
+    {
+      "titleZh": "特征参数可调",
+      "descZh": "采样率、帧长、hopSize 都能改"
+    },
+    {
+      "titleZh": "静态二进制",
+      "descZh": "官网提供免安装 extractor"
+    }
+  ],
+  "ceilingsZh": "分析采样率由 extractor 决定：默认 44100，可在 profile 覆盖（streaming_extractor_music.rst#L11）。深度模型各有输入采样率：yamnet/musicnn/vggish/maest/crepe 为 16000，fsd-sinet 22050，openl3 48000，tempocnn 11025，maest 支持 5/10/20/30 秒片段（models.yaml#L1-L105）。输出为 yaml 或 json（extractors_out_of_box.rst#L37），全程不产音频。算法数量 README 只写 extensive collection，没有准确数字；模型权重不在仓库，大小未声明。",
+  "workflowZh": "五步：装库或静态二进制 → 写 profile → 跑 extractor → 得 json → 转 csv 入库",
+  "workflow": [
+    {
+      "stepZh": "装环境",
+      "detailZh": "Linux/WSL 里 pip install essentia-tensorflow，或下官网预编译 extractor 二进制",
+      "effortZh": "5–30 分钟"
+    },
+    {
+      "stepZh": "写 profile",
+      "detailZh": "复制 profile.yaml，按需开 frame-level 与采样率字段",
+      "effortZh": "3–5 分钟"
+    },
+    {
+      "stepZh": "跑分析",
+      "detailZh": "essentia_streaming_extractor_music in.wav out.json profile.yaml",
+      "effortZh": "每首数秒"
+    },
+    {
+      "stepZh": "读结果",
+      "detailZh": "json 里取 rhythm.tempo、tonal.key、lowlevel.mfcc 等字段",
+      "effortZh": "分钟级"
+    },
+    {
+      "stepZh": "汇总",
+      "detailZh": "用 json_to_csv 合成一张特征表，再进 pandas/训练脚本",
+      "effortZh": "分钟级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "要预置 MIR extractor 与模型头选 essentia；只要高性能时频特征数组选 audioFlux。",
+      "adviceZh": "要预置 MIR extractor 与模型头选 essentia；只要高性能时频特征数组选 audioFlux。"
+    },
+    {
+      "vs": "aubio__aubio",
+      "whenZh": "要全套描述符与 embedding 选 essentia；只做 onset/pitch 轻量检测、要 C 小库选 aubio。",
+      "adviceZh": "要全套描述符与 embedding 选 essentia；只做 onset/pitch 轻量检测、要 C 小库选 aubio。"
+    },
+    {
+      "vs": "tyiannak__pyAudioAnalysis",
+      "whenZh": "要 C++ 级批量与 Vamp 可视化选 essentia；要纯 Python 快速出分类 demo 选 pyAudioAnalysis。",
+      "adviceZh": "要 C++ 级批量与 Vamp 可视化选 essentia；要纯 Python 快速出分类 demo 选 pyAudioAnalysis。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L9",
+      "noteZh": "C++ 音频分析与 MIR 库，含 Python 绑定、extractor、Vamp 插件"
+    },
+    {
+      "field": "pros[2]",
+      "source": "doc/sphinxdoc/streaming_extractor_music.rst#L11",
+      "noteZh": "分析默认 44100 采样率"
+    },
+    {
+      "field": "pros[3]",
+      "source": "src/examples/python/models/models.yaml#L1-L105",
+      "noteZh": "各模型输入采样率与片段时长"
+    },
+    {
+      "field": "cons[0]",
+      "source": "doc/sphinxdoc/installing.rst#L209",
+      "noteZh": "Windows 支持编译 C++，但不支持 Python 绑定"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L23",
+      "noteZh": "pip 仅 Linux x86_64/i686"
+    }
+  ],
+  "blockerZh": "PyPI 只有 essentia-2.1b5 源码包，无 cp313 wheel；仓库自带 waf 构建需要 cmake 与 C++ 工具链，本机无 cmake，装 CMake(~50MB)+编译 essentia 全套（含 Eigen/FFTW/TensorFlow 依赖）远超 35 分钟预算。",
+  "whatItWouldNeed": "WSL2 + Ubuntu 与 waf 构建依赖（或 Linux 机器），或从 essentia 官网下载 Windows 预编译 extractor 二进制；想用 Python API 则必须有 Linux 环境。",
+  "ceilingZh": "分析采样率由 extractor 决定：默认 44100，可在 profile 覆盖（streaming_extractor_music.rst#L11）。深度模型各有输入采样率：yamnet/musicnn/vggish/maest/crepe 为 16000，fsd-sinet 22050，openl3 48000，tempocnn 11025，maest 支持 5/10/20/30 秒片段（models.yaml#L1-L105）。输出为 yaml 或 json（extractors_out_of_box.rst#L37），全程不产音频。算法数量 README 只写 extensive collection，没有准确数字；模型权重不在仓库，大小未声明。",
+  "capabilities": {
+    "maxDurationZh": "30 秒",
+    "formatsZh": [
+      "json",
+      "csv"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "预置提取器：三套预置 profile 命令行",
+    "Vamp 插件：接入 Sonic Visualiser 看曲线",
+    "模型脚本齐全：musicnn/maest/crepe 权重脚本",
+    "特征参数可调：采样率、帧长、hopSize 都能改",
+    "静态二进制：官网提供免安装 extractor"
+  ],
+  "limits": [
+    "Windows 明确不支持 Python 绑定，只能 Linux 下 MinGW 交叉编译 C++，且产物与 VS 不兼容",
+    "README 写明 pip install 仅 Linux x86_64/i686，Windows 与 py3.13 都没有轮子",
+    "只做分析，不产出音频，样例只能是特征表或图",
+    "AGPL-3.0，闭源产品集成需要商业授权",
+    "不同版本的 extractor 描述符不兼容，换版本后旧基线要重算",
+    "TensorFlow 模型脚本只给代码不给权重，权重得自己去 essentia-models 取"
+  ],
+  "signatureZh": "C++ 音频分析库：频谱、调性与节拍描述符",
+  "chooseWhenZh": "要批量算节拍、调性、embedding 做音乐检索或数据集标注的 MIR 研究者",
+  "avoidWhenZh": "Windows 明确不支持 Python 绑定，只能 Linux 下 MinGW 交叉编译 C++，且产物与 VS 不兼容",
+  "contrastWith": [
+    "libAudioFlux__audioFlux",
+    "aubio__aubio"
+  ]
+}

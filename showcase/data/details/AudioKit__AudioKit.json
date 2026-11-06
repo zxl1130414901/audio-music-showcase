@@ -1,0 +1,166 @@
+{
+  "id": "AudioKit__AudioKit",
+  "taglineZh": "Swift 音频框架，AVAudioEngine 节点图",
+  "summaryZh": "AudioKit 是 Apple 平台音频框架，用 Swift Package 分发，把合成、效果、混音、播放、MIDI、时序与 Taps 分析封装成 Node，底层是 AVAudioEngine。仓库 146 个 Swift 文件，Package.swift 只列 macOS 11、iOS 13、tvOS 13、visionOS 1；MIT 许可，文档在 audiokit.io，示例在独立 Cookbook。没有命令行入口，必须 Xcode 集成，Windows 11 无法编译出声。",
+  "whatItMakes": [
+    {
+      "type": "合成音色",
+      "exampleZh": "PlaygroundOscillator/NoiseGenerator 接 Mixer 后实时发声",
+      "strength": "核心能力"
+    },
+    {
+      "type": "效果处理链",
+      "exampleZh": "Reverb、Delay、Distortion、Filters 节点串联",
+      "strength": "核心能力"
+    },
+    {
+      "type": "多轨混音与空间化",
+      "exampleZh": "Mixer/Mixer3D/MatrixMixer 管理多路输入",
+      "strength": "核心能力"
+    },
+    {
+      "type": "离线渲染文件",
+      "exampleZh": "Offline Rendering 节点快速处理后保存音频",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "iOS 音乐 App",
+      "whoZh": "Apple 开发者",
+      "whyZh": "Swift Package 一行接入，节点式 API 省去手写 AVAudioEngine 图",
+      "deliverableZh": "App 内合成/效果功能",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "macOS 音频工具",
+      "whoZh": "独立开发者",
+      "whyZh": "CoreAudio 直通、延迟低，适合做编辑器或乐器",
+      "deliverableZh": "Mac 音频应用",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学与 Playground",
+      "whoZh": "教师",
+      "whyZh": "AudioKit playground 可交互试听，概念直观",
+      "deliverableZh": "演示工程",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "MIDI/序列控制",
+      "whoZh": "交互音乐作者",
+      "whyZh": "内置 MIDI 与 Sequencing 模块，适合做演出原型",
+      "deliverableZh": "交互演出原型",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "节点式音频图",
+      "descZh": "Node 相连即拉流，无需手写图"
+    },
+    {
+      "titleZh": "五类节点",
+      "descZh": "合成、效果、混音、播放与分析齐全"
+    },
+    {
+      "titleZh": "Swift 包",
+      "descZh": "SPM 集成，无需二进制框架"
+    },
+    {
+      "titleZh": "MIT 许可",
+      "descZh": "允许修改与商用，只需保留版权声明"
+    }
+  ],
+  "ceilingsZh": "平台上限写死在 Package.swift：macOS 11、iOS 13、tvOS 13、visionOS 1，Swift tools 5.9（另有 6.1 清单），仓库 146 个 Swift 文件。节点覆盖合成、效果（失真/动态/滤波/延迟/变调/混响）、混音（Mixer/Mixer3D/MatrixMixer）、播放（AudioPlayer/Apple Sampler/TimePitch）与分析 Taps。采样率、位深、最大轨数均未在 README 声明，实际由 AVAudioEngine 与会话决定；没有离线 CLI，也没有 Windows/Linux 后端，音色数量取决于你搭的节点图。",
+  "workflowZh": "四步：macOS 装 Xcode → 加 Swift Package → 搭 Node 图 → 运行或离线渲染",
+  "workflow": [
+    {
+      "stepZh": "准备平台",
+      "detailZh": "macOS + Xcode 15+，Windows 不可行",
+      "effortZh": "平台门槛"
+    },
+    {
+      "stepZh": "加包",
+      "detailZh": "File → Add Package Dependencies，输入 AudioKit 仓库 URL",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "搭图",
+      "detailZh": "Engine + Oscillator + Reverb + Mixer 连接后 start",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "出样",
+      "detailZh": "用 AVAudioFile 或离线渲染节点写 wav，或扬声器试听",
+      "effortZh": "10 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "syedhali__EZAudio",
+      "whenZh": "EZAudio 已停更多年、组件更老；新 Apple 音频项目要维护中的框架选 AudioKit。",
+      "adviceZh": "EZAudio 已停更多年、组件更老；新 Apple 音频项目要维护中的框架选 AudioKit。"
+    },
+    {
+      "vs": "naudio__NAudio",
+      "whenZh": "Windows/.NET 项目没有 AudioKit 路径只能用 NAudio；Apple 端才选 AudioKit。",
+      "adviceZh": "Windows/.NET 项目没有 AudioKit 路径只能用 NAudio；Apple 端才选 AudioKit。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L13",
+      "noteZh": "AudioKit 定位为 iOS、macOS、tvOS 的合成/处理/分析平台"
+    },
+    {
+      "field": "cons[0]",
+      "source": "Package.swift#L7",
+      "noteZh": "平台只列 macOS 11/iOS 13/tvOS 13/visionOS 1"
+    },
+    {
+      "field": "pros[3]",
+      "source": "Sources/AudioKit/AudioKit.docc/Nodes.md#L27-L29",
+      "noteZh": "提供离线渲染节点，可快速处理并保存音频"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L17-L31",
+      "noteZh": "安装方式与官方 Cookbook 文档入口"
+    }
+  ],
+  "blockerZh": "Swift Package（Package.swift + Package@swift-6.1.swift），面向 macOS/iOS，依赖 AVFoundation/CoreAudio 与 Apple 平台框架；本机是 Windows，无 Swift 工具链也无法链接 Apple 音频框架。",
+  "whatItWouldNeed": "一台 macOS 机器与 Xcode 15+；若要出样例还需 iOS/macOS 运行环境或 AVAudioEngine 离线渲染工程。",
+  "ceilingZh": "平台上限写死在 Package.swift：macOS 11、iOS 13、tvOS 13、visionOS 1，Swift tools 5.9（另有 6.1 清单），仓库 146 个 Swift 文件。节点覆盖合成、效果（失真/动态/滤波/延迟/变调/混响）、混音（Mixer/Mixer3D/MatrixMixer）、播放（AudioPlayer/Apple Sampler/TimePitch）与分析 Taps。采样率、位深、最大轨数均未在 README 声明，实际由 AVAudioEngine 与会话决定；没有离线 CLI，也没有 Windows/Linux 后端，音色数量取决于你搭的节点图。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "节点式音频图：Node 相连即拉流，无需手写图",
+    "五类节点：合成、效果、混音、播放与分析齐全",
+    "Swift 包：SPM 集成，无需二进制框架",
+    "MIT 许可：允许修改与商用，只需保留版权声明"
+  ],
+  "limits": [
+    "Package.swift 只声明 Apple 平台，Windows 无法编译（Package.swift#L7）",
+    "必须 Xcode + Swift Package 集成，没有独立 CLI 或离线渲染入口（README.md#L17-L23）",
+    "Windows 上完全无声：底层 AVAudioEngine/CoreAudio 是 Apple 系统组件（README.md#L13）",
+    "示例在独立 AudioKit Cookbook 仓库，克隆框架本身看不到可运行 demo",
+    "即使有 macOS，AudioKit 的离线渲染要自己接 AVAudioFile，不是一条命令出 wav"
+  ],
+  "signatureZh": "Swift 音频框架，AVAudioEngine 节点图",
+  "chooseWhenZh": "在 iOS/macOS 上做合成器、效果器或音频分析 App 的 Swift 开发者。",
+  "avoidWhenZh": "Package.swift 只声明 Apple 平台，Windows 无法编译（Package.swift#L7）",
+  "contrastWith": [
+    "syedhali__EZAudio",
+    "naudio__NAudio"
+  ]
+}

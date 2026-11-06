@@ -1,0 +1,188 @@
+{
+  "id": "syedhali__EZAudio",
+  "taglineZh": "iOS/macOS 的 CoreAudio 录音与波形框架",
+  "summaryZh": "EZAudio 是 2013 年的 Objective-C 音频框架，直接把 Apple AudioUnits 包成六个易用组件：麦克风、输出、文件读写、播放器、录音器与设备枚举，再加 CoreGraphics 与 OpenGL 两套波形视图。麦克风一行代码就能拿到数据，OpenGL 波形可 60 fps 刷大量点。作者 2016 年已宣布废弃并推荐 AudioKit，示例全是需要真机麦克风的 Xcode 工程，Windows 没有 CoreAudio，无法落地。",
+  "whatItMakes": [
+    {
+      "type": "录音与播放",
+      "exampleZh": "六个音频组件覆盖麦克风、输出、文件读写与录音",
+      "strength": "核心能力"
+    },
+    {
+      "type": "实时波形",
+      "exampleZh": "CoreGraphics 与 OpenGL 两套波形视图",
+      "strength": "核心能力"
+    },
+    {
+      "type": "设备枚举",
+      "exampleZh": "EZAudioDevice 列出 Apple 设备的输入/输出",
+      "strength": "可用"
+    },
+    {
+      "type": "跨平台/维护",
+      "exampleZh": "只在 Apple 平台，且 2016 年起已废弃",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "实时录音波形",
+      "whoZh": "iOS 应用开发者",
+      "whyZh": "采麦克风同时把波形画到 EZAudioPlotGL 上",
+      "deliverableZh": "带波形反馈的录音 App",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "文件播放器",
+      "whoZh": "macOS 工具开发者",
+      "whyZh": "播本地音频并拖动进度、显示波形",
+      "deliverableZh": "播放器 Demo",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "设备选择",
+      "whoZh": "做音频硬件的团队",
+      "whyZh": "枚举麦克风与输出设备并切换输入源",
+      "deliverableZh": "设备选择界面",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "跨平台交付",
+      "whoZh": "Windows/Linux 项目",
+      "whyZh": "框架只在 Apple 平台，作者已推荐 AudioKit",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "一行麦克风",
+      "descZh": "一行代码拿麦克风数据"
+    },
+    {
+      "titleZh": "GPU 波形",
+      "descZh": "OpenGL 版可 60 fps 刷大量点"
+    },
+    {
+      "titleZh": "录音落盘",
+      "descZh": "wav/aiff/m4a 三种容器"
+    },
+    {
+      "titleZh": "设备枚举",
+      "descZh": "切换输入输出与 HAL 设备"
+    },
+    {
+      "titleZh": "轻量波形",
+      "descZh": "CPU 版 1024 点内够用"
+    }
+  ],
+  "ceilingsZh": "录制文件格式内置 wav（EZRecorderFileTypeWAV）、aiff（EZRecorderFileTypeAIFF）、m4a（EZRecorderFileTypeM4A）三种，也可直接传 AudioStreamBasicDescription 与 AudioFileTypeID 自定义；示例把输出设成 mono float 44.1 kHz，麦克风回调给非交错 float 数组或 AudioBufferList。EZAudioPlotGL 声称 60 fps 处理大量点，CoreGraphics 版超过 1024 点开始吃力，且同屏只能有一个 OpenGL plot。最长录制时长、最大文件体积与 AudioUnit 缓冲毫秒数 README 均未声明。",
+  "workflowZh": "三步：建工程 → 接麦克风 → 真机验证波形",
+  "workflow": [
+    {
+      "stepZh": "建工程",
+      "detailZh": "Xcode 建 iOS/macOS 工程，CocoaPods 加 pod 'EZAudio', '~> 1.1.4'",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "接麦克风",
+      "detailZh": "创建 EZMicrophone 并实现 hasAudioReceived 回调",
+      "effortZh": "20 分钟"
+    },
+    {
+      "stepZh": "上真机",
+      "detailZh": "授权麦克风，把 float 缓冲喂给 EZAudioPlotGL 验证波形",
+      "effortZh": "30 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "AudioKit__AudioKit",
+      "whenZh": "新项目直接选维护中的 AudioKit；只有维护 2016 年前老工程时才考虑 EZAudio",
+      "adviceZh": "新项目直接选维护中的 AudioKit；只有维护 2016 年前老工程时才考虑 EZAudio"
+    },
+    {
+      "vs": "naudio__NAudio",
+      "whenZh": "Windows/.NET 项目选 NAudio；Apple 平台的实时波形历史项目才选 EZAudio",
+      "adviceZh": "Windows/.NET 项目选 NAudio；Apple 平台的实时波形历史项目才选 EZAudio"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L3-L7",
+      "noteZh": "README 定位与废弃声明。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L24-L24",
+      "noteZh": "六个音频组件加两个界面组件，全部封装 AudioUnits。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L195-L221",
+      "noteZh": "一行代码获取默认麦克风数据。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L1032-L1032",
+      "noteZh": "OpenGL 波形可 60 fps 处理大量点。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "README.md#L1110-L1110",
+      "noteZh": "许可为 MIT。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L7-L7",
+      "noteZh": "作者已宣布废弃并推荐 AudioKit。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L60-L60",
+      "noteZh": "只覆盖 iOS 与 OSX，Windows 无实现。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L64-L64",
+      "noteZh": "示例是 Xcode 工程，依赖实时设备。"
+    }
+  ],
+  "blockerZh": "平台锁定：Objective-C 框架（EZAudio.podspec），依赖 CoreAudio/AVFoundation/AudioToolbox，只能跑 iOS/macOS，Windows 无法编译或运行；项目已废弃并推荐迁移到 AudioKit；仓库不含任何示例音频或命令行工具。",
+  "whatItWouldNeed": "macOS + Xcode（或 iOS 设备）；若只是要处理音频，改走跨平台库。",
+  "ceilingZh": "录制文件格式内置 wav（EZRecorderFileTypeWAV）、aiff（EZRecorderFileTypeAIFF）、m4a（EZRecorderFileTypeM4A）三种，也可直接传 AudioStreamBasicDescription 与 AudioFileTypeID 自定义；示例把输出设成 mono float 44.1 kHz，麦克风回调给非交错 float 数组或 AudioBufferList。EZAudioPlotGL 声称 60 fps 处理大量点，CoreGraphics 版超过 1024 点开始吃力，且同屏只能有一个 OpenGL plot。最长录制时长、最大文件体积与 AudioUnit 缓冲毫秒数 README 均未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "m4a"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "一行麦克风：一行代码拿麦克风数据",
+    "GPU 波形：OpenGL 版可 60 fps 刷大量点",
+    "录音落盘：wav/aiff/m4a 三种容器",
+    "设备枚举：切换输入输出与 HAL 设备",
+    "轻量波形：CPU 版 1024 点内够用"
+  ],
+  "limits": [
+    "作者 2016-06-13 正式宣布废弃，README 顶部即标 Deprecated 并建议改用 AudioKit（README.md#L5-L7、#L1125-L1143）",
+    "仅 iOS 6.0+/OSX 10.8+，依赖 Accelerate、AudioToolbox、AVFoundation、CoreAudio、GLKit 等 Apple 框架，Windows 无对应实现（README.md#L117-L138）",
+    "示例全是 Xcode 工程、靠实时麦克风与扬声器交互，无法离线渲染出样例文件（README.md#L62-L108）",
+    "CocoaPods 装 1.1.4 后新版 Xcode 可能因 OpenGL/UIWebView 弃用告警编译失败",
+    "OpenGL 波形在 iOS 模拟器上可能黑屏，需要真机验证",
+    "录音必须真机麦克风权限，模拟器没有输入设备"
+  ],
+  "signatureZh": "iOS/macOS 的 CoreAudio 录音与波形框架",
+  "chooseWhenZh": "维护 2016 年前的老 iOS/macOS 工程、需要现成实时波形控件的开发者（新项目应转 AudioKit）",
+  "avoidWhenZh": "作者 2016-06-13 正式宣布废弃，README 顶部即标 Deprecated 并建议改用 AudioKit（README.md#L5-L7、#L1125-L1143）",
+  "contrastWith": [
+    "AudioKit__AudioKit",
+    "naudio__NAudio"
+  ]
+}

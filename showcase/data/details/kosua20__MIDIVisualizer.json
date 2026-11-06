@@ -1,0 +1,188 @@
+{
+  "id": "kosua20__MIDIVisualizer",
+  "taglineZh": "OpenGL 钢琴卷帘 MIDI 可视化与视频导出",
+  "summaryZh": "MIDIVisualizer 是 2016 年起的小工具，用 C++/OpenGL（GLFW + sr_gui + RtMidi17）把 .mid 画成滚动钢琴卷帘，带按键、粒子、闪光等效果。它只做显示不做音频，可用 --export 从命令行直接出 PNG 序列或 MPEG4/MPEG2/PRORES 视频，--hide-window 可不开窗口。难点是源码要 CMake+MSVC 编三个内置库，视频导出还要 FFmpeg 4.2。",
+  "whatItMakes": [
+    {
+      "type": "钢琴卷帘动画",
+      "exampleZh": "按 MIDI 音符滚动绘制键位、轨道与粒子效果",
+      "strength": "核心能力"
+    },
+    {
+      "type": "离线出片",
+      "exampleZh": "命令行按指定分辨率与帧率导出 PNG 或 MP4",
+      "strength": "核心能力"
+    },
+    {
+      "type": "外观配置",
+      "exampleZh": "颜色、缩放、线条、粒子数与画质均可调",
+      "strength": "可用"
+    },
+    {
+      "type": "音频输出",
+      "exampleZh": "只显示 MIDI，不播放也不合成声音",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "曲谱动画",
+      "whoZh": "MV 剪辑与视频作者",
+      "whyZh": "把歌曲 MIDI 渲染成钢琴卷帘动画直接配画面",
+      "deliverableZh": "MP4 视频或 PNG 序列",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量预览",
+      "whoZh": "曲库/MIDI 资料站维护者",
+      "whyZh": "命令行循环导出多首曲子的 1080p 预览片段",
+      "deliverableZh": "一批 MP4 预览片",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "外观实验",
+      "whoZh": "视觉设计师",
+      "whyZh": "调粒子、闪光与配色做风格测试",
+      "deliverableZh": "风格样片",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "音频分析",
+      "whoZh": "音频工程师",
+      "whyZh": "它不读音频也不发声，做频谱或波形分析不适用",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "钢琴卷帘",
+      "descZh": "滚动显示音符、轨道与键位"
+    },
+    {
+      "titleZh": "命令行出片",
+      "descZh": "用 --export 与 --format 出片"
+    },
+    {
+      "titleZh": "隐藏窗口",
+      "descZh": "--hide-window 后台渲染视频"
+    },
+    {
+      "titleZh": "粒子特效",
+      "descZh": "1–512 个粒子与闪光强度可调"
+    },
+    {
+      "titleZh": "透明背景",
+      "descZh": "PNG 与 PRORES 可输出透明底"
+    }
+  ],
+  "ceilingsZh": "输出分辨率由 --size W H 指定（示例 1920×1080），--framerate 与 --bitrate 给整数；导出格式只有 PNG/MPEG2/MPEG4/PRORES，postroll 默认 10 s，preroll 可配，particles-count 限 1–512，flashes-size 0.1–3.0，quality 分 LOW_RES/LOW/MEDIUM/HIGH/HIGH_RES。运行要求 OpenGL 3.2 以上；视频导出依赖 FFmpeg 4.2，未编入时只能出 PNG，release 构建也只保留 MPEG-2/MPEG-4。最长 MIDI 时长与最大分辨率 README 未声明，实际受显存与 GL 纹理上限约束。",
+  "workflowZh": "四步：取二进制 → 试渲染 → 调外观 → 批量出片",
+  "workflow": [
+    {
+      "stepZh": "取二进制",
+      "detailZh": "从 Releases 下 Windows 包，或在 CMake+MSVC 下编译 GLFW/sr_gui/RtMidi17",
+      "effortZh": "10 分钟或 30 分钟"
+    },
+    {
+      "stepZh": "试渲染",
+      "detailZh": "用 --midi 指定 .mid、--size 1920 1080 --export out.mp4 --format MPEG4 出片",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "调外观",
+      "detailZh": "改 --color-bg、--flashes-size、--particles-count 与 --quality 复渲染",
+      "effortZh": "20–40 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "djfun__audio-visualizer-python",
+      "whenZh": "要跟着音频做频谱/波形动画选 djfun；只要 MIDI 钢琴卷帘选 MIDIVisualizer",
+      "adviceZh": "要跟着音频做频谱/波形动画选 djfun；只要 MIDI 钢琴卷帘选 MIDIVisualizer"
+    },
+    {
+      "vs": "luisbocanegra__plasma-audio-visualizer",
+      "whenZh": "要在 KDE 桌面实时看频谱选 plasma 小组件；要导出视频文件选 MIDIVisualizer",
+      "adviceZh": "要在 KDE 桌面实时看频谱选 plasma 小组件；要导出视频文件选 MIDIVisualizer"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L5-L13",
+      "noteZh": "README 说明窗口内可调显示参数并导出图片与视频。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L6-L6",
+      "noteZh": "官方预编译包覆盖 Windows/macOS/Ubuntu。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L23-L40",
+      "noteZh": "CLI 导出示例，且说明 --export 是必需的。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L56-L56",
+      "noteZh": "外观参数范围直接在帮助里列出。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "README.md#L43-L43",
+      "noteZh": "输出格式枚举。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L13-L13",
+      "noteZh": "明确不做音频播放。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L76-L76",
+      "noteZh": "Windows 包未签名会被 SmartScreen 警告。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L99-L99",
+      "noteZh": "FFmpeg 4.2 为可选依赖，release 只留两种视频格式。"
+    }
+  ],
+  "blockerZh": "产物类型不符：README 明确写 “not playing any sound”，仓库只输出图像/视频，不输出 wav/mp3，无法满足本批 sample 音频交付；同时源码是 C++/OpenGL（CMake），本机 cmake/MSVC 缺失，只能依赖 GitHub Releases 的 Windows 预编译包，而本机访问 GitHub Release 曾超时。",
+  "whatItWouldNeed": "预编译 exe（Release 页下载）或 cmake + MSVC + OpenGL 3.2；一个 MIDI 文件；输出为 mp4/图片，若需音频还得另配合成器。",
+  "ceilingZh": "输出分辨率由 --size W H 指定（示例 1920×1080），--framerate 与 --bitrate 给整数；导出格式只有 PNG/MPEG2/MPEG4/PRORES，postroll 默认 10 s，preroll 可配，particles-count 限 1–512，flashes-size 0.1–3.0，quality 分 LOW_RES/LOW/MEDIUM/HIGH/HIGH_RES。运行要求 OpenGL 3.2 以上；视频导出依赖 FFmpeg 4.2，未编入时只能出 PNG，release 构建也只保留 MPEG-2/MPEG-4。最长 MIDI 时长与最大分辨率 README 未声明，实际受显存与 GL 纹理上限约束。",
+  "capabilities": {
+    "maxDurationZh": "默认 10 秒",
+    "formatsZh": [
+      "png",
+      "mp4"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "钢琴卷帘：滚动显示音符、轨道与键位",
+    "命令行出片：用 --export 与 --format 出片",
+    "隐藏窗口：--hide-window 后台渲染视频",
+    "粒子特效：1–512 个粒子与闪光强度可调",
+    "透明背景：PNG 与 PRORES 可输出透明底"
+  ],
+  "limits": [
+    "只显示 MIDI 不发声，README 明确写 not able to play soundtracks, only display them（README.md#L13、#L67-L68）",
+    "Windows 二进制没有签名会被 SmartScreen 拦截，缺少 VC++ 运行库时还会提示缺 vcruntime140_1.dll（README.md#L75-L79）",
+    "源码构建要 CMake+MSVC 编 GLFW、sr_gui 与 libremidi，视频导出依赖 FFmpeg 4.2，且 release 构建只保留 MPEG-2/MPEG-4（README.md#L91-L101）",
+    "--export 必须配 --format；PNG 时 --export 传的是目录而不是文件名，否则会拼出奇怪的扩展名",
+    "必须拿到 OpenGL 3.2 上下文，远程桌面/虚拟显卡不满足时会直接启动失败",
+    "构建时未编入 FFmpeg 就只会输出 PNG 序列，视频参数被忽略"
+  ],
+  "signatureZh": "OpenGL 钢琴卷帘 MIDI 可视化与视频导出",
+  "chooseWhenZh": "要把 .mid 批量转成钢琴卷帘 MP4/PNG，又不想自己写渲染代码的剪辑或可视化作者",
+  "avoidWhenZh": "只显示 MIDI 不发声，README 明确写 not able to play soundtracks, only display them（README.md#L13、#L67-L68）",
+  "contrastWith": [
+    "djfun__audio-visualizer-python",
+    "luisbocanegra__plasma-audio-visualizer"
+  ]
+}

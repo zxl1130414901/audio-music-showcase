@@ -1,0 +1,178 @@
+{
+  "id": "steffest__BassoonTracker",
+  "taglineZh": "纯 JS 的浏览器 MOD/XM tracker",
+  "summaryZh": "浏览器里的复古 tracker：用 Web Audio API 播放 Protracker MOD 与 FastTracker 2 XM，最多 32 通道，Protracker 效果 99% 准确、XM 效果 97%。自带样本编辑器与 ST-01/ST-02 样本盘，可导出 .mod/.xm/.wav/.mp3。零运行时依赖，静态服务器直接开 index.html。代价是操作全在浏览器、没有 CLI，批量出样只能人工点击；XM 写入不打包 pattern，PingPong loop 会被展开。",
+  "whatItMakes": [
+    {
+      "type": "MOD/XM 播放与编辑",
+      "exampleZh": "加载 Protracker 或 FastTracker 2 模块，逐行改 pattern 与样本属性",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频与模块导出",
+      "exampleZh": "把编好的曲子导出为 .mod、.xm、.wav 或 .mp3",
+      "strength": "核心能力"
+    },
+    {
+      "type": "样本编辑器",
+      "exampleZh": "导入 8-bit WAV/8SVX/RAW 样本，在浏览器里切片与试听",
+      "strength": "核心能力"
+    },
+    {
+      "type": "在线曲库检索",
+      "exampleZh": "通过 modarchive 与 modules.pl API 搜索上千首 module 直接载入",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "复古游戏或 chiptune 素材制作",
+      "whoZh": "独立游戏开发者",
+      "whyZh": "内置 ST-01/ST-02 样本盘，编完可直接导出 wav 当 BGM",
+      "deliverableZh": ".mod 源文件与 wav/mp3 成品",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "老 MOD 修复与再导出",
+      "whoZh": "tracker 爱好者",
+      "whyZh": "支持全部 Protracker 效果，可逐条对照原曲修 pattern",
+      "deliverableZh": "修正后的 .mod 与 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "讲解 tracker 效果与采样原理",
+      "whoZh": "音乐技术教师",
+      "whyZh": "效果编号 1/2/4/A/F 都有实现，学生能在浏览器里直接听差别",
+      "deliverableZh": "演示工程与对照音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "网页内嵌 module 播放器",
+      "whoZh": "前端开发者",
+      "whyZh": "player/ 目录提供 Standalone Player 示例，可复用播放逻辑",
+      "deliverableZh": "能播 MOD/XM 的网页",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "32 通道",
+      "descZh": "MOD 与 XM 多通道混音"
+    },
+    {
+      "titleZh": "零构建运行",
+      "descZh": "静态服务器直接开 dev.html"
+    },
+    {
+      "titleZh": "历史样本盘",
+      "descZh": "内置 1987 年 ST-01/ST-02 音色"
+    },
+    {
+      "titleZh": "四种导出",
+      "descZh": "mod、xm、wav、mp3 都能存"
+    },
+    {
+      "titleZh": "完整撤销",
+      "descZh": "pattern 与 sample 编辑都可回退"
+    }
+  ],
+  "ceilingsZh": "README 只声明最多 32 通道、Protracker 效果 99% 准确、FastTracker 效果 97% 准确，未给内部采样率或位深；MOD/XM 素材通常是 8-bit 样本，导出 WAV/MP3 的采样率由浏览器 AudioContext 决定，README 未声明具体值。曲目长度取决于 module 的 pattern 数，无硬性上限。没有 GPU、没有服务端，移动端最低 iOS9 / Android 6。已知不支持 Tremor、Set envelope position、Panning Slides，XM 保存后 pattern 不打包。",
+  "workflowZh": "四步：起静态服务器 → 浏览器打开 dev.html → 载入 MOD/XM → 导出 wav/mp3",
+  "workflow": [
+    {
+      "stepZh": "起服务",
+      "detailZh": "python -m http.server 8080，或 npm i 后 npm start 启动 vite",
+      "effortZh": "1–3 分钟"
+    },
+    {
+      "stepZh": "打开界面",
+      "detailZh": "浏览器访问 http://localhost:8080/dev.html",
+      "effortZh": "即时"
+    },
+    {
+      "stepZh": "载入曲目",
+      "detailZh": "File 菜单选 .mod/.xm，或用 modarchive 搜索框拉曲",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "编辑并导出",
+      "detailZh": "改 pattern 与 sample 后走 File→Export，选 wav、mp3、mod 或 xm",
+      "effortZh": "5–30 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "milkytracker__MilkyTracker",
+      "whenZh": "要桌面级精确回放、键盘流编辑和批量脚本选 MilkyTracker；要免安装、在浏览器里快速听改选 BassoonTracker",
+      "adviceZh": "要桌面级精确回放、键盘流编辑和批量脚本选 MilkyTracker；要免安装、在浏览器里快速听改选 BassoonTracker"
+    },
+    {
+      "vs": "squiggythings__WaveTracker",
+      "whenZh": "偏好现代工作流与更自由的波形编辑选 WaveTracker；要 Amiga MOD/XM 兼容与历史样本盘选 BassoonTracker",
+      "adviceZh": "偏好现代工作流与更自由的波形编辑选 WaveTracker；要 Amiga MOD/XM 兼容与历史样本盘选 BassoonTracker"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "readme.md#L3-L8",
+      "noteZh": "定位为浏览器里的 Amiga tracker，播放并编辑 MOD 与 XM"
+    },
+    {
+      "field": "whatItMakes",
+      "source": "readme.md#L45-L52",
+      "noteZh": "32 通道、样本编辑器与 mod/xm/wav/mp3 导出"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "readme.md#L22-L45",
+      "noteZh": "列出全部 Protracker 效果与最多 32 通道"
+    },
+    {
+      "field": "cons",
+      "source": "readme.md#L62-L70",
+      "noteZh": "未支持的 XM 特性、PingPong loop 展开与 Safari 限制"
+    },
+    {
+      "field": "workflow",
+      "source": "readme.md#L72-L84",
+      "noteZh": "serve index.html 即可运行，构建是可选的"
+    }
+  ],
+  "blockerZh": "纯浏览器 WebAudio 应用，仓库没有命令行入口；而且这份克隆是浅克隆（仅 1 个提交），两个 HTML 入口都是坏的：index.html 加载已构建产物 ./live/main-BrbsbuoY.js（live/ 目录根本不存在），dev.html 加载源码时又 import 了不存在的 script/src/audio/sampleBuffer.js 与 script/src/ui/font.js，页面直接卡在模块加载失败，window.Tracker 永远不出现（实测 headless Chrome 等 60 秒超时）。就算补齐构建，音频也只能在真实浏览器 AudioContext 里出声，无法在 Node 侧离线拿到 PCM。",
+  "whatItWouldNeed": "完整的非浅克隆（含 live/ 构建产物或用 vite 全量构建）+ 能跑的 WebAudio 环境（headless Chrome + OfflineAudioContext 注入）；本仓库即使补全，也需要自己写 JS 桥接去调 window.renderToMp3 并把 blob 回传，属于额外工程。",
+  "ceilingZh": "README 只声明最多 32 通道、Protracker 效果 99% 准确、FastTracker 效果 97% 准确，未给内部采样率或位深；MOD/XM 素材通常是 8-bit 样本，导出 WAV/MP3 的采样率由浏览器 AudioContext 决定，README 未声明具体值。曲目长度取决于 module 的 pattern 数，无硬性上限。没有 GPU、没有服务端，移动端最低 iOS9 / Android 6。已知不支持 Tremor、Set envelope position、Panning Slides，XM 保存后 pattern 不打包。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "mp3"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "32 通道：MOD 与 XM 多通道混音",
+    "零构建运行：静态服务器直接开 dev.html",
+    "历史样本盘：内置 1987 年 ST-01/ST-02 音色",
+    "四种导出：mod、xm、wav、mp3 都能存",
+    "完整撤销：pattern 与 sample 编辑都可回退"
+  ],
+  "limits": [
+    "全部操作在浏览器 GUI 里完成，没有 CLI，批量出样必须人工点 Export，无法无人值守",
+    "XM 写出时 pattern 不打包，文件会比 FastTracker 2 存的大；PingPong loop 会被展开，保存后样本数据改变",
+    "FastTracker 的 Tremor、Set envelope position、Panning Slides 尚未支持；Safari 无 StereoPanner、Safari/Firefox 无 Web MIDI",
+    "必须通过 http 服务打开 dev.html，直接双击 index.html 的 file:// 协议会限制部分加载",
+    "导出 MP3 依赖浏览器编码路径，长曲目可能等待较久，批量任务应先出 WAV",
+    "移动端最低 iOS9 / Android 6，桌面 Chrome 最稳"
+  ],
+  "signatureZh": "纯 JS 的浏览器 MOD/XM tracker",
+  "chooseWhenZh": "要做复古 chiptune/Amiga 风格素材、又想免安装直接在浏览器里改 MOD/XM 的人",
+  "avoidWhenZh": "全部操作在浏览器 GUI 里完成，没有 CLI，批量出样必须人工点 Export，无法无人值守",
+  "contrastWith": [
+    "milkytracker__MilkyTracker",
+    "squiggythings__WaveTracker"
+  ]
+}

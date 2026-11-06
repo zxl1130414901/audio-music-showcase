@@ -1,0 +1,173 @@
+{
+  "id": "hkchengrex__MMAudio",
+  "taglineZh": "视频转同步音效，流匹配出 flac/mp4",
+  "summaryZh": "MMAudio 是 CVPR 2025 视频/文本到音频模型：CLIP 抽画面、Synchformer 抽同步特征，与文本喂 flow-matching 网络，再经 44.1 kHz VAE 与 BigVGAN 出声。首次运行自动下权重并校验 MD5，输出 flac，给视频时合成 mp4。默认 large_44k_v2、8 秒、25 步，16-bit 推理约 6GB 显存。代价是只在 Ubuntu 测过、权重约 6.4GB、checkpoint 为 CC-BY-NC 4.0。",
+  "whatItMakes": [
+    {
+      "type": "视频同步音效",
+      "exampleZh": "给无声 mp4 生成脚步/风声并合成带音轨 mp4",
+      "strength": "核心能力"
+    },
+    {
+      "type": "文本生音效",
+      "exampleZh": "省略 --video，仅用 prompt 出 8 秒 flac",
+      "strength": "核心能力"
+    },
+    {
+      "type": "多档模型",
+      "exampleZh": "small_16k/small_44k/medium_44k/large_44k_v2 可选",
+      "strength": "核心能力"
+    },
+    {
+      "type": "实验性图生音",
+      "exampleZh": "Gradio 把图片复制成视频再合成",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "短视频/广告拟音",
+      "whoZh": "视频创作者",
+      "whyZh": "画面自动配同步音效，省掉人工拟音",
+      "deliverableZh": "带音轨 MP4",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "游戏过场音效",
+      "whoZh": "游戏音频设计师",
+      "whyZh": "参考视频直接出 flac 再精修",
+      "deliverableZh": "FLAC 音效轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "无声片修复",
+      "whoZh": "影视修复者",
+      "whyZh": "帧级同步特征适合动作匹配",
+      "deliverableZh": "修复版 MP4",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "多模态研究",
+      "whoZh": "研究者",
+      "whyZh": "官方训练/评估脚本与 CVPR 论文",
+      "deliverableZh": "复现实验",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "双模态条件",
+      "descZh": "视频与文本联合训练，可单独或组合输入"
+    },
+    {
+      "titleZh": "同步模块",
+      "descZh": "Synchformer 按帧对齐画面"
+    },
+    {
+      "titleZh": "五档模型",
+      "descZh": "16k/44k 多档可选"
+    },
+    {
+      "titleZh": "自动下载",
+      "descZh": "首次运行拉权重并做 MD5 校验"
+    }
+  ],
+  "ceilingsZh": "44.1 kHz（CONFIG_44K，spectrogram_frame_rate 512）或 16 kHz（CONFIG_16K），默认 8 秒、25 步、cfg 4.5；44.1 kHz 时 8 秒对应 353280 样本。README 称 16-bit 推理约 6GB 显存。推荐 large_44k_v2 权重 3.9G，加 44.1k VAE 1.2G、Synchformer 907M、44.1k 声码器自动下载，最小组合约 6.4GB。时长可调但偏离 8 秒训练分布会掉质量；README 未声明最长时长或批量并发上限。",
+  "workflowZh": "五步：装 torch → pip install -e . → 备视频 → python demo.py → 取 flac/mp4",
+  "workflow": [
+    {
+      "stepZh": "装 torch",
+      "detailZh": "pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118",
+      "effortZh": "30–60 分钟（本机已装可跳过）"
+    },
+    {
+      "stepZh": "装包",
+      "detailZh": "cd MMAudio && pip install -e .",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "备输入",
+      "detailZh": "准备 mp4；CLIP 会缩到 384×384，Synchformer 短边 224 中心裁切",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python demo.py --duration=8 --video=in.mp4 --prompt \"...\"",
+      "effortZh": "1–3 分钟/条"
+    },
+    {
+      "stepZh": "取产物",
+      "detailZh": "./output/*.flac 与 *.mp4",
+      "effortZh": "即时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "SAIL-PRLab__Foley-Omni",
+      "whenZh": "只要视频拟音且显存 6GB 级选 MMAudio；要文本/视频更复杂拟音可看 Foley-Omni。",
+      "adviceZh": "只要视频拟音且显存 6GB 级选 MMAudio；要文本/视频更复杂拟音可看 Foley-Omni。"
+    },
+    {
+      "vs": "thxxx__VTS",
+      "whenZh": "VTS 用拟声词生成具体音效、需 HF_TOKEN；MMAudio 强在画面同步与 mp4 合成。",
+      "adviceZh": "VTS 用拟声词生成具体音效、需 HF_TOKEN；MMAudio 强在画面同步与 mp4 合成。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L18-L20",
+      "noteZh": "多模态联合训练与同步模块的定位"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L96-L110",
+      "noteZh": "默认 large_44k_v2、6GB 显存、8 秒与 flac/mp4 输出"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L49",
+      "noteZh": "只在 Ubuntu 测试过的平台声明"
+    },
+    {
+      "field": "cons[1]",
+      "source": "docs/MODELS.md#L11-L16",
+      "noteZh": "large_44k_v2 3.9G、VAE 1.2G、Synchformer 907M、声码器 429M"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "44.1 kHz（CONFIG_44K，spectrogram_frame_rate 512）或 16 kHz（CONFIG_16K），默认 8 秒、25 步、cfg 4.5；44.1 kHz 时 8 秒对应 353280 样本。README 称 16-bit 推理约 6GB 显存。推荐 large_44k_v2 权重 3.9G，加 44.1k VAE 1.2G、Synchformer 907M、44.1k 声码器自动下载，最小组合约 6.4GB。时长可调但偏离 8 秒训练分布会掉质量；README 未声明最长时长或批量并发上限。",
+  "capabilities": {
+    "maxDurationZh": "默认 8 秒",
+    "formatsZh": [
+      "flac",
+      "mp4"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "双模态条件：视频与文本联合训练，可单独或组合输入",
+    "同步模块：Synchformer 按帧对齐画面",
+    "五档模型：16k/44k 多档可选",
+    "自动下载：首次运行拉权重并做 MD5 校验"
+  ],
+  "limits": [
+    "README 明说只在 Ubuntu 测试过，Windows 无官方验证（README.md#L49）",
+    "44.1 kHz 版权重合计约 6.4GB（3.9G+1.2G+907M+429M），F 盘 USB HDD 加载慢（docs/MODELS.md#L12-L16）",
+    "训练数据授权复杂，checkpoint 为 CC-BY-NC 4.0 不可商用（README.md#L155、L183）",
+    "已知会生成类似人声/低质背景音乐，生僻概念失败（README.md#L137-L141）",
+    "默认 bf16，若显卡/驱动不支持需 --full_precision 否则报错（demo.py#L72）",
+    "视频读取依赖 pyav，ffmpeg 缺失或版本过新时合成 mp4 会失败（README.md#L162）"
+  ],
+  "signatureZh": "视频转同步音效，流匹配出 flac/mp4",
+  "chooseWhenZh": "要给无声视频自动配同步拟音、并直接拿到带音轨 mp4 的创作者。",
+  "avoidWhenZh": "README 明说只在 Ubuntu 测试过，Windows 无官方验证（README.md#L49）",
+  "contrastWith": [
+    "SAIL-PRLab__Foley-Omni",
+    "thxxx__VTS"
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "id": "BazedFrog__SongGeneration-Studio",
+  "taglineZh": "LeVo 模型的 Pinokio 封装，歌词出人声歌曲",
+  "summaryZh": "SongGeneration Studio 是 Tencent LeVo 模型的 Pinokio 封装：先 clone 上游，再下约 15GB 权重并覆盖 requirements。Web UI 支持歌词分节、风格/情绪/音色/BPM、参考音频克隆、三轨与队列，导出 FLAC 或波形 MP4。模型注册表按显存选 10/12/22GB 档，最低 10GB，生成一首约 3–6 分钟。代价是 8GB 显存不够、许可证只写个人/教育用途。",
+  "whatItMakes": [
+    {
+      "type": "完整歌曲（人声+伴奏）",
+      "exampleZh": "输入分节歌词与风格，输出一首 2m30s 内歌曲",
+      "strength": "核心能力"
+    },
+    {
+      "type": "人声/伴奏分轨",
+      "exampleZh": "同一首歌另出 *_vocal.flac 与 *_bgm.flac",
+      "strength": "核心能力"
+    },
+    {
+      "type": "风格克隆",
+      "exampleZh": "上传参考音频匹配 genre/mood 与音色",
+      "strength": "特色能力"
+    },
+    {
+      "type": "带波形视频",
+      "exampleZh": "ffmpeg 叠加波形与扫线导出 MP4",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "短视频配乐",
+      "whoZh": "内容创作者",
+      "whyZh": "歌词加风格直接出完整歌，省掉编曲与找素材",
+      "deliverableZh": "歌曲 FLAC/MP4",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "歌曲 demo 快速验证",
+      "whoZh": "独立音乐人",
+      "whyZh": "参考音频克隆风格，分轨还能再进 DAW 后期",
+      "deliverableZh": "人声/伴奏分轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量风格实验",
+      "whoZh": "AI 音乐研究者",
+      "whyZh": "队列批量生成，模型按显存自动选档",
+      "deliverableZh": "一批对比样",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "卡拉 OK/remix 素材",
+      "whoZh": "二创作者",
+      "whyZh": "直接提供 vocals 与 instrumental 分轨",
+      "deliverableZh": "分轨素材包",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "三轨导出",
+      "descZh": "混音/人声/伴奏任选"
+    },
+    {
+      "titleZh": "显存自适应",
+      "descZh": "按 10/12/22GB 自动切换三档模型"
+    },
+    {
+      "titleZh": "风格克隆",
+      "descZh": "参考音频对齐 genre/mood 与音色"
+    },
+    {
+      "titleZh": "队列批量",
+      "descZh": "一次排队生成多首，适合对比"
+    }
+  ],
+  "ceilingsZh": "模型注册表四档：base 10GB 显存/11.3GB 权重/最长 2m30s，base-full 12GB，large 22GB/20.5GB 权重/最长 4m30s（models.py#L24-L57）。输出采样率取自模型 cfg，README 未声明；导出 FLAC 或 MP4，分轨为 *_vocal/_bgm。README 标称生成一首 3–6 分钟，Pinokio 下载约 15GB，安装后占 25GB 起。本机 8188 MiB 显存低于最低 10GB，只能跑 CPU 或失败，音色数、并发上限未声明。",
+  "workflowZh": "五步：装 Pinokio → 一键装 15GB 权重 → 开 Web UI → 填歌词/风格 → 导出分轨",
+  "workflow": [
+    {
+      "stepZh": "装 Pinokio",
+      "detailZh": "从 pinokio.computer 下载安装 Pinokio",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "安装 Studio",
+      "detailZh": "Search SongGeneration Studio → Install，自动 clone 并下权重",
+      "effortZh": "40–90 分钟"
+    },
+    {
+      "stepZh": "启动",
+      "detailZh": "点 ▶️ Start，浏览器打开 Web UI",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "生成",
+      "detailZh": "写分节歌词，选 genre/mood/voice/BPM 后 Generate",
+      "effortZh": "3–6 分钟/首"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "选 Full/Vocals/Instrumental，导出 FLAC 或 MP4",
+      "effortZh": "1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "要纯音乐/音效提示词生成选 MusicGen；要带歌词人声与三轨导出选本仓库。",
+      "adviceZh": "要纯音乐/音效提示词生成选 MusicGen；要带歌词人声与三轨导出选本仓库。"
+    },
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "Stable Audio Open 擅长 47 秒内音效且可 CLI；整首歌与分轨只有 SongGeneration Studio 提供。",
+      "adviceZh": "Stable Audio Open 擅长 47 秒内音效且可 CLI；整首歌与分轨只有 SongGeneration Studio 提供。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L73-L85",
+      "noteZh": "10GB 显存最低要求与约 15GB 权重下载说明"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L53-L56",
+      "noteZh": "Full Mix / Vocals / Instrumental 三轨导出"
+    },
+    {
+      "field": "pros[2]",
+      "source": "models.py#L24-L57",
+      "noteZh": "10/12/22GB 三档模型与 2m30s/4m30s 时长上限"
+    },
+    {
+      "field": "cons[1]",
+      "source": "install.js#L13-L62",
+      "noteZh": "clone 上游、覆盖 requirements、装 uv 与 torch 的脚本"
+    }
+  ],
+  "blockerZh": "显存与权重双重不满足：仓库自带模型注册表（models.py）标注 base 需 10GB VRAM、base_full 需 12GB、large 需 22GB，本机 RTX 4060 Laptop 只有 8GB；HF 上 lglg666/SongGeneration-base 的 model.pt 实测 10.54GB，单这一项就吃掉 15GB 权重额度的大半。LeVo 是 AR 语言模型 + 扩散双阶段，权重无法塞进 8GB，强上必然 OOM。补充：克隆到本地的是 BazedFrog__SongGeneration-Studio（Pinokio 包装层，非 Tencent 官方仓库），本质仍是 LeVo 权重。",
+  "whatItWouldNeed": "至少 10GB（建议 12–16GB）显存的 NVIDIA 卡、约 12GB 磁盘、完整的 LeVo 推理代码与 audio tokenizer/vocoder 权重、单首歌 30–60 分钟推理；Pinokio 安装脚本还会在用户目录自建 venv 与前端，环境侧成本远高于 30 分钟上限。",
+  "ceilingZh": "模型注册表四档：base 10GB 显存/11.3GB 权重/最长 2m30s，base-full 12GB，large 22GB/20.5GB 权重/最长 4m30s（models.py#L24-L57）。输出采样率取自模型 cfg，README 未声明；导出 FLAC 或 MP4，分轨为 *_vocal/_bgm。README 标称生成一首 3–6 分钟，Pinokio 下载约 15GB，安装后占 25GB 起。本机 8188 MiB 显存低于最低 10GB，只能跑 CPU 或失败，音色数、并发上限未声明。",
+  "capabilities": {
+    "maxDurationZh": "上限 30 秒",
+    "formatsZh": [
+      "flac",
+      "mp4"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "三轨导出：混音/人声/伴奏任选",
+    "显存自适应：按 10/12/22GB 自动切换三档模型",
+    "风格克隆：参考音频对齐 genre/mood 与音色",
+    "队列批量：一次排队生成多首，适合对比"
+  ],
+  "limits": [
+    "README 最低要求 10GB 显存，本机 8188 MiB 低于门槛（README.md#L73）",
+    "权重约 15GB，安装后占 25GB 起，且必须经 Pinokio/uv/torch 全自动安装（README.md#L74、L85）",
+    "许可证只写 personal/educational，模型授权需回看 Tencent 上游（README.md#L127-L130）",
+    "Pinokio 安装脚本会 git clone 上游并覆盖 requirements，已装环境会被改写（install.js#L13-L38）",
+    "8GB 显存没有对应小模型，base 也要 10GB，实际只能 CPU/失败"
+  ],
+  "signatureZh": "LeVo 模型的 Pinokio 封装，歌词出人声歌曲",
+  "chooseWhenZh": "要一键生成带歌词人声完整歌曲、并拿到人声/伴奏分轨的内容创作者。",
+  "avoidWhenZh": "README 最低要求 10GB 显存，本机 8188 MiB 低于门槛（README.md#L73）",
+  "contrastWith": [
+    "facebookresearch__audiocraft",
+    "Stability-AI__stable-audio-tools"
+  ]
+}

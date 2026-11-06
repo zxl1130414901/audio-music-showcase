@@ -1,0 +1,184 @@
+{
+  "id": "ZFTurbo__Music-Source-Separation-Training",
+  "taglineZh": "17 种分轨模型族 + MUSDB SDR 权重表",
+  "summaryZh": "MSS 是 PyTorch 音乐分轨框架，覆盖 17 个模型族：MDX23C、HTDemucs、BS Roformer、SCNet 等，用 --model_type 切换。仓库给出预训练权重表，标 MUSDB test SDR，最高 SCNet XL IHF 10.08。inference.py 读 config 与 ckpt，整目录批量分轨，自动选 FLAC/WAV。代价是依赖锁在 2023 年版本，batch 按 A6000 48GB 调，8GB 显存必须改 config；权重全部外链。",
+  "whatItMakes": [
+    {
+      "type": "四轨分轨音频",
+      "exampleZh": "input/song.wav → vocals、drums、bass、other 四个文件",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱对照图",
+      "exampleZh": "--draw_spectro 3 输出分离前后频谱图",
+      "strength": "附加能力"
+    },
+    {
+      "type": "微调权重",
+      "exampleZh": "用 MUSDB18HQ 在 mdx23c 上继续训练，产出 .ckpt",
+      "strength": "核心能力"
+    },
+    {
+      "type": "整目录批量结果",
+      "exampleZh": "--input_folder songs/ --store_dir out/ 一次处理整张专辑",
+      "strength": "核心能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给翻唱/二创拆人声伴奏",
+      "whoZh": "音乐二创作者",
+      "whyZh": "htdemucs 或 scnet 直接套权重，四轨输出，本地跑不上传",
+      "deliverableZh": "vocals/drums/bass/other",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "训练自己数据集的分轨模型",
+      "whoZh": "音频算法研究者",
+      "whyZh": "train.py 支持 17 种模型、多种 loss 与数据集配置",
+      "deliverableZh": ".ckpt 与推理 config",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "比赛刷 SDR 或横评模型",
+      "whoZh": "MIR 竞赛选手",
+      "whyZh": "预训练表逐曲列 SDR，同一套 inference 横评多个模型",
+      "deliverableZh": "SDR 报表与分离音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "8GB 笔记本跑最大模型",
+      "whoZh": "普通笔记本用户",
+      "whyZh": "SCNet XL/BS Roformer 的 batch 与 chunk 按 48GB 卡调，需降 batch 或换小模型",
+      "deliverableZh": "需调参",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "17 种模型族",
+      "descZh": "MDX23C 到 SCNet 全支持"
+    },
+    {
+      "titleZh": "SDR 权重表",
+      "descZh": "每行权重标注 MUSDB 分数"
+    },
+    {
+      "titleZh": "批量推理",
+      "descZh": "整目录输入，按峰值选编码"
+    },
+    {
+      "titleZh": "TTA 增强",
+      "descZh": "多路径平均提分离质量"
+    },
+    {
+      "titleZh": "训练闭环",
+      "descZh": "train/infer 脚本齐全"
+    }
+  ],
+  "ceilingsZh": "config 固定 sample_rate 44100、2 通道、chunk_size 261120（约 5.9 秒）、STFT dim_f 4096、dim_t 256，训练 batch_size 6 按 A6000 48GB 设（config_musdb18_mdx23c.yaml#L2-L25, README.md#L80）。质量上限看权重表：SCNet XL IHF 10.08、BS Roformer 9.65、SCNet XL 9.80（docs/pretrained_models.md#L67-L70）。输出位深与采样率跟随源文件，peak≤1.0 选 FLAC 否则 WAV。权重大小与单曲时长上限未声明；8GB 显存需减 batch。",
+  "workflowZh": "五步：装依赖 → 下 config 与 ckpt → 准备输入 → inference 分轨 → 转码试听",
+  "workflow": [
+    {
+      "stepZh": "装依赖",
+      "detailZh": "python -m venv 后 pip install -r requirements.txt，与现有 torch 冲突时按 README 处理",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "从 pretrained_models.md 选一行，下对应 .yaml 与 .ckpt",
+      "effortZh": "1–10 分钟"
+    },
+    {
+      "stepZh": "准备输入",
+      "detailZh": "音频放进 input/，确认 44.1 kHz 立体声，非 44.1k 先重采样",
+      "effortZh": "秒级/首"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python inference.py --model_type mdx23c --config_path ... --start_check_point model.ckpt --input_folder input/ --store_dir out/",
+      "effortZh": "1–3 分钟/首（GPU）"
+    },
+    {
+      "stepZh": "后处理",
+      "detailZh": "加 --use_tta 或 --draw_spectro，再 ffmpeg 转 mp3",
+      "effortZh": "分钟级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Anjok07__ultimatevocalremovergui",
+      "whenZh": "要脚本化批量与自训练选 MSS；要开箱 GUI 点几下分轨选 UVR。",
+      "adviceZh": "要脚本化批量与自训练选 MSS；要开箱 GUI 点几下分轨选 UVR。"
+    },
+    {
+      "vs": "sergree__matchering",
+      "whenZh": "要把歌拆成多轨选 MSS；要做母带匹配与响度对齐选 matchering，可串联。",
+      "adviceZh": "要把歌拆成多轨选 MSS；要做母带匹配与响度对齐选 matchering，可串联。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L11-L27",
+      "noteZh": "17 个模型族与 --model_type 键"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "configs/config_musdb18_mdx23c.yaml#L2-L8",
+      "noteZh": "chunk 261120、dim_f 4096、44100 Hz"
+    },
+    {
+      "field": "pros[1]",
+      "source": "docs/pretrained_models.md#L67-L70",
+      "noteZh": "SDR 10.08/9.65/9.80"
+    },
+    {
+      "field": "cons[0]",
+      "source": "requirements.txt#L9-L19",
+      "noteZh": "锁死老版本依赖"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L80",
+      "noteZh": "batch 按 A6000 48GB 设定"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "config 固定 sample_rate 44100、2 通道、chunk_size 261120（约 5.9 秒）、STFT dim_f 4096、dim_t 256，训练 batch_size 6 按 A6000 48GB 设（config_musdb18_mdx23c.yaml#L2-L25, README.md#L80）。质量上限看权重表：SCNet XL IHF 10.08、BS Roformer 9.65、SCNet XL 9.80（docs/pretrained_models.md#L67-L70）。输出位深与采样率跟随源文件，peak≤1.0 选 FLAC 否则 WAV。权重大小与单曲时长上限未声明；8GB 显存需减 batch。",
+  "capabilities": {
+    "maxDurationZh": "约 5.9 秒",
+    "formatsZh": [
+      "wav",
+      "flac"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "17 种模型族：MDX23C 到 SCNet 全支持",
+    "SDR 权重表：每行权重标注 MUSDB 分数",
+    "批量推理：整目录输入，按峰值选编码",
+    "TTA 增强：多路径平均提分离质量",
+    "训练闭环：train/infer 脚本齐全"
+  ],
+  "limits": [
+    "requirements.txt 锁死老版本依赖（segmentation_models_pytorch==0.3.3、timm==0.9.2、transformers~=4.35.0、demucs==4.0.0），与本机 torch 2.6+cu124 直接装会大量冲突（requirements.txt#L9-L19）",
+    "官方所有 config 的 batch size 按单卡 A6000 48GB 调，8GB 显存必须改 training.batch_size 与梯度累积，否则 OOM（README.md#L80）",
+    "requirements 里还有 pyaudio 与 wxpython==4.2.2，Windows 装这两个要么编译要么找轮子，GUI 依赖并非推理必需却拖慢安装（requirements.txt#L35-L36）",
+    "权重不在仓库里，全部是 GitHub Release / fbaipublicfiles 外链（docs/pretrained_models.md#L45-L71）",
+    "config 里 sample_rate 44100、chunk_size 261120（约 5.9 s）与权重绑定，换采样率必须同步改 config，否则音质崩",
+    "batch_size 下调时别忘了同步调 gradient_accumulation_steps，不然等效 batch 变小影响收敛",
+    "--store_dir 已有同名输出会被覆盖，批量跑不同模型务必分目录"
+  ],
+  "signatureZh": "17 种分轨模型族 + MUSDB SDR 权重表",
+  "chooseWhenZh": "要把整首歌拆成 drums/bass/vocals/other，或自己用 MUSDB18HQ 微调 SOTA 分轨模型的人",
+  "avoidWhenZh": "requirements.txt 锁死老版本依赖（segmentation_models_pytorch==0.3.3、timm==0.9.2、transformers~=4.35.0、demucs==4.0.0），与本机 torch 2.6+cu124 直接装会大量冲突（requirements.txt#L9-L19）",
+  "contrastWith": [
+    "Anjok07__ultimatevocalremovergui",
+    "sergree__matchering"
+  ]
+}

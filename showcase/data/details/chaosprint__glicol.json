@@ -1,0 +1,178 @@
+{
+  "id": "chaosprint__glicol",
+  "taglineZh": "Rust 图式 DSL，WASM 浏览器实时合成",
+  "summaryZh": "Glicol 是为 live coding 设计的图式音频 DSL，解析器与引擎用 Rust 写，编译到 WebAssembly 后在浏览器跑。节点用 >> 接线，o: sin 440 >> mul ~amp 两行出声，seq 节点写 16 分音符。Engine::<32>::new() 后 update_with_code 与 next_block 直接拿 f32 采样块。代价是引擎不写文件、也没有声卡后端（cpal 被注释），要 WAV 必须自己接；官方明示仍高度实验性。",
+  "whatItMakes": [
+    {
+      "type": "实时合成音频流",
+      "exampleZh": "浏览器里写 o: saw 220 >> mul 0.2，即改即听",
+      "strength": "核心能力"
+    },
+    {
+      "type": "Rust DSP 采样块",
+      "exampleZh": "Engine::<32> 每次 next_block 返回 32 个 f32 样本",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音序/采样片段",
+      "exampleZh": "o: speed 2.0 >> seq 60 _72 _ 48__67 >> mul 0.5 做 16 分音符",
+      "strength": "核心能力"
+    },
+    {
+      "type": "VST/Bela 原型",
+      "exampleZh": "rs/vst 分支编译成插件，rs/bela 跑在 Bela 板上",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "浏览器里做 live coding 演出",
+      "whoZh": "新媒体艺术家",
+      "whyZh": "改字符串即改声音，网页零安装，图式语义适合即兴接线",
+      "deliverableZh": "实时声音（无文件）",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "把合成引擎嵌进 Rust 应用",
+      "whoZh": "Rust 音频开发者",
+      "whyZh": "直接引 glicol crate 拿 f32 block，不用实现 parser",
+      "deliverableZh": "自建播放器",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做浏览器玩具合成器",
+      "whoZh": "创意前端开发者",
+      "whyZh": "CDN 单文件引入，无需构建链，成本最低",
+      "deliverableZh": "网页 demo",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量离线生成 WAV 素材",
+      "whoZh": "音效素材生产者",
+      "whyZh": "没有录音、导出与文件写出，也没有 cpal 设备，必须自写写出层",
+      "deliverableZh": "需二次开发",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "图式 DSL",
+      "descZh": ">> 接线，节点即振荡器"
+    },
+    {
+      "titleZh": "WASM 实时",
+      "descZh": "Rust 引擎近原生性能"
+    },
+    {
+      "titleZh": "音序节点",
+      "descZh": "16 分音符音序"
+    },
+    {
+      "titleZh": "Rust 库",
+      "descZh": "Engine 直接输出采样块"
+    },
+    {
+      "titleZh": "三处宿主",
+      "descZh": "浏览器、VST、Bela"
+    }
+  ],
+  "ceilingsZh": "引擎用 const generics 定块大小，官方示例有 Engine::<32> 与 Engine::<128>，每次 next_block 返回对应长度的 f32 采样（rs/main/README.md#L5-L12）。DSL 覆盖振荡器、滤波器、混音、seq 音序器与采样播放，版本到 0.12.0（README.md#L167-L181）。采样率由宿主决定（浏览器 AudioContext 通常 44.1/48 kHz），glicol 自身未声明固定采样率与位深；没有内置 WAV/FLAC 导出，也没有声卡后端（rs/synth/Cargo.toml#L53 的 cpal 被注释）。最大同时节点数、最大采样长度、VST 支持格式 README 均未声明。",
+  "workflowZh": "三步：CDN 引入网页出声，或 cargo 引 crate 拿 block，再自接输出",
+  "workflow": [
+    {
+      "stepZh": "网页试语法",
+      "detailZh": "引 CDN 的 glicol.js，在编辑器写 o: sin 440 听声",
+      "effortZh": "2 分钟"
+    },
+    {
+      "stepZh": "本地 Rust 构建",
+      "detailZh": "cargo build -p glicol_synth，或 cd rs/main 跑 examples/hello.rs",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "接音频输出",
+      "detailZh": "自接 cpal 播放，或用 hound 把 next_block 写成 WAV",
+      "effortZh": "30 分钟起"
+    },
+    {
+      "stepZh": "上 wasm（可选）",
+      "detailZh": "rustup target add wasm32-unknown-unknown 后按 js/README 的 vite 流程构建",
+      "effortZh": "10 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "supercollider__supercollider",
+      "whenZh": "要浏览器零安装、轻量图式 DSL 选 glicol；要成熟音频语言、庞大 UGen 库与现场生态选 SuperCollider。",
+      "adviceZh": "要浏览器零安装、轻量图式 DSL 选 glicol；要成熟音频语言、庞大 UGen 库与现场生态选 SuperCollider。"
+    },
+    {
+      "vs": "Ameobea__web-synth",
+      "whenZh": "要文本 DSL 与 Rust 引擎选 glicol；要浏览器可视化搭模块、教学型合成器选 web-synth。",
+      "adviceZh": "要文本 DSL 与 Rust 引擎选 glicol；要浏览器可视化搭模块、教学型合成器选 web-synth。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L34-L37",
+      "noteZh": "Rust 引擎 + WASM 浏览器实时"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "rs/main/README.md#L5-L12",
+      "noteZh": "Engine::<32> 与 next_block"
+    },
+    {
+      "field": "cons[0]",
+      "source": "rs/synth/Cargo.toml#L53",
+      "noteZh": "cpal 被注释，无声卡后端"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L187",
+      "noteZh": "官方称仍高度实验性"
+    },
+    {
+      "field": "workflowZh",
+      "source": "js/README.md#L15-L22",
+      "noteZh": "CDN 单文件引入"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "引擎用 const generics 定块大小，官方示例有 Engine::<32> 与 Engine::<128>，每次 next_block 返回对应长度的 f32 采样（rs/main/README.md#L5-L12）。DSL 覆盖振荡器、滤波器、混音、seq 音序器与采样播放，版本到 0.12.0（README.md#L167-L181）。采样率由宿主决定（浏览器 AudioContext 通常 44.1/48 kHz），glicol 自身未声明固定采样率与位深；没有内置 WAV/FLAC 导出，也没有声卡后端（rs/synth/Cargo.toml#L53 的 cpal 被注释）。最大同时节点数、最大采样长度、VST 支持格式 README 均未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "无音频输出"
+    ],
+    "sampleRateZh": "48 kHz",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "图式 DSL：>> 接线，节点即振荡器",
+    "WASM 实时：Rust 引擎近原生性能",
+    "音序节点：16 分音符音序",
+    "Rust 库：Engine 直接输出采样块",
+    "三处宿主：浏览器、VST、Bela"
+  ],
+  "limits": [
+    "引擎没有声卡后端，Cargo.toml 里 cpal 依赖是注释掉的，必须靠浏览器 Web Audio 或自己接后端（rs/synth/Cargo.toml#L53）",
+    "没有内置录音或导出：输入是字符串代码，输出是内存里的 f32 block，要 WAV 得自己写文件写出（rs/main/examples/hello.rs）",
+    "官方标注仍高度实验性，1.0 前 API 会变，现场演出有风险（README.md#L187）",
+    "js 包 package.json 版本号是 0.0.0，npm 上的版本管理不跟随主干，引依赖要以网站文档为准（js/package.json#L3）",
+    "浏览器端依赖 SharedArrayBuffer，需要 cross-origin isolation 响应头，直接双击本地 HTML 不会出声",
+    "本地 Rust 侧要出声必须自行接 cpal/音频设备或把 block 写成 WAV，examples 只打印采样",
+    "wasm 构建要 `rustup target add wasm32-unknown-unknown`，本机只装了默认 host target"
+  ],
+  "signatureZh": "Rust 图式 DSL，WASM 浏览器实时合成",
+  "chooseWhenZh": "想在浏览器里做 live coding 合成、或需要一个 Rust 图式 DSP 引擎嵌进自己应用的人",
+  "avoidWhenZh": "引擎没有声卡后端，Cargo.toml 里 cpal 依赖是注释掉的，必须靠浏览器 Web Audio 或自己接后端（rs/synth/Cargo.toml#L53）",
+  "contrastWith": [
+    "supercollider__supercollider",
+    "Ameobea__web-synth"
+  ]
+}

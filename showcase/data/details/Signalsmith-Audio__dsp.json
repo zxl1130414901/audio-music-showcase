@@ -1,0 +1,171 @@
+{
+  "id": "Signalsmith-Audio__dsp",
+  "taglineZh": "C++11 头文件 DSP 库：FFT、滤波、延迟积木",
+  "summaryZh": "Signalsmith DSP 是 MIT 许可的 C++11 header-only 库：include fft.h、filters.h、delay.h 后直接用模板类，CMake 只建 INTERFACE 目标，不拉第三方依赖。覆盖 FFT/STFT、频谱、滤波、重采样、延迟、包络、窗函数、混音与 perf。测试和文档脚本放在 dsp-doc 仓库，本仓库无 examples/main/test，出样要自写 harness 并接 WAV 读写；README 仅 40 行，参数由调用方决定。",
+  "whatItMakes": [
+    {
+      "type": "频谱处理模块",
+      "exampleZh": "FFT/STFT 与 spectral 变换嵌进自家 C++ 引擎",
+      "strength": "核心能力"
+    },
+    {
+      "type": "滤波器与重采样",
+      "exampleZh": "filters.h、rates.h 提供滤波器设计与多相重采样",
+      "strength": "核心能力"
+    },
+    {
+      "type": "延迟与干湿混音",
+      "exampleZh": "delay.h 延迟线加 mix.h 干湿比例",
+      "strength": "核心能力"
+    },
+    {
+      "type": "性能计时",
+      "exampleZh": "perf.h 统计各段运算耗时",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "音频插件内核",
+      "whoZh": "C++ 插件开发者",
+      "whyZh": "头文件零依赖，容易嵌进 JUCE 或自家宿主",
+      "deliverableZh": "插件 DSP 模块",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "离线渲染工具",
+      "whoZh": "工具链作者",
+      "whyZh": "需自写 main，但滤波器/FFT 现成可复用",
+      "deliverableZh": "WAV 处理结果",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "DSP 算法验证",
+      "whoZh": "音频研究者",
+      "whyZh": "配套脚本可测频率响应与混叠",
+      "deliverableZh": "测量报告",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学示例",
+      "whoZh": "音频课程教师",
+      "whyZh": "代码短、模板清晰，便于做小实验",
+      "deliverableZh": "可编译小实验",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "纯头文件",
+      "descZh": "include 即用，无需链接任何库"
+    },
+    {
+      "titleZh": "零第三方依赖",
+      "descZh": "CMake 只建 INTERFACE 目标"
+    },
+    {
+      "titleZh": "九类模块",
+      "descZh": "FFT、滤波、频谱、重采样、延迟、包络等"
+    },
+    {
+      "titleZh": "MIT 许可",
+      "descZh": "可修改可商用，保留版权声明即可"
+    }
+  ],
+  "ceilingsZh": "C++11、header-only，仓库仅 include/signalsmith-dsp 九个转发头与根目录同名实现头，CMake 目标为 INTERFACE、无编译产物。README 未声明采样率、位深、最大 FFT 尺寸或实时延迟指标，这些由调用方模板参数决定。没有 examples/tests/main，也没有 WAV/MP3 输出代码，出样需自写 harness 并另接 libsndfile 或 ffmpeg。MIT 许可、282 stars；能力上限取决于你怎样组合 FFT/滤波/延迟，而非库自带管线。",
+  "workflowZh": "五步：建 CMake 工程 → include 头文件 → 搭处理链 → 接 WAV 读写 → 编译运行",
+  "workflow": [
+    {
+      "stepZh": "建工程",
+      "detailZh": "CMakeLists.txt 里 add_subdirectory 或直接暴露 include 目录",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "选模块",
+      "detailZh": "按需 #include \"signalsmith-dsp/fft.h\" 等转发头",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "写 harness",
+      "detailZh": "准备 float 缓冲，调用 FFT/Filter 处理",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "读写 WAV",
+      "detailZh": "接 libsndfile 或写最小 WAV writer",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "编译运行",
+      "detailZh": "MSVC 或 g++ -std=c++11，链接你的 IO 库",
+      "effortZh": "5 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "cycfi__q",
+      "whenZh": "q 自带示例工程与 CMake 子模块，Signalsmith 只给头文件；要示例选 q，要极简嵌入选本库。",
+      "adviceZh": "q 自带示例工程与 CMake 子模块，Signalsmith 只给头文件；要示例选 q，要极简嵌入选本库。"
+    },
+    {
+      "vs": "Orastron__brickworks",
+      "whenZh": "brickworks 提供可编译示例与构建脚本，本库连 main 都没有；同样要 harness 时 brickworks 更快出样。",
+      "adviceZh": "brickworks 提供可编译示例与构建脚本，本库连 main 都没有；同样要 harness 时 brickworks 更快出样。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L3-L6",
+      "noteZh": "声明 header-only C++11 库及其覆盖范围"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L30-L36",
+      "noteZh": "测试与文档脚本放在独立 dsp-doc 仓库"
+    },
+    {
+      "field": "pros[2]",
+      "source": "CMakeLists.txt#L3-L4",
+      "noteZh": "只定义 INTERFACE 目标并暴露 include 目录"
+    },
+    {
+      "field": "cons[0]",
+      "source": "CMakeLists.txt#L3-L5",
+      "noteZh": "只暴露 include 目录，仓库无 examples/main/test"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "C++11、header-only，仓库仅 include/signalsmith-dsp 九个转发头与根目录同名实现头，CMake 目标为 INTERFACE、无编译产物。README 未声明采样率、位深、最大 FFT 尺寸或实时延迟指标，这些由调用方模板参数决定。没有 examples/tests/main，也没有 WAV/MP3 输出代码，出样需自写 harness 并另接 libsndfile 或 ffmpeg。MIT 许可、282 stars；能力上限取决于你怎样组合 FFT/滤波/延迟，而非库自带管线。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "无音频输出"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "纯头文件：include 即用，无需链接任何库",
+    "零第三方依赖：CMake 只建 INTERFACE 目标",
+    "九类模块：FFT、滤波、频谱、重采样、延迟、包络等",
+    "MIT 许可：可修改可商用，保留版权声明即可"
+  ],
+  "limits": [
+    "仓库内没有 examples/、没有 main、没有测试，要出样必须自写 C++ harness（目录仅有 include 与头文件）",
+    "README 仅 40 行，无版本化 API 文档，细节只能跳转官网 Doxygen（README.md#L4-L6）",
+    "音频参数完全由调用方决定，库不提供默认渲染管线、采样率或位深约定（README.md#L9-L24）",
+    "include/signalsmith-dsp/*.h 只是转发到仓库根的同名头文件，包含路径要同时暴露根目录与 include",
+    "编译需 -std=c++11 且自己接 libsndfile/ffmpeg 才能落 wav，仓库本身不产音频"
+  ],
+  "signatureZh": "C++11 头文件 DSP 库：FFT、滤波、延迟积木",
+  "chooseWhenZh": "要把轻量、零依赖的 C++ DSP 积木嵌进自有插件或引擎的开发者。",
+  "avoidWhenZh": "仓库内没有 examples/、没有 main、没有测试，要出样必须自写 C++ harness（目录仅有 include 与头文件）",
+  "contrastWith": [
+    "cycfi__q",
+    "Orastron__brickworks"
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "id": "KinWaiCheuk__nnAudio",
+  "taglineZh": "1D 卷积算可微 STFT 的 PyTorch 特征库",
+  "summaryZh": "nnAudio 把 STFT、Mel、CQT/VQT、Gammatone 与 Griffin-Lim 做成 PyTorch 的 1D 卷积层：傅里叶基即卷积核，因此特征提取器可微、可训练，能嵌进网络边训练边算谱。它只依赖 numpy/scipy/torch，Windows 上没有 torchaudio 的 sox 问题，pip 装完即用，GPU 下明显快于 CPU 版 librosa。适合可学习前端与批量特征提取。短板是维护：作者已迁 nnAudio2，本仓库只留 0.3.4 旧版。",
+  "whatItMakes": [
+    {
+      "type": "GPU 频谱张量",
+      "exampleZh": "STFT(n_fft=2048, hop_length=512) 一次算出整批音频的复数谱",
+      "strength": "核心能力"
+    },
+    {
+      "type": "可训练特征前端",
+      "exampleZh": "把 Mel/CQT 层放进模型，让卷积核随反向传播更新",
+      "strength": "核心能力"
+    },
+    {
+      "type": "多分辨率时频表示",
+      "exampleZh": "CQT/VQT 给对数频率轴，适合音乐音高分析",
+      "strength": "核心能力"
+    },
+    {
+      "type": "相位重建",
+      "exampleZh": "Griffin-Lim 从幅度谱迭代估相位，可用 torchaudio 保存为 wav",
+      "strength": "进阶能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "训练时的实时特征",
+      "whoZh": "音频深度学习研究者",
+      "whyZh": "特征层跟着模型在 GPU 上算，省掉预处理落盘与 IO",
+      "deliverableZh": "模型与特征张量",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "可学习前端研究",
+      "whoZh": "论文作者",
+      "whyZh": "傅里叶核可训练，便于做端到端对比实验",
+      "deliverableZh": "消融结果",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "Windows 批量特征提取",
+      "whoZh": "数据工程",
+      "whyZh": "不依赖 sox，torch 已装好即可跑",
+      "deliverableZh": "npy 特征文件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "直接出音频成品",
+      "whoZh": "音乐创作者",
+      "whyZh": "只输出张量，没有合成/渲染链路，出音频要另接声码器",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "卷积即傅里叶",
+      "descZh": "STFT 写成 1D 卷积，核可训练"
+    },
+    {
+      "titleZh": "八类特征",
+      "descZh": "STFT/Mel/CQT/VQT 等八类"
+    },
+    {
+      "titleZh": "Win 友好",
+      "descZh": "只依赖 torch，绕开 sox 依赖"
+    },
+    {
+      "titleZh": "GPU 加速",
+      "descZh": "批量前向，峰值 1931 MiB"
+    },
+    {
+      "titleZh": "API 文档",
+      "descZh": "API 文档与论文齐全，附对照表"
+    }
+  ],
+  "ceilingsZh": "它不固定采样率：STFT/Mel 等层的 sr 由调用参数传入，仓库没有默认值也没有上限，这点与生成类仓库不同。可调上限在参数里：n_fft、hop_length、n_mels、fmin/fmax、CQT 的 bins_per_octave 都由调用者决定；README 只声明 PyTorch >= 1.6.0（Griffin-Lim 需 1.6+），以及跑单元测试至少需要 1931 MiB 显存。输出是 float 张量（复数谱或幅度谱），位深概念不适用，落盘与否由你决定。0.3.4 版没有流式/分块接口，长音频要自己切窗；也没有内置多通道（立体声）下混逻辑，多声道需先自行处理。",
+  "workflowZh": "四步：pip 装 nnaudio → 读 wav 成张量 → 调 STFT/CQT 层 → 存 npy 或接 Griffin-Lim 回音频",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "pip install nnaudio==0.3.4，或 pip install git+...#subdirectory=Installation",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "读音频",
+      "detailZh": "soundfile 读 wav 后 torch.from_numpy，必要时 resample 到目标 sr",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "算特征",
+      "detailZh": "from nnAudio.features.stft import STFT; STFT(sr=44100, n_fft=2048, hop_length=512)(x)",
+      "effortZh": "秒级"
+    },
+    {
+      "stepZh": "落盘",
+      "detailZh": "np.save 存 npy，matplotlib 出 png；要音频则接 Griffin-Lim + torchaudio.save",
+      "effortZh": "1–2 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "pytorch__audio",
+      "whenZh": "要完整 torchaudio 生态（IO、重采样、预训练模型）且有 Linux/conda 选 torchaudio；只要 Windows 上能 pip 装的可微谱选 nnAudio",
+      "adviceZh": "要完整 torchaudio 生态（IO、重采样、预训练模型）且有 Linux/conda 选 torchaudio；只要 Windows 上能 pip 装的可微谱选 nnAudio"
+    },
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "要 C 级速度、几十种特征且不做端到端训练选 audioFlux；要把特征层嵌进 PyTorch 模型选 nnAudio",
+      "adviceZh": "要 C 级速度、几十种特征且不做端到端训练选 audioFlux；要把特征层嵌进 PyTorch 模型选 nnAudio"
+    },
+    {
+      "vs": "MTG__essentia",
+      "whenZh": "要做音乐信息检索（调性、节拍、响度）选 Essentia；只做时频表示与可微前端选 nnAudio",
+      "adviceZh": "要做音乐信息检索（调性、节拍、响度）选 Essentia；只做时频表示与可微前端选 nnAudio"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L24",
+      "noteZh": "说明用 PyTorch 卷积网络做后端，可边训练边生成谱，傅里叶核可训练"
+    },
+    {
+      "field": "featureCallouts[2]",
+      "source": "README.md#L27",
+      "noteZh": "指出 torchaudio 在 Windows 因 sox 难装，nnAudio 只依赖 PyTorch 更兼容"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L30-L34",
+      "noteZh": "两种安装方式：git+...#subdirectory=Installation 或 pip install nnaudio==0.3.4"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L93",
+      "noteZh": "跑单元测试至少需 1931 MiB 显存；说明 GPU 内存开销基线"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L1-L8",
+      "noteZh": "提示已有 nnAudio2 新版本并由他人实验室维护"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L10-L21",
+      "noteZh": "公开招募维护者，原作者不再做常规 code review"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "它不固定采样率：STFT/Mel 等层的 sr 由调用参数传入，仓库没有默认值也没有上限，这点与生成类仓库不同。可调上限在参数里：n_fft、hop_length、n_mels、fmin/fmax、CQT 的 bins_per_octave 都由调用者决定；README 只声明 PyTorch >= 1.6.0（Griffin-Lim 需 1.6+），以及跑单元测试至少需要 1931 MiB 显存。输出是 float 张量（复数谱或幅度谱），位深概念不适用，落盘与否由你决定。0.3.4 版没有流式/分块接口，长音频要自己切窗；也没有内置多通道（立体声）下混逻辑，多声道需先自行处理。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "npy",
+      "png",
+      "无音频输出"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "卷积即傅里叶：STFT 写成 1D 卷积，核可训练",
+    "八类特征：STFT/Mel/CQT/VQT 等八类",
+    "Win 友好：只依赖 torch，绕开 sox 依赖",
+    "GPU 加速：批量前向，峰值 1931 MiB",
+    "API 文档：API 文档与论文齐全，附对照表"
+  ],
+  "limits": [
+    "README 开头提示作者已转向 nnAudio2，本仓库只维护旧版，长期不再加新特征",
+    "README 第 10–14 行公开招募维护者，issue 响应没有保障",
+    "仓库根目录不能直接 pip install，必须带 #subdirectory=Installation，第一次装很容易踩坑",
+    "输出只有张量与图，没有音频回写路径（GriffinLim 也只回张量），出音频样例要自己接 soundfile",
+    "pip install 时若不写 #subdirectory=Installation 会报找不到 setup.py",
+    "README 的 GPU 内存表写测试峰值 1931 MiB，长音频 + 大 n_fft 会成倍上涨，8GB 卡要控制 batch",
+    "仓库 48.8 MB 里大半是文档图片，源码在 Installation/nnAudio 下，别在根目录找模块"
+  ],
+  "signatureZh": "1D 卷积算可微 STFT 的 PyTorch 特征库",
+  "chooseWhenZh": "要在训练循环里实时算 STFT/CQT 特征、又不想在 Windows 上折腾 torchaudio/sox 的人",
+  "avoidWhenZh": "README 开头提示作者已转向 nnAudio2，本仓库只维护旧版，长期不再加新特征",
+  "contrastWith": [
+    "pytorch__audio",
+    "libAudioFlux__audioFlux"
+  ]
+}

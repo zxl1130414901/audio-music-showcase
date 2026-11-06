@@ -1,0 +1,189 @@
+{
+  "id": "pkalogiros__AudioMass",
+  "taglineZh": "纯浏览器波形编辑器，多轨剪辑与 MP3 导出",
+  "summaryZh": "AudioMass 是纯前端波形编辑器，用 WaveSurfer 解码、WebAudio 处理。打开页面即可裁切、静音、淡入淡出、EQ、压缩与 LUFS 计量；2024 年后加入多轨：叠轨、拖 clip、交叉淡化、录到指定通道、整体 bounce。启动只要 python audiomass-server.py 或 go run，端口 5055；导出支持 mp3/flac/wav，可选位深、dither 与只导选区。它没有 CLI 和服务端批处理，长文件整段进内存。",
+  "whatItMakes": [
+    {
+      "type": "波形编辑",
+      "exampleZh": "裁切、静音、淡入淡出、EQ、压缩与 LUFS 计量",
+      "strength": "核心能力"
+    },
+    {
+      "type": "多轨编排",
+      "exampleZh": "叠轨、拖 clip、重叠交叉淡化与整体 bounce",
+      "strength": "核心能力"
+    },
+    {
+      "type": "格式导出",
+      "exampleZh": "导出 mp3/flac/wav，可选码率、压缩级与位深",
+      "strength": "可用"
+    },
+    {
+      "type": "自动批处理",
+      "exampleZh": "无 CLI/API，只能人工在浏览器里操作",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "快速剪辑",
+      "whoZh": "播客与自媒体作者",
+      "whyZh": "剪掉口误、静音段并直接导出 mp3",
+      "deliverableZh": "剪辑后的 mp3/wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "多轨拼合",
+      "whoZh": "播客制作人",
+      "whyZh": "叠人声与音乐，交叉淡化后 bounce 成单文件",
+      "deliverableZh": "拼好的单轨混音",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "响度粗校",
+      "whoZh": "独立音乐人",
+      "whyZh": "用 LUFS 表看电平并做简单 EQ/压缩",
+      "deliverableZh": "电平修过的 wav",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "批量处理",
+      "whoZh": "有几十个文件要处理的人",
+      "whyZh": "没有脚本接口，只能逐个手点",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "零安装起服务",
+      "descZh": "python/go 起静态服务即用"
+    },
+    {
+      "titleZh": "多轨模式",
+      "descZh": "叠轨、拖 clip、交叉淡化与 bounce"
+    },
+    {
+      "titleZh": "三种导出",
+      "descZh": "mp3/flac/wav 可选参数"
+    },
+    {
+      "titleZh": "选区导出",
+      "descZh": "只导选中片段，省去二次裁切"
+    },
+    {
+      "titleZh": "LUFS 表",
+      "descZh": "实时看响度并做电平粗校"
+    }
+  ],
+  "ceilingsZh": "可导入 aac/aif/aiff/flac/m4a/mp3/oga/ogg/opus/wav/wave/webm 11 类扩展名；mp3 码率可选 128/192/256 kbps，flac 压缩级 0–8，wav 位深 16/24/32-bit float 并可开 TPDF dither，声道 mono/stereo，可整段或只导选区。wav 标签标注 44100 Hz，其余采样率跟随源文件；实际重采样与声道处理都在浏览器内完成。最大文件长度、轨数与并发录音通道 README 未声明，实际受 AudioBuffer 内存与标签页限制。",
+  "workflowZh": "三步：起服务 → 编辑或多轨拼接 → 导出",
+  "workflow": [
+    {
+      "stepZh": "起服务",
+      "detailZh": "在 src 目录跑 python audiomass-server.py，浏览器开 localhost:5055",
+      "effortZh": "2 分钟"
+    },
+    {
+      "stepZh": "编辑",
+      "detailZh": "拖入音频，裁切/加效果，多轨时叠轨并交叉淡化",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "在导出面板选 mp3/flac/wav、码率或位深，决定整段或选区",
+      "effortZh": "5 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "kvoltmer__Audionaut",
+      "whenZh": "要 JUCE 桌面多轨编辑器与 MCP 代理选 Audionaut；只想在浏览器里快速剪一段选 AudioMass",
+      "adviceZh": "要 JUCE 桌面多轨编辑器与 MCP 代理选 Audionaut；只想在浏览器里快速剪一段选 AudioMass"
+    },
+    {
+      "vs": "mlm-games__yadaw",
+      "whenZh": "要完整 DAW 时间线与工程管理选 yadaw；要零安装波形剪切片选 AudioMass",
+      "adviceZh": "要完整 DAW 时间线与工程管理选 yadaw；要零安装波形剪切片选 AudioMass"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L2-L9",
+      "noteZh": "定位是浏览器内波形编辑器，并说明多轨能力。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L18-L19",
+      "noteZh": "README 给了 python 与 go 两种起服务方式，端口 5055。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L9-L9",
+      "noteZh": "多轨能力的完整描述。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "src/ui.js#L325-L355",
+      "noteZh": "导出面板把格式、码率、位深、选区与 dither 全部传给引擎。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "src/engine.js#L38-L38",
+      "noteZh": "可导入扩展名清单。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L15-L19",
+      "noteZh": "README 只说明怎么启动，没有任何 CLI 或 API 说明。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "src/engine.js#L69-L69",
+      "noteZh": "整段音频以 AudioBuffer 存在内存里，长文件受内存限制。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L27-L28",
+      "noteZh": "README 只补了打包命令，缺功能与参数文档。"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "可导入 aac/aif/aiff/flac/m4a/mp3/oga/ogg/opus/wav/wave/webm 11 类扩展名；mp3 码率可选 128/192/256 kbps，flac 压缩级 0–8，wav 位深 16/24/32-bit float 并可开 TPDF dither，声道 mono/stereo，可整段或只导选区。wav 标签标注 44100 Hz，其余采样率跟随源文件；实际重采样与声道处理都在浏览器内完成。最大文件长度、轨数与并发录音通道 README 未声明，实际受 AudioBuffer 内存与标签页限制。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "mp3",
+      "flac"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "零安装起服务：python/go 起静态服务即用",
+    "多轨模式：叠轨、拖 clip、交叉淡化与 bounce",
+    "三种导出：mp3/flac/wav 可选参数",
+    "选区导出：只导选中片段，省去二次裁切",
+    "LUFS 表：实时看响度并做电平粗校"
+  ],
+  "limits": [
+    "只有浏览器 GUI，没有 CLI/API，批量处理必须人工点（README 全篇仅给启动方式，README.md#L15-L19）",
+    "整段音频解码进内存的 AudioBuffer，长素材受浏览器内存与标签页限制（src/engine.js#L69）",
+    "README 只讲怎么起服务和 uglify 打包，缺功能、参数与快捷键说明（README.md#L27-L28）",
+    "录音通道要浏览器麦克风授权，非 localhost 的 http 页面下 getUserMedia 会被禁",
+    "MP3 导出默认码率 128 kbps，要高码率得在导出面板手动选",
+    "依赖 python/go 起静态服务，直接 file:// 打开 index.html 会因跨域取不到 wasm"
+  ],
+  "signatureZh": "纯浏览器波形编辑器，多轨剪辑与 MP3 导出",
+  "chooseWhenZh": "要在 Windows 上快速剪一段音频、加 EQ/压缩并导出 MP3，且不想装 DAW 的人",
+  "avoidWhenZh": "只有浏览器 GUI，没有 CLI/API，批量处理必须人工点（README 全篇仅给启动方式，README.md#L15-L19）",
+  "contrastWith": [
+    "kvoltmer__Audionaut",
+    "mlm-games__yadaw"
+  ]
+}

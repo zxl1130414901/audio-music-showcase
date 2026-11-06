@@ -1,0 +1,202 @@
+{
+  "id": "alibaba__unified-audio",
+  "taglineZh": "用 AR 语言模型加双流 H-Codec 统一九类语音任务",
+  "summaryZh": "阿里通义 QuarkAudio 的统一音频工程，把语音增强、修复、目标说话人提取、分离、编辑、转换与语言查询分离收进 AR 语言模型加双流 H-Codec 的离散 token 框架，解码端再用生成模型还原波形。HCodec-2.0 支持 48 kHz 全带、12.5 Hz 帧率、16 层码本，Spatial 版做双声道上混。它是语音处理工程而非通用音乐模型：三个子项目各自环境与权重，TTA 仍标 Developing。好处是编解码与分离细节完整，适合复现与二次训练；代价是没有统一入口。",
+  "whatItMakes": [
+    {
+      "type": "离散音频 token",
+      "exampleZh": "用 HCodec-2.0 把 48 kHz 单声道 wav 编成 16 层、每层 1024 大小的码本 token，并可解码回波形",
+      "strength": "核心能力"
+    },
+    {
+      "type": "增强/分离语音",
+      "exampleZh": "UniSE 的 se/tse/ss 模式在 5 秒切片上输出降噪人声或指定说话人音轨",
+      "strength": "核心能力"
+    },
+    {
+      "type": "双耳空间音频",
+      "exampleZh": "HCodec-Spatial 把单声道上混成双声道并附带方位角参数",
+      "strength": "进阶能力"
+    },
+    {
+      "type": "文本生成音频",
+      "exampleZh": "TTA 分支没有代码与权重，README 标 Developing，本条无法交付",
+      "strength": "未交付"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "语音增强论文复现",
+      "whoZh": "做 SE/TSE 研究的学生",
+      "whyZh": "UniSE 给了 5 秒切片、80 维 mel、12 层 AR-LM 的完整配置，se/tse/ss 三种模式各有一套 test_kwargs",
+      "deliverableZh": "增强后的 wav 与指标对比表",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "音频编解码研究",
+      "whoZh": "码本/声码器方向工程师",
+      "whyZh": "HCodec 从 1.0 到 2.0 再到 Spatial 四个版本同仓，能横向比较 16 k 与 48 k、单声道与双耳",
+      "deliverableZh": "重建 wav、token 序列",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "语音数据清洗",
+      "whoZh": "数据工程团队",
+      "whyZh": "SR/SE 分支可直接吃噪声数据出干净语音，不需要训练",
+      "deliverableZh": "清洗后的训练集",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "目标说话人提取",
+      "whoZh": "会议/播客转写团队",
+      "whyZh": "TSE 模式用 5 秒 enroll 音频锁定说话人，适合长录音按人切轨",
+      "deliverableZh": "按人分离的音轨",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "唱歌/音乐生成",
+      "whoZh": "音乐创作者",
+      "whyZh": "TTA 未发布，仓库也没有音乐数据集或乐器建模代码，用它出音乐素材没有路径",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "双流码本",
+      "descZh": "语义+声学双路 RVQ，16 层码本 1024"
+    },
+    {
+      "titleZh": "48kHz 全带",
+      "descZh": "48 kHz 全带，帧率固定 12.5 Hz"
+    },
+    {
+      "titleZh": "单模型多任务",
+      "descZh": "同一 AR-LM 覆盖九类语音任务"
+    },
+    {
+      "titleZh": "空间上混",
+      "descZh": "Spatial 输出双耳音频与方位角"
+    },
+    {
+      "titleZh": "权重需自备",
+      "descZh": "ckpt 目录为空，权重需另找"
+    }
+  ],
+  "ceilingsZh": "编码上限是 HCodec-2.0 的 48 kHz 单声道、12.5 Hz 帧率、16 层码本 × 1024、编码器 1536 维 24 层，重建全带但只有单通道；双声道与方位角只有 Spatial 版才有。UniSE 的输入钉死 5.0 秒切片（cut_duration [5.0, 5.0]）、80 维 mel、hidden 512、12 层 AR-LM，任务只有 se/tse/ss，由 test_kwargs.mode 切换；训练集路径是 /voxbox 这类绝对路径，无法直接复训。音乐能力为 0，README 的 TTA 仍是 Developing。权重体积 README 未声明（批次表记 6GB+），显存也未声明；8GB 卡跑 48 kHz 编解码尚可，跑 AR-LM 训练不够。",
+  "workflowZh": "五步：拉 HCodec/UniSE → 建 Python 3.10 环境 → 装各自 requirements → 放 ckpt 与 HF 权重 → 跑 audio_tokenizer.py 或 test.py 出 wav",
+  "workflow": [
+    {
+      "stepZh": "选子项目",
+      "detailZh": "进入 QuarkAudio-HCodec 或 QuarkAudio-UniSE，两者依赖与权重都不共享",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "建环境",
+      "detailZh": "conda create -n hcodec python=3.10 后 pip install -r requirements.txt，PyPI 走清华源",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "补权重",
+      "detailZh": "把 large_12.5hz_weights.pt 放到 HCodec-2.0/ckpt/，UniSE 还要 Spark-TTS-0.5B 的 BiCodec 权重",
+      "effortZh": "6GB+ 权重，镜像下 20 分钟起"
+    },
+    {
+      "stepZh": "跑推理",
+      "detailZh": "HCodec 用 audio_tokenizer.py 的 encode/decode；UniSE 改 conf/config.yaml 的 data_src_dir 后跑 test.py",
+      "effortZh": "首次加载 3–5 分钟"
+    },
+    {
+      "stepZh": "验收听感",
+      "detailZh": "用 ffprobe 看采样率是否为 48 kHz，再跑 verify_audio.ps1 确认非静音",
+      "effortZh": "1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "要文本直接出音效/音乐选 AudioLDM；要语音编解码、增强、分离或做码本实验选 unified-audio，它没有可用的文生音频分支",
+      "adviceZh": "要文本直接出音效/音乐选 AudioLDM；要语音编解码、增强、分离或做码本实验选 unified-audio，它没有可用的文生音频分支"
+    },
+    {
+      "vs": "hkchengrex__MMAudio",
+      "whenZh": "要给视频配音、做多模态音画同步选 MMAudio；只处理纯语音且在乎 48 kHz 重建质量选 unified-audio",
+      "adviceZh": "要给视频配音、做多模态音画同步选 MMAudio；只处理纯语音且在乎 48 kHz 重建质量选 unified-audio"
+    },
+    {
+      "vs": "Anjok07__ultimatevocalremovergui",
+      "whenZh": "只想把人声/伴奏分开出成品选 UVR 的 GUI；要研究分离模型结构与 token 表示才选 unified-audio",
+      "adviceZh": "只想把人声/伴奏分开出成品选 UVR 的 GUI；要研究分离模型结构与 token 表示才选 unified-audio"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L24-L31",
+      "noteZh": "Key Highlights 列出 Multitask Support：SE/SR/TSE/SS/EDIT/VC/LASS/TTA 同一模型"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "QuarkAudio-HCodec/HCodec-2.0/conf/large_12.5hz_config.yaml#L1-L29",
+      "noteZh": "48 kHz、12.5 Hz 帧率、16 层码本 × 1024、编码器 1536 维 24 层"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "QuarkAudio-UniSE/conf/config.yaml#L16-L20",
+      "noteZh": "cut_duration 与 enroll_duration 都是 5.0 秒，训练集是绝对路径 .scp"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L50",
+      "noteZh": "TTA 一栏标 Developing，说明文生音频尚未交付"
+    },
+    {
+      "field": "workflow[2]",
+      "source": "QuarkAudio-HCodec/HCodec-2.0/audio_tokenizer.py#L87",
+      "noteZh": "默认加载 ./ckpt/large_12.5hz_weights.pt，而仓库内无 ckpt 目录"
+    },
+    {
+      "field": "useCases[4]",
+      "source": "README.md#L24-L31",
+      "noteZh": "任务表里没有任何音乐/乐器生成项，音乐场景不适用"
+    }
+  ],
+  "blockerZh": "根目录 environment.yml 只列 linux-64 包（_libgcc_mutex、pytorch-cuda 等），Windows conda 求解直接失败；requirements.txt 锁 sox==1.5.0、pysndfx、visqol、funasr，Python 3.13 与 Windows 都没有可用轮子；三个子项目的 ckpt 目录为空，48 kHz 权重还要另找。",
+  "whatItWouldNeed": "WSL2/Ubuntu 或手改 environment.yml 去掉 linux-64 段；Python 3.10（本机只有 3.13 venv，需另建）；6GB+ 权重经 hf-mirror 下载；UniSE 另需 Spark-TTS-0.5B 的 BiCodec 码本权重。",
+  "ceilingZh": "编码上限是 HCodec-2.0 的 48 kHz 单声道、12.5 Hz 帧率、16 层码本 × 1024、编码器 1536 维 24 层，重建全带但只有单通道；双声道与方位角只有 Spatial 版才有。UniSE 的输入钉死 5.0 秒切片（cut_duration [5.0, 5.0]）、80 维 mel、hidden 512、12 层 AR-LM，任务只有 se/tse/ss，由 test_kwargs.mode 切换；训练集路径是 /voxbox 这类绝对路径，无法直接复训。音乐能力为 0，README 的 TTA 仍是 Developing。权重体积 README 未声明（批次表记 6GB+），显存也未声明；8GB 卡跑 48 kHz 编解码尚可，跑 AR-LM 训练不够。",
+  "capabilities": {
+    "maxDurationZh": "5.0 秒",
+    "formatsZh": [
+      "wav",
+      "token",
+      "npy"
+    ],
+    "sampleRateZh": "48 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "双流码本：语义+声学双路 RVQ，16 层码本 1024",
+    "48kHz 全带：48 kHz 全带，帧率固定 12.5 Hz",
+    "单模型多任务：同一 AR-LM 覆盖九类语音任务",
+    "空间上混：Spatial 输出双耳音频与方位角",
+    "权重需自备：ckpt 目录为空，权重需另找"
+  ],
+  "limits": [
+    "README 表格里 TTA 一栏标 Developing，文生音频这一半能力在本仓库并不存在，category 标音乐生成与实际交付不符",
+    "根目录 environment.yml 的依赖全是 linux-64 构建（_libgcc_mutex、pytorch-cuda 等），Windows 上 conda 直接解不出来",
+    "requirements.txt 死锁 sox==1.5.0、pysndfx、visqol、funasr 等包，Python 3.13 与 Windows 均无可用轮子",
+    "三个子项目各自要 6GB+ 权重（HCodec-2.0 的 ./ckpt、UniSE 的 BiCodec、TokenFlow），仓库里 ckpt 目录是空的，得自己去 HF 找",
+    "照着 README 跑 conda env create 会在 Windows 上卡在 linux-64 求解；必须换 WSL2/Ubuntu 或逐条改 environment.yml",
+    "QuarkAudio-HCodec 里 HCodec 实际是 HCodec 家族的多个版本（1.0/1.5/2.0/Spatial），README 默认指向 2.0 的 ckpt 路径，但该目录不存在",
+    "UniTok-audio 目录只放了示意图，没有可运行代码；别把它当成可复现的训练工程"
+  ],
+  "signatureZh": "用 AR 语言模型加双流 H-Codec 统一九类语音任务",
+  "chooseWhenZh": "要在 Linux 上做语音编解码/增强/分离的算法复现或二次训练的研究者，而不是想直接出音乐的人",
+  "avoidWhenZh": "README 表格里 TTA 一栏标 Developing，文生音频这一半能力在本仓库并不存在，category 标音乐生成与实际交付不符",
+  "contrastWith": [
+    "haoheliu__AudioLDM",
+    "hkchengrex__MMAudio"
+  ]
+}

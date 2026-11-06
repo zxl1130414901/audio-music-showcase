@@ -1,0 +1,177 @@
+{
+  "id": "schellingb__TinySoundFont",
+  "taglineZh": "单文件 sf2 合成器，加载音源就能发声",
+  "summaryZh": "TinySoundFont 把 SoundFont2 合成器压进一个 tsf.h：加载 sf2、设输出格式与采样率、note_on 后调用 tsf_render_short 或 tsf_render_float 就能拿到 PCM。仓库自带 florestan-subset.sf2，example1-3 覆盖最小发声、实时播放与 MIDI。没有外部音频依赖、MIT 许可，适合嵌进游戏或小工具；但它只负责渲染，不写 wav、也不解析 MIDI。",
+  "whatItMakes": [
+    {
+      "type": "sf2 渲染 PCM",
+      "exampleZh": "加载 florestan-subset.sf2 后 note_on 出缓冲",
+      "strength": "核心能力"
+    },
+    {
+      "type": "游戏 MIDI 音源",
+      "exampleZh": "用少数 sf2 替代大量 wav 素材",
+      "strength": "核心能力"
+    },
+    {
+      "type": "简易 MIDI 播放器",
+      "exampleZh": "接 tml.h 播 venture.mid",
+      "strength": "附加能力"
+    },
+    {
+      "type": "离线 wav",
+      "exampleZh": "tsf_render_float 接自写 wav 写入器",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "游戏里播放 MIDI 风格音乐与音效",
+      "whoZh": "独立游戏或工具开发者",
+      "whyZh": "一个头文件、无外部音频库，sf2 可替换",
+      "deliverableZh": "内嵌合成器的可执行程序",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "把 MIDI 文件离线渲染成 wav",
+      "whoZh": "做音乐素材或测试数据的工程师",
+      "whyZh": "tsf_render_float 逐块出 PCM，自接 dr_wav",
+      "deliverableZh": "wav 文件",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "在嵌入式/无音频框架环境发声",
+      "whoZh": "嵌入式或跨平台 C 开发者",
+      "whyZh": "只依赖 fopen/math/malloc，可换自定义内存",
+      "deliverableZh": "设备固件中的合成模块",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "学习 SoundFont2 合成原理",
+      "whoZh": "音频学生或引擎开发者",
+      "whyZh": "单文件实现完整，注释即 API 文档",
+      "deliverableZh": "可调试的合成器",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "单头文件",
+      "descZh": "定义宏后 include 即用"
+    },
+    {
+      "titleZh": "采样率回退",
+      "descZh": "samplerate<1 自动用 44100"
+    },
+    {
+      "titleZh": "两种 PCM",
+      "descZh": "16-bit 与 float 两种输出"
+    },
+    {
+      "titleZh": "自带示例",
+      "descZh": "含 sf2、MIDI 与三个例子"
+    }
+  ],
+  "ceilingsZh": "tsf_set_output 在 samplerate 小于 1 时回退 44100 Hz（tsf.h 第 1531 行），tsf_load_memory 初始化同样用 44100（第 1440 行）；tsf_render_short 出 16-bit、tsf_render_float 出 32-bit float（第 190-196 行），输出模式支持立体声交织、去交织与单声道（第 120-124 行）。复音上限通过 tsf_set_max_voices 在运行期设定，源码未给默认上限，属于未声明。音质完全取决于所加载的 sf2，仓库只带 florestan-subset.sf2 子集音源；无 GPU/权重/显存概念。",
+  "workflowZh": "四步：集成 tsf.h → 加载 sf2 → 设输出与 note_on → 渲染并接写入器",
+  "workflow": [
+    {
+      "stepZh": "集成头文件",
+      "detailZh": "工程里加 #define TSF_IMPLEMENTATION 与 #include \"tsf.h\"",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "加载并设输出",
+      "detailZh": "tsf_load_filename(\"x.sf2\")，tsf_set_output(f, TSF_STEREO_INTERLEAVED, 44100, 0)",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "触发与渲染",
+      "detailZh": "tsf_note_on 后按块调用 tsf_render_short/float",
+      "effortZh": "30-60 分钟"
+    },
+    {
+      "stepZh": "写文件",
+      "detailZh": "接 dr_wav 或自写 RIFF 头，把渲染缓冲落成 wav",
+      "effortZh": "30-60 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "FluidSynth__fluidsynth",
+      "whenZh": "要完整 MIDI 2.0/音序器与专业 sf2 支持选 FluidSynth；要单头文件嵌小工程选 TinySoundFont。",
+      "adviceZh": "要完整 MIDI 2.0/音序器与专业 sf2 支持选 FluidSynth；要单头文件嵌小工程选 TinySoundFont。"
+    },
+    {
+      "vs": "surge-synthesizer__surge",
+      "whenZh": "要带 GUI 的完整软件合成器与音色库选 Surge；只要 sf2 渲染内核选 TinySoundFont。",
+      "adviceZh": "要带 GUI 的完整软件合成器与音色库选 Surge；只要 sf2 渲染内核选 TinySoundFont。"
+    },
+    {
+      "vs": "SamiPerttu__fundsp",
+      "whenZh": "要在 Rust 里搭自定义 DSP 图选 fundsp；要在 C/C++ 里直接播 sf2 选 TinySoundFont。",
+      "adviceZh": "要在 Rust 里搭自定义 DSP 图选 fundsp；要在 C/C++ 里直接播 sf2 选 TinySoundFont。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "README.md#L8",
+      "noteZh": "单 C 头文件、易于集成"
+    },
+    {
+      "field": "pros[3]",
+      "source": "tsf.h#L190-L191",
+      "noteZh": "short 与 float 两种渲染输出"
+    },
+    {
+      "field": "cons[0]",
+      "source": "examples/example2.c#L29",
+      "noteZh": "示例走 miniaudio 实时播放而非写文件"
+    },
+    {
+      "field": "cons[1]",
+      "source": "examples/example3.c#L7",
+      "noteZh": "MIDI 播放依赖 tml.h"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "tsf.h#L1531",
+      "noteZh": "采样率小于 1 时回退 44100"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "tsf_set_output 在 samplerate 小于 1 时回退 44100 Hz（tsf.h 第 1531 行），tsf_load_memory 初始化同样用 44100（第 1440 行）；tsf_render_short 出 16-bit、tsf_render_float 出 32-bit float（第 190-196 行），输出模式支持立体声交织、去交织与单声道（第 120-124 行）。复音上限通过 tsf_set_max_voices 在运行期设定，源码未给默认上限，属于未声明。音质完全取决于所加载的 sf2，仓库只带 florestan-subset.sf2 子集音源；无 GPU/权重/显存概念。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "单头文件：定义宏后 include 即用",
+    "采样率回退：samplerate<1 自动用 44100",
+    "两种 PCM：16-bit 与 float 两种输出",
+    "自带示例：含 sf2、MIDI 与三个例子"
+  ],
+  "limits": [
+    "库只渲染 PCM 缓冲、不写文件；examples 用 miniaudio 实时播放（example2.c 第 29 行 ma_device_type_playback），要 wav 得自己接 dr_wav 等写入器。",
+    "MIDI 文件播放示例依赖第三方 tml.h（example3.c 第 7-8 行）和仅作演示的 venture.mid，核心库本身不含 MIDI 解析器。",
+    "音色完全取决于外部 sf2，仓库只带一个子集音源；Windows 也没有预编译二进制，需要 MSVC 打开 examples.sln 自行编译。",
+    "tsf_set_output 的 samplerate 传 0 或负数才会回退 44100（tsf.h 第 1531 行），显式传错采样率会导致音高/时长不对。",
+    "examples 必须用 examples.sln 或对应平台的构建脚本编译，仓库不带可执行文件。",
+    "sf2 音源有独立授权，商用前要确认 soundfont 的 license。"
+  ],
+  "signatureZh": "单文件 sf2 合成器，加载音源就能发声",
+  "chooseWhenZh": "需要轻量 sf2 合成、在 C/C++ 小工程或游戏里播放 MIDI 的开发者。",
+  "avoidWhenZh": "库只渲染 PCM 缓冲、不写文件；examples 用 miniaudio 实时播放（example2.c 第 29 行 ma_device_type_playback），要 wav 得自己接 dr_wav 等写入器。",
+  "contrastWith": [
+    "FluidSynth__fluidsynth",
+    "surge-synthesizer__surge"
+  ]
+}

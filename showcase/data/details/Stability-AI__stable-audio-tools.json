@@ -1,0 +1,183 @@
+{
+  "id": "Stability-AI__stable-audio-tools",
+  "taglineZh": "Stable Audio 44.1kHz 立体声训练栈",
+  "summaryZh": "Stability AI 的音频生成工具链：用 JSON 配置组合 autoencoder、diffusion_cond、inpaint、lm 等模型，既能用 stable-audio-open-1.0 出 44.1kHz 立体声音效/氛围音乐，也能训练或 LoRA 微调。代价是权重 gated 需在 HF 接受条款、pyproject 锁 Python 3.10 与 torch 2.7.1，本机 3.13/2.6.0 要另起环境，flash-attn 仍需自行编译。",
+  "whatItMakes": [
+    {
+      "type": "文本生音效/音乐",
+      "exampleZh": "输入 prompt 与 seconds_total，生成 44.1kHz 立体声音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频续写与补全",
+      "exampleZh": "用 diffusion_cond_inpaint 在已有音频的遮罩区间续写",
+      "strength": "核心能力"
+    },
+    {
+      "type": "训练与微调",
+      "exampleZh": "按 JSON 配置从零训 autoencoder/diffusion，或加 LoRA 适配自有音色",
+      "strength": "核心能力"
+    },
+    {
+      "type": "Gradio 试听界面",
+      "exampleZh": "网页里调 prompt、时长与采样器参数并导出 wav",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "游戏/短视频音效铺底",
+      "whoZh": "独立开发者",
+      "whyZh": "44.1kHz 立体声可直接进剪辑时间线，Gradio 快速试听",
+      "deliverableZh": "wav 音效或氛围音乐",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "用自有素材微调音色",
+      "whoZh": "音频算法工程师",
+      "whyZh": "训练脚本与 LoRA 都在仓内，配置即实验记录",
+      "deliverableZh": "LoRA/checkpoint 与推理配置",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "研究扩散/条件音频模型",
+      "whoZh": "生成模型研究员",
+      "whyZh": "autoencoder、diffusion、inpaint、lm 四类模型共用一套接口",
+      "deliverableZh": "消融实验与生成样本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量生成免版税素材",
+      "whoZh": "内容创作者",
+      "whyZh": "权重许可允许商用（需遵守 Stability 社区许可），可脚本循环出样",
+      "deliverableZh": "一批 wav 素材",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "多模型类型",
+      "descZh": "一份配置驱动四类模型"
+    },
+    {
+      "titleZh": "立体声输出",
+      "descZh": "44.1kHz 双声道 DAC VAE"
+    },
+    {
+      "titleZh": "网页界面",
+      "descZh": "Gradio 一键起界面"
+    },
+    {
+      "titleZh": "uv 依赖锁",
+      "descZh": "pyproject 固定全部版本"
+    },
+    {
+      "titleZh": "LoRA 微调",
+      "descZh": "低秩适配自有音色"
+    }
+  ],
+  "ceilingsZh": "stable_audio_1_0.json 明写 sample_rate=44100、audio_channels=2、sample_size=4194304（约 95 秒@44.1kHz），模型为 DAC VAE（latent_dim=64、downsampling_ratio=1024）加 diffusion_cond；seconds_start/seconds_total 作为条件可指定时间段。Gradio 默认 --model-half=True，可把权重压到 fp16。README 未声明 stable-audio-open-1.0 的参数量、权重体积与显存下限；批次评估记录为 4.7GB / 1.1B（非 README 数据）。",
+  "workflowZh": "五步：装 uv → uv sync → 接受 HF 条款拿 Token → 下 4.7GB 权重 → run_gradio.py 或脚本推理",
+  "workflow": [
+    {
+      "stepZh": "装 uv",
+      "detailZh": "pip install uv，或直接用仓库的 uv.lock",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "装依赖",
+      "detailZh": "uv sync（推理）或 uv sync --extra train --extra ui",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "HF 授权",
+      "detailZh": "登录 HF，在 stabilityai/stable-audio-open-1.0 页面接受条款，导出 HF_TOKEN",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "下权重并起界面",
+      "detailZh": "HF_ENDPOINT=https://hf-mirror.com python run_gradio.py --pretrained-name stabilityai/stable-audio-open-1.0",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "出样",
+      "detailZh": "网页填 prompt 与 seconds_total，导出 output.wav",
+      "effortZh": "1–5 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "要现成音乐旋律与 MusicGen 系列选 audiocraft；要 44.1kHz 立体声音效与可训练工具链选 stable-audio-tools",
+      "adviceZh": "要现成音乐旋律与 MusicGen 系列选 audiocraft；要 44.1kHz 立体声音效与可训练工具链选 stable-audio-tools"
+    },
+    {
+      "vs": "lks-ai__ComfyUI-StableAudioSampler",
+      "whenZh": "想把 Stable Audio 接进 ComfyUI 工作流选那个封装；要 CLI、训练与 LoRA 选本仓",
+      "adviceZh": "想把 Stable Audio 接进 ComfyUI 工作流选那个封装；要 CLI、训练与 LoRA 选本仓"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L6-L23",
+      "noteZh": "定位为生成音频模型的训练与推理工具"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "stable_audio_tools/configs/model_configs/txt2audio/stable_audio_1_0.json#L2-L5",
+      "noteZh": "sample_rate 44100、audio_channels 2、sample_size 4194304"
+    },
+    {
+      "field": "cons",
+      "source": "pyproject.toml#L9-L29",
+      "noteZh": "requires-python >=3.10,<3.11，torch/torchaudio 固定 2.7.1"
+    },
+    {
+      "field": "blockerZh",
+      "source": "README.md#L40-L47",
+      "noteZh": "需在 HF 接受 stable-audio-open-1.0 条款后才能拉权重"
+    },
+    {
+      "field": "workflow",
+      "source": "README.md#L49-L70",
+      "noteZh": "run_gradio.py 与 --model-half 的启动方式"
+    }
+  ],
+  "blockerZh": "需 HF Token 同意 gated 条款，用户已决定不申请，因此按「需 Token」归档、不下载不绕过：stabilityai/stable-audio-open-1.0 在 HF 标记 gated=auto，必须登录并接受 Stability 许可后才能取权重；模型本体约 4.7 GB。仓库只提供 run_gradio.py 演示界面，没有开箱即用命令行。",
+  "whatItWouldNeed": "免费 HF Token + 在模型页接受 gated 条款（用户已决定不申请）；约 4.7 GB 权重落 _models；PyTorch ≥2.5（本机 2.6 满足）；8 GB 显存需 fp16。",
+  "ceilingZh": "stable_audio_1_0.json 明写 sample_rate=44100、audio_channels=2、sample_size=4194304（约 95 秒@44.1kHz），模型为 DAC VAE（latent_dim=64、downsampling_ratio=1024）加 diffusion_cond；seconds_start/seconds_total 作为条件可指定时间段。Gradio 默认 --model-half=True，可把权重压到 fp16。README 未声明 stable-audio-open-1.0 的参数量、权重体积与显存下限；批次评估记录为 4.7GB / 1.1B（非 README 数据）。",
+  "capabilities": {
+    "maxDurationZh": "约 95 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "多模型类型：一份配置驱动四类模型",
+    "立体声输出：44.1kHz 双声道 DAC VAE",
+    "网页界面：Gradio 一键起界面",
+    "uv 依赖锁：pyproject 固定全部版本",
+    "LoRA 微调：低秩适配自有音色"
+  ],
+  "limits": [
+    "权重 gated：README 明确要求先在 Hugging Face 接受 stable-audio-open-1.0 的条款才能拉取",
+    "pyproject 要求 Python >=3.10,<3.11，本机 Python 3.13 无法直接安装",
+    "pyproject 固定 torch==2.7.1/torchaudio==2.7.1，且 uv 的 cu126 索引只对 Linux x86_64 生效",
+    "README 推荐 Flash Attention 但未提供 Windows 轮子，要按上游仓库自行编译",
+    "HF 直连只通 HEAD 不通数据时必须设 HF_ENDPOINT=https://hf-mirror.com，并核对 4.7GB 权重是否下全",
+    "uv sync 默认不装 flash-attn，README 只说 recommended，缺它只是变慢不是跑不起来",
+    "run_gradio.py 的 --model-half 默认 True，改 False 会直接吃满显存"
+  ],
+  "signatureZh": "Stable Audio 44.1kHz 立体声训练栈",
+  "chooseWhenZh": "要 44.1kHz 立体声音效/氛围音乐，同时想微调或训练自有 Stable Audio 模型的人",
+  "avoidWhenZh": "权重 gated：README 明确要求先在 Hugging Face 接受 stable-audio-open-1.0 的条款才能拉取",
+  "contrastWith": [
+    "facebookresearch__audiocraft",
+    "lks-ai__ComfyUI-StableAudioSampler"
+  ]
+}

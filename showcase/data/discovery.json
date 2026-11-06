@@ -1,0 +1,1169 @@
+{
+  "meta": {
+    "generatedAt": "2026-11-06T18:00:00+08:00",
+    "titleZh": "按「你想做什么声音」选型",
+    "methodZh": "11 个场景来自音频生产的真实链路（配乐、音效、拟音、分轨、母带、剪辑、可视化、MIDI 渲染、交互装置、分析、训练数据），不沿用视频项目的 10 个场景。first 只取已在本机出样、或样例批次判为 A/B 档且不需 Token 的仓库（额外权重与工具链写在 whyZh）；仅产分析结果的场景已单独标注；需 HF Token 的 gated 仓库一律不进 first/quickPicks/constraints.fits。",
+    "disclaimerZh": "first 是「该场景下最省事且能出声」的选择，不代表音质最强；音质上限见各 details 的 ceilingsZh。权重 gated、需 HF Token 或需原生构建的，已在 whyZh 里写明代价。",
+    "tokenRuleZh": "tokenRequired=true 指权重为 Hugging Face gated，必须登录账号接受条款并配置 HF_TOKEN 才能下载；本机已决定不申请 Token，因此这类仓库不参与任何「本机可跑」的首选或快捷推荐，样例也不会产出。"
+  },
+  "scenarios": [
+    {
+      "id": "shortvideo-bgm",
+      "titleZh": "给短视频配 15–30 秒 BGM",
+      "descZh": "输入一句风格/情绪描述，直接生成可商用短视频的背景音乐，要求能控制时长、能批量换风格。",
+      "questionZh": "我只想写一句「lofi 钢琴、雨天、30 秒」，谁能直接给我 wav？",
+      "first": "facebookresearch__audiocraft",
+      "whyZh": "MusicGen 提供 300M/1.5B/3.3B 三档权重，small 约 2GB（批次评估）、8GB 显存可跑；32kHz EnCodec、4 码本 50Hz，duration 默认 15 秒、预训练上限 30 秒，正好覆盖短视频；纯 pip + 权重即可脚本批量，无 gated 门槛。",
+      "categories": [
+        "音乐生成"
+      ],
+      "alternatives": [
+        {
+          "repoId": "Stability-AI__stable-audio-tools",
+          "whyZh": "要 44.1kHz 立体声、更长氛围铺底时选它；代价是权重 gated（需接受 stable-audio-open-1.0 条款）、4.7GB、配置 sample_size 约 95 秒。"
+        },
+        {
+          "repoId": "Text-to-Audio__AudioLCM",
+          "whyZh": "追求 2–4 步极快出样、能接受旧版 diffusers 依赖与较低采样率时选它；适合批量草稿，不适合终混。"
+        },
+        {
+          "repoId": "ivcylc__OpenMusic",
+          "whyZh": "想做风格化歌曲而非纯 BGM、且能上 Linux+16GB 显存时再考虑；本机 conda 环境锁 linux-64，Windows 跑不动。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "facebookresearch__audiocraft",
+          "verdict": "first",
+          "whyZh": "MusicGen 提供 300M/1.5B/3.3B 三档权重，small 约 2GB（批次评估）、8GB 显存可跑；32kHz EnCodec、4 码本 50Hz，duration 默认 15 秒、预训练上限 30 秒，正好覆盖短视频；纯 pip + 权重即可脚本批量，无 gated 门槛。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "Stability-AI__stable-audio-tools",
+          "verdict": "alt",
+          "whyZh": "要 44.1kHz 立体声、更长氛围铺底时选它；代价是权重 gated（需接受 stable-audio-open-1.0 条款）、4.7GB、配置 sample_size 约 95 秒。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "Text-to-Audio__AudioLCM",
+          "verdict": "alt",
+          "whyZh": "追求 2–4 步极快出样、能接受旧版 diffusers 依赖与较低采样率时选它；适合批量草稿，不适合终混。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "ivcylc__OpenMusic",
+          "verdict": "alt",
+          "whyZh": "想做风格化歌曲而非纯 BGM、且能上 Linux+16GB 显存时再考虑；本机 conda 环境锁 linux-64，Windows 跑不动。",
+          "timeZh": "半天以上"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音乐生成"
+        ],
+        "tags": [
+          "文本生音乐",
+          "32kHz 编解码",
+          "10 个预训练模型",
+          "权重 CC-BY-NC",
+          "Stable Audio Open",
+          "44.1kHz 立体声",
+          "gated 权重",
+          "可训练"
+        ],
+        "soundTypes": [
+          "神经网络生成",
+          "环境音",
+          "语音"
+        ]
+      }
+    },
+    {
+      "id": "game-sfx",
+      "titleZh": "做游戏/视频里的短音效",
+      "descZh": "生成脚步、开门、爆炸、法术这类 1–10 秒短音效，可反复批量出不同变体；44.1kHz 立体声依赖 gated 权重，本机先用 16kHz 草稿。",
+      "questionZh": "我要一批 3 秒的金属撞击声，怎么一次出十几条？",
+      "first": "haoheliu__AudioLDM",
+      "whyZh": "AudioLDM 是文本→短音效/环境声的潜扩散模型，B 档、权重约 2GB、无 gated 门槛，batch A 已在跑；audioldm/utils.py 把 vocoder 与写盘统一按 16000 Hz，输出 16kHz 单声道，默认 10 秒、ddim_steps 200（可降到 50），8GB 显存 batchsize 只能保持 1。要 44.1kHz 立体声得换 stable-audio-tools，但它要 HF Token，本机不申请。",
+      "categories": [
+        "音效生成",
+        "音乐生成"
+      ],
+      "alternatives": [
+        {
+          "repoId": "Stability-AI__stable-audio-tools",
+          "whyZh": "音质上限最高：44.1kHz 双声道、seconds_start/seconds_total 可按秒指定片段；但权重 gated，必须 HF 账号接受条款并配置 HF_TOKEN，本机不申请 Token，只作参考，样例不会产出。"
+        },
+        {
+          "repoId": "thxxx__VTS",
+          "whyZh": "能用口技录音锁定时序与质感，44.1kHz；权重 dynamic_v3_0415.ckpt 为 5.20GB 公开权重（gated=False，无需 HF Token），但要按 requirements 单独建 Python 3.11 + torch 2.4.1 环境。"
+        },
+        {
+          "repoId": "haidog-yaqub__EzAudio",
+          "whyZh": "要 24kHz 文本生音频、且不想碰 Token 时选它；B 档、权重约 2GB，但 README 未声明 Windows 支持，风险高于 AudioLDM。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "haoheliu__AudioLDM",
+          "verdict": "first",
+          "whyZh": "AudioLDM 是文本→短音效/环境声的潜扩散模型，B 档、权重约 2GB、无 gated 门槛，batch A 已在跑；audioldm/utils.py 把 vocoder 与写盘统一按 16000 Hz，输出 16kHz 单声道，默认 10 秒、ddim_steps 200（可降到 50），8GB 显存 batchsize 只能保持 1。要 44.1kHz 立体声得换 stable-audio-tools，但它要 HF Token，本机不申请。",
+          "timeZh": "0.5–2 小时"
+        },
+        {
+          "repoId": "Stability-AI__stable-audio-tools",
+          "verdict": "alt",
+          "whyZh": "音质上限最高：44.1kHz 双声道、seconds_start/seconds_total 可按秒指定片段；但权重 gated，必须 HF 账号接受条款并配置 HF_TOKEN，本机不申请 Token，只作参考，样例不会产出。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "thxxx__VTS",
+          "verdict": "alt",
+          "whyZh": "能用口技录音锁定时序与质感，44.1kHz；权重 dynamic_v3_0415.ckpt 为 5.20GB 公开权重（gated=False，无需 HF Token），但要按 requirements 单独建 Python 3.11 + torch 2.4.1 环境。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "haidog-yaqub__EzAudio",
+          "verdict": "alt",
+          "whyZh": "要 24kHz 文本生音频、且不想碰 Token 时选它；B 档、权重约 2GB，但 README 未声明 Windows 支持，风险高于 AudioLDM。",
+          "timeZh": "0.5–2 小时"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音乐生成",
+          "音效生成"
+        ],
+        "tags": [
+          "Stable Audio Open",
+          "44.1kHz 立体声",
+          "gated 权重",
+          "可训练",
+          "LoRA",
+          "音效生成",
+          "口技条件",
+          "44.1kHz"
+        ],
+        "soundTypes": [
+          "神经网络生成",
+          "环境音",
+          "语音"
+        ]
+      }
+    },
+    {
+      "id": "video-foley",
+      "titleZh": "给视频自动配同步拟音",
+      "descZh": "拿一段无声或需要替换声轨的视频，自动生成与画面动作对齐的音效/环境声，直接输出带新声轨的 mp4。",
+      "questionZh": "我有一段 8 秒的产品演示视频，能自动配按键与环境声吗？",
+      "first": "hkchengrex__MMAudio",
+      "whyZh": "MMAudio 同时吃视频与文本，44.1kHz/16kHz 双配置，默认 8 秒、25 步、cfg 4.5；large_44k_v2 权重 3.9G + VAE 1.2G + Synchformer 907M，README 称 16-bit 推理约 6GB 显存，8GB 卡能跑，demo.py 可直接输出 flac/mp4。",
+      "categories": [
+        "音效生成",
+        "可视化"
+      ],
+      "alternatives": [
+        {
+          "repoId": "SAIL-PRLab__Foley-Omni",
+          "whyZh": "要 10 秒内对白+音效+音乐整轨、且有 24GB 以上显存时选它；5B DiT + flash-attn，Windows 需自行解决编译。"
+        },
+        {
+          "repoId": "TencentARC__AudioStory",
+          "whyZh": "要做几十秒叙事音频而非逐帧拟音、且有 Linux+16GB 显存时选它；install 脚本锁 torch 2.1.0/cu121。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "hkchengrex__MMAudio",
+          "verdict": "first",
+          "whyZh": "MMAudio 同时吃视频与文本，44.1kHz/16kHz 双配置，默认 8 秒、25 步、cfg 4.5；large_44k_v2 权重 3.9G + VAE 1.2G + Synchformer 907M，README 称 16-bit 推理约 6GB 显存，8GB 卡能跑，demo.py 可直接输出 flac/mp4。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "SAIL-PRLab__Foley-Omni",
+          "verdict": "alt",
+          "whyZh": "要 10 秒内对白+音效+音乐整轨、且有 24GB 以上显存时选它；5B DiT + flash-attn，Windows 需自行解决编译。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "TencentARC__AudioStory",
+          "verdict": "alt",
+          "whyZh": "要做几十秒叙事音频而非逐帧拟音、且有 Linux+16GB 显存时选它；install 脚本锁 torch 2.1.0/cu121。",
+          "timeZh": "半天以上"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音效生成"
+        ],
+        "tags": [
+          "视频转音效",
+          "CVPR 2025",
+          "44.1 kHz",
+          "6GB 显存",
+          "视频拟音",
+          "对白+音效+音乐",
+          "5B DiT",
+          "≤10s"
+        ],
+        "soundTypes": [
+          "神经网络生成",
+          "环境音",
+          "语音"
+        ]
+      }
+    },
+    {
+      "id": "stem-separation",
+      "titleZh": "把歌拆成人声/伴奏/四轨",
+      "descZh": "输入一首混音，输出 vocals/drums/bass/other 四轨或人声+伴奏两轨，用于翻唱、二创或后期。",
+      "questionZh": "我想把一首歌的人声抽出来，命令行怎么批量做？",
+      "first": "ZFTurbo__Music-Source-Separation-Training",
+      "whyZh": "推理脚本 + config 固定 44100Hz/2 通道，chunk 261120（约 5.9 秒），权重表覆盖 SCNet XL、BS、MDX23C 等 17 类模型，SDR 可到 10.08；纯 Python、Windows 可用，适合按目录批量分轨。",
+      "categories": [
+        "语音分离"
+      ],
+      "alternatives": [
+        {
+          "repoId": "Anjok07__ultimatevocalremovergui",
+          "whyZh": "只想点鼠标、要 MDX23C/Demucs/VR 多模型 ensemble 时选它；但 README 硬性要求装到 C:\\ 主分区，且只有 Tkinter GUI，无法无人值守批量。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "ZFTurbo__Music-Source-Separation-Training",
+          "verdict": "first",
+          "whyZh": "推理脚本 + config 固定 44100Hz/2 通道，chunk 261120（约 5.9 秒），权重表覆盖 SCNet XL、BS、MDX23C 等 17 类模型，SDR 可到 10.08；纯 Python、Windows 可用，适合按目录批量分轨。",
+          "timeZh": "0.5–2 小时"
+        },
+        {
+          "repoId": "Anjok07__ultimatevocalremovergui",
+          "verdict": "alt",
+          "whyZh": "只想点鼠标、要 MDX23C/Demucs/VR 多模型 ensemble 时选它；但 README 硬性要求装到 C:\\ 主分区，且只有 Tkinter GUI，无法无人值守批量。",
+          "timeZh": "半天以上"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "语音分离"
+        ],
+        "tags": [
+          "分轨",
+          "17 种模型",
+          "SDR 10.08",
+          "8GB 显存需改 batch",
+          "人声分离",
+          "伴奏提取",
+          "MDX-Net",
+          "Demucs"
+        ],
+        "soundTypes": [
+          "处理与转码",
+          "语音"
+        ]
+      }
+    },
+    {
+      "id": "mastering-match",
+      "titleZh": "把 demo 母带对齐到参考曲",
+      "descZh": "给一首混音和一首参考曲，匹配 RMS、频响、峰值与立体声宽度，快速得到接近商业母带的成品。",
+      "questionZh": "我没有母带工程师，怎么让歌听起来像某首商业作品？",
+      "first": "sergree__matchering",
+      "whyZh": "pip install 一条命令，Windows 下 libsndfile 随 SoundFile 自动装；内部固定 44.1kHz、FFT 4096、单段 15 秒、整曲上限 900 秒，纯 CPU 批处理；输入参考曲即可对齐 RMS/频响/峰值/立体声宽度。",
+      "categories": [
+        "音频编辑"
+      ],
+      "alternatives": [
+        {
+          "repoId": "DBraun__DawDreamer",
+          "whyZh": "要自己搭效果链、加载 VST 做更细的母带处理时选它；pip 可装但需自备插件 .dll，GPL-3.0。"
+        },
+        {
+          "repoId": "pkalogiros__AudioMass",
+          "whyZh": "只想手动拉 EQ/压缩、看波形对比时选它；浏览器零安装，但没有参考曲自动匹配算法。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "sergree__matchering",
+          "verdict": "first",
+          "whyZh": "pip install 一条命令，Windows 下 libsndfile 随 SoundFile 自动装；内部固定 44.1kHz、FFT 4096、单段 15 秒、整曲上限 900 秒，纯 CPU 批处理；输入参考曲即可对齐 RMS/频响/峰值/立体声宽度。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "DBraun__DawDreamer",
+          "verdict": "alt",
+          "whyZh": "要自己搭效果链、加载 VST 做更细的母带处理时选它；pip 可装但需自备插件 .dll，GPL-3.0。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "pkalogiros__AudioMass",
+          "verdict": "alt",
+          "whyZh": "只想手动拉 EQ/压缩、看波形对比时选它；浏览器零安装，但没有参考曲自动匹配算法。",
+          "timeZh": "10–30 分钟"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音频编辑"
+        ],
+        "tags": [
+          "母带匹配",
+          "参考曲对齐",
+          "PCM16/24 输出",
+          "CPU 渲染",
+          "可编程 DAW",
+          "VST3 宿主",
+          "Faust DSP",
+          "音频图渲染"
+        ],
+        "soundTypes": [
+          "处理与转码"
+        ]
+      }
+    },
+    {
+      "id": "edit-convert",
+      "titleZh": "长音频切段、转码、快速剪辑",
+      "descZh": "把一小时的录音切成人声段落、去掉空白、导出 MP3/FLAC，或把 wav 批量转成发布格式。",
+      "questionZh": "我只想剪掉播客开头的空白，再导出 MP3，最快的路是什么？",
+      "first": "pkalogiros__AudioMass",
+      "whyZh": "零安装：进 src 跑 python audiomass-server.py 或 go run audiomass-server.go，浏览器开 localhost:5055 就能多轨剪辑、加效果、导出 wav/mp3/flac；单文件手工切段最快，Windows 无编译门槛。",
+      "categories": [
+        "音频编辑"
+      ],
+      "alternatives": [
+        {
+          "repoId": "pytorch__audio",
+          "whyZh": "要按目录批量重采样/切段、写十行 Python 时选它；但当前仓库要求 torch>=2.11，需先对齐 torch/torchaudio 版本。"
+        },
+        {
+          "repoId": "kvoltmer__Audionaut",
+          "whyZh": "要 AI agent/CLI 驱动的多轨剪辑时选它；本机 7 个子模块为空且无 CMake/MSVC，只能走官方安装包。"
+        },
+        {
+          "repoId": "naudio__NAudio",
+          "whyZh": "在 .NET 工程里写批量转码时选它；需要 .NET 9 SDK，本机只有运行时。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "pkalogiros__AudioMass",
+          "verdict": "first",
+          "whyZh": "零安装：进 src 跑 python audiomass-server.py 或 go run audiomass-server.go，浏览器开 localhost:5055 就能多轨剪辑、加效果、导出 wav/mp3/flac；单文件手工切段最快，Windows 无编译门槛。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "pytorch__audio",
+          "verdict": "alt",
+          "whyZh": "要按目录批量重采样/切段、写十行 Python 时选它；但当前仓库要求 torch>=2.11，需先对齐 torch/torchaudio 版本。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "kvoltmer__Audionaut",
+          "verdict": "alt",
+          "whyZh": "要 AI agent/CLI 驱动的多轨剪辑时选它；本机 7 个子模块为空且无 CMake/MSVC，只能走官方安装包。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "naudio__NAudio",
+          "verdict": "alt",
+          "whyZh": "在 .NET 工程里写批量转码时选它；需要 .NET 9 SDK，本机只有运行时。",
+          "timeZh": "0.5–2 小时"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音频编辑",
+          "DSP库",
+          "音频框架"
+        ],
+        "tags": [
+          "浏览器音频编辑",
+          "多轨",
+          "MP3/FLAC 导出",
+          "零安装",
+          "DSP库",
+          "频谱变换",
+          "torch>=2.11",
+          "维护期"
+        ],
+        "soundTypes": [
+          "处理与转码",
+          "分析"
+        ]
+      }
+    },
+    {
+      "id": "music-visualizer",
+      "titleZh": "做音乐可视化视频",
+      "descZh": "把一首歌或一段 MIDI 变成频谱条、波形、粒子、钢琴卷帘等动画视频，导出 MP4 用于发布。",
+      "questionZh": "我想给新歌做一条频谱跳动的竖屏视频，谁可以直接渲染？",
+      "first": "djfun__audio-visualizer-python",
+      "whyZh": "9 类可视化组件 + Qt GUI 排列后存 .avp 工程，命令行换输入输出即可批处理；默认 1280×720/30fps，可选 1080p，mp4 走 H264+AAC（ffmpeg），Windows pip 可装。",
+      "categories": [
+        "可视化"
+      ],
+      "alternatives": [
+        {
+          "repoId": "kosua20__MIDIVisualizer",
+          "whyZh": "素材是 MIDI、要钢琴卷帘而非频谱时选它；官方有 Windows 预编译包，但它不发声、只能显示。"
+        },
+        {
+          "repoId": "scottlawsonbc__audio-reactive-led-strip",
+          "whyZh": "要做实体灯带随音乐变色、能接受 ESP8266+WS2812B 硬件时选它；没有文件产物。"
+        },
+        {
+          "repoId": "luisbocanegra__plasma-audio-visualizer",
+          "whyZh": "只要 KDE Plasma 6 桌面面板频谱条时选它；Windows 无 plasmoid 宿主，不能用于成片。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "djfun__audio-visualizer-python",
+          "verdict": "first",
+          "whyZh": "9 类可视化组件 + Qt GUI 排列后存 .avp 工程，命令行换输入输出即可批处理；默认 1280×720/30fps，可选 1080p，mp4 走 H264+AAC（ffmpeg），Windows pip 可装。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "kosua20__MIDIVisualizer",
+          "verdict": "alt",
+          "whyZh": "素材是 MIDI、要钢琴卷帘而非频谱时选它；官方有 Windows 预编译包，但它不发声、只能显示。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "scottlawsonbc__audio-reactive-led-strip",
+          "verdict": "alt",
+          "whyZh": "要做实体灯带随音乐变色、能接受 ESP8266+WS2812B 硬件时选它；没有文件产物。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "luisbocanegra__plasma-audio-visualizer",
+          "verdict": "alt",
+          "whyZh": "只要 KDE Plasma 6 桌面面板频谱条时选它；Windows 无 plasmoid 宿主，不能用于成片。",
+          "timeZh": "半天以上"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "可视化"
+        ],
+        "tags": [
+          "可视化视频",
+          "9 种组件",
+          "FFmpeg 容器",
+          "PyQt6",
+          "MIDI 可视化",
+          "钢琴卷帘",
+          "命令行导出 MP4",
+          "OpenGL 3.2"
+        ],
+        "soundTypes": [
+          "可视化"
+        ]
+      }
+    },
+    {
+      "id": "midi-render",
+      "titleZh": "把 MIDI 渲染成真实乐器音色",
+      "descZh": "用 SF2/SF3 音源把 .mid 编曲渲染成 wav，用于 demo 试听、游戏配乐或给视频垫乐。",
+      "questionZh": "我有一堆 .mid 和一套 SoundFont，怎么离线批量转成 wav？",
+      "first": "FluidSynth__fluidsynth",
+      "whyZh": "fluidsynth -F out.wav song.mid 一条命令离线渲染；默认 44100Hz、16-bit，polyphony 256（可调到 65535），支持 SF2/SF3/DLS；音色完全取决于你给的 SoundFont，适合批量。本机需装官方 Windows 包或用 CMake+MSVC 自建。",
+      "categories": [
+        "合成器"
+      ],
+      "alternatives": [
+        {
+          "repoId": "schellingb__TinySoundFont",
+          "whyZh": "要把 SoundFont 播放嵌进自己的 C/C++ 程序、只要单头文件时选它；需 MSVC 编译，无现成 CLI。"
+        },
+        {
+          "repoId": "milkytracker__MilkyTracker",
+          "whyZh": "素材是 XM/MOD 而非 MIDI、要 tracker 工作流时选它；rtaudio 子模块为空，需自行构建。"
+        },
+        {
+          "repoId": "steffest__BassoonTracker",
+          "whyZh": "想在浏览器里改 MOD/XM 并导出 wav/mp3 时选它；无 CLI，批量只能人工点。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "FluidSynth__fluidsynth",
+          "verdict": "first",
+          "whyZh": "fluidsynth -F out.wav song.mid 一条命令离线渲染；默认 44100Hz、16-bit，polyphony 256（可调到 65535），支持 SF2/SF3/DLS；音色完全取决于你给的 SoundFont，适合批量。本机需装官方 Windows 包或用 CMake+MSVC 自建。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "schellingb__TinySoundFont",
+          "verdict": "alt",
+          "whyZh": "要把 SoundFont 播放嵌进自己的 C/C++ 程序、只要单头文件时选它；需 MSVC 编译，无现成 CLI。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "milkytracker__MilkyTracker",
+          "verdict": "alt",
+          "whyZh": "素材是 XM/MOD 而非 MIDI、要 tracker 工作流时选它；rtaudio 子模块为空，需自行构建。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "steffest__BassoonTracker",
+          "verdict": "alt",
+          "whyZh": "想在浏览器里改 MOD/XM 并导出 wav/mp3 时选它；无 CLI，批量只能人工点。",
+          "timeZh": "10–30 分钟"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "合成器",
+          "tracker"
+        ],
+        "tags": [
+          "SF2 采样合成",
+          "MIDI 渲染",
+          "256 复音",
+          "8-96kHz",
+          "需 CMake",
+          "单头文件",
+          "sf2",
+          "MIDI 播放"
+        ],
+        "soundTypes": [
+          "采样乐器",
+          "纯合成"
+        ]
+      }
+    },
+    {
+      "id": "code-synth",
+      "titleZh": "用代码搭合成器/交互式声音装置",
+      "descZh": "用代码定义振荡器、滤波器与事件模式，做实时试听与离线渲染，或接到传感器/浏览器做声音装置。",
+      "questionZh": "我想用代码写一段会随参数变化的电子乐，还能离线导出，选谁？",
+      "first": "supercollider__supercollider",
+      "whyZh": "scsynth 默认跟随设备采样率（mPreferredSampleRate=0），1024 节点/缓冲区，数百个 UGen；装预编译包后可用 SynthDef+Pattern 实时试听，再用 NRT 离线渲染，Windows 有 winget 包，是交互装置与算法作曲最成熟的一条路。",
+      "categories": [
+        "合成器"
+      ],
+      "alternatives": [
+        {
+          "repoId": "chaosprint__glicol",
+          "whyZh": "想在浏览器里写一行行 DSL、实时交互、无需安装时选它；引擎没有文件写出与 cpal 后端，成片需另录。"
+        },
+        {
+          "repoId": "Ameobea__web-synth",
+          "whyZh": "要模块化 patch、Faust/Soul 写 DSP、直接导 MIDI/WAV 时选它；本地构建需 Rust nightly+wasm 工具链，复杂度 5。"
+        },
+        {
+          "repoId": "DISTRHO__Cardinal",
+          "whyZh": "要在 DAW 里当模块化插件、复用 Rack 模块时选它；需 VST 宿主，89 个子模块构建重。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "supercollider__supercollider",
+          "verdict": "first",
+          "whyZh": "scsynth 默认跟随设备采样率（mPreferredSampleRate=0），1024 节点/缓冲区，数百个 UGen；装预编译包后可用 SynthDef+Pattern 实时试听，再用 NRT 离线渲染，Windows 有 winget 包，是交互装置与算法作曲最成熟的一条路。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "chaosprint__glicol",
+          "verdict": "alt",
+          "whyZh": "想在浏览器里写一行行 DSL、实时交互、无需安装时选它；引擎没有文件写出与 cpal 后端，成片需另录。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "Ameobea__web-synth",
+          "verdict": "alt",
+          "whyZh": "要模块化 patch、Faust/Soul 写 DSP、直接导 MIDI/WAV 时选它；本地构建需 Rust nightly+wasm 工具链，复杂度 5。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "DISTRHO__Cardinal",
+          "verdict": "alt",
+          "whyZh": "要在 DAW 里当模块化插件、复用 Rack 模块时选它；需 VST 宿主，89 个子模块构建重。",
+          "timeZh": "半天以上"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "合成器"
+        ],
+        "tags": [
+          "算法作曲",
+          "scsynth",
+          "UGens",
+          "Qt IDE",
+          "GPL-3.0",
+          "live coding",
+          "WASM",
+          "Rust"
+        ],
+        "soundTypes": [
+          "纯合成",
+          "环境音",
+          "采样乐器"
+        ]
+      }
+    },
+    {
+      "id": "audio-analysis",
+      "titleZh": "测节拍、音高、起音，做音频分析",
+      "descZh": "从录音里提取节拍点、基频、起始点、MFCC 等特征，输出 CSV/JSON 或图，用于研究、标注与检索。",
+      "questionZh": "我有一段旋律录音，想拿到每个音的 Hz 和节拍位置，谁能跑？",
+      "first": "JorenSix__TarsosDSP",
+      "whyZh": "Java 实现，Gradle wrapper 拉依赖后 shadowJar 出 examples-all.jar，feature_extractor pitch 按 2048 样本块输出时间戳/频率/音高概率三列文本；麦克风流固定 44100Hz/16-bit/mono，Windows 原生可跑，不需 GPU。",
+      "categories": [
+        "音频分析"
+      ],
+      "alternatives": [
+        {
+          "repoId": "aubio__aubio",
+          "whyZh": "要 C 级性能、命令行 onset/pitch/tempo 时选它；本机无 py3.13 轮子，需 conda 或 MSVC 构建。"
+        },
+        {
+          "repoId": "MTG__essentia",
+          "whyZh": "要 musicnn/maest/crepe 预置模型与标准提取器时选它；官方不支持 Windows Python 绑定，只能 C++ 或 WSL。"
+        },
+        {
+          "repoId": "KinWaiCheuk__nnAudio",
+          "whyZh": "要在 PyTorch 里可微分地算 STFT/Mel/MFCC、接训练时选它；不直接给节拍/音高。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "JorenSix__TarsosDSP",
+          "verdict": "first",
+          "whyZh": "Java 实现，Gradle wrapper 拉依赖后 shadowJar 出 examples-all.jar，feature_extractor pitch 按 2048 样本块输出时间戳/频率/音高概率三列文本；麦克风流固定 44100Hz/16-bit/mono，Windows 原生可跑，不需 GPU。",
+          "timeZh": "0.5–2 小时"
+        },
+        {
+          "repoId": "aubio__aubio",
+          "verdict": "alt",
+          "whyZh": "要 C 级性能、命令行 onset/pitch/tempo 时选它；本机无 py3.13 轮子，需 conda 或 MSVC 构建。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "MTG__essentia",
+          "verdict": "alt",
+          "whyZh": "要 musicnn/maest/crepe 预置模型与标准提取器时选它；官方不支持 Windows Python 绑定，只能 C++ 或 WSL。",
+          "timeZh": "半天以上"
+        },
+        {
+          "repoId": "KinWaiCheuk__nnAudio",
+          "verdict": "alt",
+          "whyZh": "要在 PyTorch 里可微分地算 STFT/Mel/MFCC、接训练时选它；不直接给节拍/音高。",
+          "timeZh": "10–30 分钟"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "音频分析"
+        ],
+        "tags": [
+          "纯 Java",
+          "GPL-3.0",
+          "基频检测",
+          "2048 样本块",
+          "实时处理",
+          "onset",
+          "pitch",
+          "MFCC"
+        ],
+        "soundTypes": [
+          "分析",
+          "处理与转码"
+        ]
+      }
+    },
+    {
+      "id": "dataset-tokenize",
+      "titleZh": "做训练数据：MIDI/音频 token 化",
+      "descZh": "把 MIDI 或音频批量转成模型可训练的 token 序列，配 BPE 词表与 Dataset，用于自训生成模型。",
+      "questionZh": "我想用自己的 MIDI 库训练一个生成模型，第一步怎么把 MIDI 变成 token？",
+      "first": "Natooz__MidiTok",
+      "whyZh": "本场景暂无本地可跑首选，最接近的是 Natooz__MidiTok：pip install miditok 一条命令、Python 3.10–3.14、Windows 纯 CPU 可跑，内置 REMI/REMI+/TSD/BEAT/Octuple 等 11 种分词法，BPE 示例 vocab_size=30000；但它只产 token 不产音频（README 明确无 vocoder），要试听必须把 token 接回生成模型。",
+      "categories": [
+        "模型工具链",
+        "音频分析"
+      ],
+      "alternatives": [
+        {
+          "repoId": "lucidrains__audiolm-pytorch",
+          "whyZh": "要音频 RVQ token + 三级 Transformer 的完整训练栈时选它；无预训练权重，示例 num_train_steps=1_000_000。"
+        },
+        {
+          "repoId": "lucidrains__soundstorm-pytorch",
+          "whyZh": "要复现 SoundStorm 并行解掩码、且已有 codebook id 时选它；同样无权重。"
+        },
+        {
+          "repoId": "teticio__audio-diffusion",
+          "whyZh": "要做 mel 频谱扩散而非 token 语言模型时选它；22050Hz、256×256、约 5.9 秒片段。"
+        }
+      ],
+      "recommended": [
+        {
+          "repoId": "Natooz__MidiTok",
+          "verdict": "first",
+          "whyZh": "本场景暂无本地可跑首选，最接近的是 Natooz__MidiTok：pip install miditok 一条命令、Python 3.10–3.14、Windows 纯 CPU 可跑，内置 REMI/REMI+/TSD/BEAT/Octuple 等 11 种分词法，BPE 示例 vocab_size=30000；但它只产 token 不产音频（README 明确无 vocoder），要试听必须把 token 接回生成模型。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "lucidrains__audiolm-pytorch",
+          "verdict": "alt",
+          "whyZh": "要音频 RVQ token + 三级 Transformer 的完整训练栈时选它；无预训练权重，示例 num_train_steps=1_000_000。",
+          "timeZh": "1–3 小时"
+        },
+        {
+          "repoId": "lucidrains__soundstorm-pytorch",
+          "verdict": "alt",
+          "whyZh": "要复现 SoundStorm 并行解掩码、且已有 codebook id 时选它；同样无权重。",
+          "timeZh": "10–30 分钟"
+        },
+        {
+          "repoId": "teticio__audio-diffusion",
+          "verdict": "alt",
+          "whyZh": "要做 mel 频谱扩散而非 token 语言模型时选它；22050Hz、256×256、约 5.9 秒片段。",
+          "timeZh": "0.5–2 小时"
+        }
+      ],
+      "filters": {
+        "categories": [
+          "模型工具链",
+          "音乐生成"
+        ],
+        "tags": [
+          "tokenization",
+          "BPE 30000",
+          "MIDI",
+          "HF Hub",
+          "MIT",
+          "AudioLM 复现",
+          "三级 Transformer",
+          "RVQ 编解码"
+        ],
+        "soundTypes": [
+          "处理与转码",
+          "神经网络生成"
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "no-gpu",
+      "titleZh": "没有独显 / 不想用 CUDA",
+      "descZh": "只能 CPU 跑，或愿意接受几分钟一条的离线渲染。",
+      "fits": [
+        "sergree__matchering",
+        "FluidSynth__fluidsynth",
+        "Natooz__MidiTok",
+        "JorenSix__TarsosDSP",
+        "djfun__audio-visualizer-python",
+        "milkytracker__MilkyTracker",
+        "naudio__NAudio"
+      ],
+      "avoid": [
+        "facebookresearch__audiocraft",
+        "Stability-AI__stable-audio-tools",
+        "hkchengrex__MMAudio",
+        "SAIL-PRLab__Foley-Omni",
+        "TencentARC__AudioStory",
+        "BazedFrog__SongGeneration-Studio"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "needsGpu",
+        "op": "eq",
+        "value": false
+      }
+    },
+    {
+      "id": "cli-batch",
+      "titleZh": "必须命令行可跑、能批量",
+      "descZh": "要写进脚本/流水线，不能每条都靠鼠标点。",
+      "fits": [
+        "ZFTurbo__Music-Source-Separation-Training",
+        "sergree__matchering",
+        "facebookresearch__audiocraft",
+        "djfun__audio-visualizer-python",
+        "JorenSix__TarsosDSP",
+        "Natooz__MidiTok",
+        "FluidSynth__fluidsynth"
+      ],
+      "avoid": [
+        "Anjok07__ultimatevocalremovergui",
+        "pkalogiros__AudioMass",
+        "steffest__BassoonTracker",
+        "BambooTracker__BambooTracker",
+        "squiggythings__WaveTracker",
+        "mlm-games__yadaw",
+        "stargatedaw__stargate"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "hasCli",
+        "op": "eq",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "windows-native",
+      "titleZh": "Windows 原生，不装 WSL/MSYS2",
+      "descZh": "要直接双击/命令行跑，不引入 Linux 子系统或大型编译链。",
+      "fits": [
+        "ZFTurbo__Music-Source-Separation-Training",
+        "sergree__matchering",
+        "Natooz__MidiTok",
+        "djfun__audio-visualizer-python",
+        "naudio__NAudio",
+        "JorenSix__TarsosDSP",
+        "KinWaiCheuk__nnAudio",
+        "torchsynth__torchsynth"
+      ],
+      "avoid": [
+        "MTG__essentia",
+        "ivcylc__OpenMusic",
+        "TencentARC__AudioStory",
+        "SAIL-PRLab__Foley-Omni",
+        "luisbocanegra__plasma-audio-visualizer",
+        "AudioKit__AudioKit",
+        "syedhali__EZAudio"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "windowsTier",
+        "op": "eq",
+        "value": "works"
+      }
+    },
+    {
+      "id": "no-extra-toolchain",
+      "titleZh": "只接受 pip/npm，不装 CMake/VST 宿主",
+      "descZh": "不想碰原生编译、插件宿主或 DAW 安装。",
+      "fits": [
+        "facebookresearch__audiocraft",
+        "sergree__matchering",
+        "Natooz__MidiTok",
+        "ZFTurbo__Music-Source-Separation-Training",
+        "djfun__audio-visualizer-python",
+        "KinWaiCheuk__nnAudio",
+        "torchsynth__torchsynth",
+        "DBraun__DawDreamer"
+      ],
+      "avoid": [
+        "FluidSynth__fluidsynth",
+        "DISTRHO__Cardinal",
+        "kvoltmer__Audionaut",
+        "stargatedaw__stargate",
+        "milkytracker__MilkyTracker",
+        "BambooTracker__BambooTracker",
+        "surge-synthesizer__surge"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "installComplexity",
+        "op": "lte",
+        "value": 3
+      }
+    },
+    {
+      "id": "vram-8gb",
+      "titleZh": "8GB 显存以内",
+      "descZh": "本机只有 8GB 显存，权重与 batch 必须压得住。",
+      "fits": [
+        "facebookresearch__audiocraft",
+        "hkchengrex__MMAudio",
+        "thxxx__VTS",
+        "ZFTurbo__Music-Source-Separation-Training",
+        "torchsynth__torchsynth"
+      ],
+      "avoid": [
+        "SAIL-PRLab__Foley-Omni",
+        "TencentARC__AudioStory",
+        "BazedFrog__SongGeneration-Studio",
+        "ivcylc__OpenMusic"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "needsGpu",
+        "op": "in",
+        "value": [
+          "none",
+          "optional"
+        ]
+      }
+    },
+    {
+      "id": "realtime-interactive",
+      "titleZh": "要实时低延迟交互",
+      "descZh": "声音要跟着参数/传感器/观众即时变化，不能先渲染再播放。",
+      "fits": [
+        "supercollider__supercollider",
+        "chaosprint__glicol",
+        "Ameobea__web-synth",
+        "DISTRHO__Cardinal",
+        "surge-synthesizer__surge"
+      ],
+      "avoid": [
+        "facebookresearch__audiocraft",
+        "Stability-AI__stable-audio-tools",
+        "sergree__matchering",
+        "Natooz__MidiTok"
+      ],
+      "apply": {
+        "type": "field",
+        "field": "pipeline",
+        "op": "eq",
+        "value": "realtime"
+      }
+    },
+    {
+      "id": "gui-acceptable",
+      "titleZh": "可以接受 GUI 手动操作",
+      "descZh": "不要求脚本化，愿意用桌面/浏览器界面剪、调、导。",
+      "fits": [
+        "Anjok07__ultimatevocalremovergui",
+        "pkalogiros__AudioMass",
+        "kvoltmer__Audionaut",
+        "steffest__BassoonTracker",
+        "milkytracker__MilkyTracker",
+        "BambooTracker__BambooTracker",
+        "squiggythings__WaveTracker",
+        "stargatedaw__stargate"
+      ],
+      "avoid": [],
+      "apply": {
+        "type": "field",
+        "field": "hasCli",
+        "op": "eq",
+        "value": "no"
+      }
+    }
+  ],
+  "quickPicks": [
+    {
+      "needZh": "最快拿到一段能用的 BGM",
+      "repoId": "facebookresearch__audiocraft",
+      "whyZh": "MusicGen-small 约 2GB（批次评估）、8GB 显存可跑，一句风格提示直接出 15–30 秒 32kHz 音乐。",
+      "timeZh": "1–3 小时"
+    },
+    {
+      "needZh": "最快拿到一段短音效（免 Token）",
+      "repoId": "haoheliu__AudioLDM",
+      "whyZh": "B 档、权重约 2GB、无 gated 门槛，batch A 在跑；16kHz 单声道、默认 10 秒，8GB 显存可跑。要 44.1kHz 立体声需 stable-audio-tools，但它要 HF Token，本机不申请。",
+      "timeZh": "0.5–2 小时"
+    },
+    {
+      "needZh": "最快把人声/伴奏拆开",
+      "repoId": "ZFTurbo__Music-Source-Separation-Training",
+      "whyZh": "推理脚本 + 44100Hz 配置 + 17 类权重，命令行按目录批量，Windows 可用。",
+      "timeZh": "0.5–2 小时"
+    },
+    {
+      "needZh": "最快把 demo 母带对齐参考曲",
+      "repoId": "sergree__matchering",
+      "whyZh": "pip 一条命令、纯 CPU、44.1kHz，给参考曲就对齐 RMS/频响/峰值/立体声宽度。",
+      "timeZh": "10–30 分钟"
+    },
+    {
+      "needZh": "最快做一条频谱可视化视频",
+      "repoId": "djfun__audio-visualizer-python",
+      "whyZh": "9 类组件拖好存 .avp，命令行批量出 720p/1080p MP4，Windows pip 可装。",
+      "timeZh": "10–30 分钟"
+    },
+    {
+      "needZh": "最快把 MIDI 变成有音色的 wav",
+      "repoId": "FluidSynth__fluidsynth",
+      "whyZh": "fluidsynth -F 一条命令，44100Hz/16-bit，音色由 SF2 决定；本机需装官方包或自建。",
+      "timeZh": "1–3 小时"
+    },
+    {
+      "needZh": "最快拿到音高/节拍数据",
+      "repoId": "JorenSix__TarsosDSP",
+      "whyZh": "Java+Gradle，feature_extractor pitch 直接输出时间戳/Hz/概率三列，Windows 原生无 GPU 依赖。",
+      "timeZh": "0.5–2 小时"
+    }
+  ],
+  "updatedAt": "2026-11-06T19:00:00+08:00",
+  "soundTypes": [
+    {
+      "id": "neural",
+      "titleZh": "神经网络生成",
+      "descZh": "用扩散/Transformer 权重从文本或音频条件生成新声音。",
+      "keywords": [
+        "神经网络生成",
+        "text-to-audio",
+        "text-to-music",
+        "diffusion",
+        "MusicGen",
+        "Stable Audio"
+      ]
+    },
+    {
+      "id": "sample",
+      "titleZh": "采样乐器",
+      "descZh": "用 SF2/采样库还原真实乐器与打击乐。",
+      "keywords": [
+        "采样乐器",
+        "soundfont",
+        "sf2",
+        "SoundFont"
+      ]
+    },
+    {
+      "id": "synth",
+      "titleZh": "纯合成",
+      "descZh": "振荡器、波表、FM 与模块化接线，不依赖录音样本。",
+      "keywords": [
+        "纯合成",
+        "synthesizer",
+        "DSP",
+        "oscillator",
+        "Faust"
+      ]
+    },
+    {
+      "id": "ambient",
+      "titleZh": "环境音",
+      "descZh": "房间底噪、自然声与长氛围铺底。",
+      "keywords": [
+        "环境音",
+        "ambience",
+        "soundscape",
+        "foley"
+      ]
+    },
+    {
+      "id": "voice",
+      "titleZh": "语音",
+      "descZh": "人声、歌唱、对白与语音分离。",
+      "keywords": [
+        "语音",
+        "vocal",
+        "speech",
+        "voice",
+        "stem"
+      ]
+    },
+    {
+      "id": "visual",
+      "titleZh": "可视化",
+      "descZh": "频谱、波形、钢琴卷帘与灯效。",
+      "keywords": [
+        "可视化",
+        "visualizer",
+        "spectrum",
+        "waveform"
+      ]
+    },
+    {
+      "id": "process",
+      "titleZh": "处理与转码",
+      "descZh": "剪辑、母带、降噪、分轨与格式转换。",
+      "keywords": [
+        "处理与转码",
+        "mastering",
+        "matchering",
+        "editing",
+        "separation"
+      ]
+    },
+    {
+      "id": "analysis",
+      "titleZh": "分析",
+      "descZh": "节拍、音高、起音、MFCC 与特征提取。",
+      "keywords": [
+        "分析",
+        "beat",
+        "pitch",
+        "onset",
+        "MFCC"
+      ]
+    }
+  ],
+  "sampleGroups": [
+    {
+      "id": "text-to-music",
+      "titleZh": "文本生音乐三档对比",
+      "descZh": "同一句提示词，比较 MusicGen、Stable Audio 与 AudioLCM 的质感与时长。",
+      "repoIds": [
+        "facebookresearch__audiocraft",
+        "Stability-AI__stable-audio-tools",
+        "Text-to-Audio__AudioLCM"
+      ]
+    },
+    {
+      "id": "sfx",
+      "titleZh": "短音效三家对比",
+      "descZh": "同一条 5 秒金属撞击提示，比较 44.1kHz 与 16/24kHz 的差别。",
+      "repoIds": [
+        "Stability-AI__stable-audio-tools",
+        "thxxx__VTS",
+        "haoheliu__AudioLDM"
+      ]
+    },
+    {
+      "id": "separation",
+      "titleZh": "人声/伴奏分离对比",
+      "descZh": "同一首歌，比较 MSS 四轨与 UVR 集成模型的残留与相位。",
+      "repoIds": [
+        "ZFTurbo__Music-Source-Separation-Training",
+        "Anjok07__ultimatevocalremovergui"
+      ]
+    }
+  ],
+  "synonyms": {
+    "BGM": [
+      "背景音乐",
+      "配乐",
+      "音乐生成"
+    ],
+    "音效": [
+      "SFX",
+      "sound effect",
+      "foley"
+    ],
+    "分轨": [
+      "人声分离",
+      "伴奏提取",
+      "stem"
+    ],
+    "母带": [
+      "mastering",
+      "响度匹配",
+      "matchering"
+    ],
+    "频谱": [
+      "spectrogram",
+      "可视化",
+      "波形"
+    ],
+    "MIDI": [
+      "mid",
+      "soundfont",
+      "音序"
+    ]
+  },
+  "warnings": [
+    {
+      "scopeZh": "Stability-AI__stable-audio-tools / lks-ai__ComfyUI-StableAudioSampler",
+      "riskZh": "权重为 gated，需 HF 账号接受条款并配置 HF_TOKEN；直连不通时用 HF_ENDPOINT=https://hf-mirror.com。本机已决定不申请 Token，这两个仓库不参与 first/quickPicks，样例也不会产出。"
+    },
+    {
+      "scopeZh": "thxxx__VTS",
+      "riskZh": "权重 dynamic_v3_0415.ckpt 为 5.20GB 公开权重（gated=False，无需 HF Token），但要按 requirements 单独建 Python 3.11 + torch 2.4.1 环境；README 的 Daniel777/VTS 地址与代码实际 repo_id Daniel777/textalignment 不一致。"
+    },
+    {
+      "scopeZh": "Anjok07__ultimatevocalremovergui",
+      "riskZh": "README 要求装到 C:\\ 主分区，且只有 GUI，不适合无人值守批量；介意系统盘占用者改用 MSS。"
+    },
+    {
+      "scopeZh": "所有 sample 字段",
+      "riskZh": "当前全部 pending，音频与频谱由样例批次回填；本数据层不对能否出声做实测承诺。"
+    },
+    {
+      "scopeZh": "scores 六维",
+      "riskZh": "为 README/源码的相对判断，不是统一 benchmark；无证据项按 3 分处理，细看 evidence.json。"
+    }
+  ]
+}

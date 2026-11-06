@@ -1,0 +1,182 @@
+{
+  "id": "DISTRHO__Cardinal",
+  "taglineZh": "DPF 封装的 VCV Rack 模块化合成器",
+  "summaryZh": "Cardinal 把 Rack 运行时、89 个子模块与一批第三方模块编进单个二进制，再用 DPF 包成 AU/CLAP/LV2/VST2/VST3 三种变体与独立版。它不连 Rack 商店、不加载外部模块，装一个包就有整套模块库。代价是构建不支持 MSVC、要求符号链接，Windows 本机编不了，只能用未签名安装包或从 Linux 交叉编译；模块文档里只有 Audio File 播放器，没有录音导出模块，出 wav 必须挂 DAW 录或声卡回采。",
+  "whatItMakes": [
+    {
+      "type": "模块化合成音色",
+      "exampleZh": "用 8 路主输出把振荡器、滤波器、CV 拼成 pad",
+      "strength": "核心能力"
+    },
+    {
+      "type": "三格式插件工程",
+      "exampleZh": "主变体搭好 patch，在 Carla 里当乐器加载",
+      "strength": "核心能力"
+    },
+    {
+      "type": "独立版实时演奏",
+      "exampleZh": "挂 MIDI 键盘，实时推 CV 与包络参数",
+      "strength": "附加能力"
+    },
+    {
+      "type": "效果处理链",
+      "exampleZh": "用音箱模拟模块把吉他输入染色再送出",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "搭复杂模块化音色与音效",
+      "whoZh": "合成器玩家/音效设计师",
+      "whyZh": "89 个子模块一次装齐，不依赖 Rack 商店，CV 与音频模块都在单二进制里",
+      "deliverableZh": "宿主工程 + 录制出的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "验证 DPF 多格式封装",
+      "whoZh": "插件开发者",
+      "whyZh": "一份代码出 AU/CLAP/LV2/VST2/VST3 与独立版，可作为打包模板",
+      "deliverableZh": "三变体插件二进制",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "讲模块化信号流",
+      "whoZh": "音频课程教师",
+      "whyZh": "图形化连线直观，但课前要装好宿主与未签名安装包",
+      "deliverableZh": "patch 截图与现场演示",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "无人工批量出音色样例",
+      "whoZh": "自动化流程维护者",
+      "whyZh": "无录音模块也无 headless 渲染入口，批量只能靠宿主录制",
+      "deliverableZh": "人工回采的 wav",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "三变体封装",
+      "descZh": "main/Synth/FX 只改 IO 适配宿主"
+    },
+    {
+      "titleZh": "89 子模块",
+      "descZh": "Rack 与第三方模块编进单二进制，不连商店"
+    },
+    {
+      "titleZh": "音频文件模块",
+      "descZh": "可读外部音频并按宿主采样率重采样"
+    },
+    {
+      "titleZh": "交叉编译出包",
+      "descZh": "mingw 交叉编译出 Windows 包"
+    },
+    {
+      "titleZh": "无头模式",
+      "descZh": "HEADLESS=true 去掉 GUI"
+    }
+  ],
+  "ceilingsZh": "单实例最多 8 路音频进出加 10 路 CV（README#L69），Synth/FX 各 2 路输出；README 模块清单 83 条，git 子模块 89 个。采样率与位深不由它定：README 未声明固定采样率，Audio File 模块只在需要时重采样到宿主采样率（CARDINAL-MODULES.md#L37），位深随宿主，也未声明。没有录音或导出模块，文档里音频相关只有播放器，超过 30 秒的文件流式读盘，所以出 wav 只能靠 DAW 录制或系统回采。官方 Windows 32/64 位包免编译，但源码只能在 POSIX 上用 mingw 交叉编译。",
+  "workflowZh": "五步：装官方包或交叉编译 → 选变体 → 拖模块连线 → 挂宿主调音 → 录制出 wav",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "下载 Windows 未签名安装包，或按 BUILDING.md 在 Linux 上用 mingw-w64 交叉编译",
+      "effortZh": "5–40 分钟"
+    },
+    {
+      "stepZh": "建 patch",
+      "detailZh": "打开 main 变体，从模块库拖振荡器/滤波/CV 模块并连线",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "调音",
+      "detailZh": "用 Audio File 加载素材，开启 sync to host transport 对齐节拍",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "出样",
+      "detailZh": "在 Carla/DAW 里挂载插件并录制，或用声卡回采主输出",
+      "effortZh": "5–10 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "surge-synthesizer__surge",
+      "whenZh": "要自由连线搭模块链选 Cardinal；只要一台现成减法合成器、求快速出音选 Surge。",
+      "adviceZh": "要自由连线搭模块链选 Cardinal；只要一台现成减法合成器、求快速出音选 Surge。"
+    },
+    {
+      "vs": "supercollider__supercollider",
+      "whenZh": "要图形化 patch 与插件交付选 Cardinal；要写代码做算法作曲与批量渲染选 SuperCollider。",
+      "adviceZh": "要图形化 patch 与插件交付选 Cardinal；要写代码做算法作曲与批量渲染选 SuperCollider。"
+    },
+    {
+      "vs": "Ameobea__web-synth",
+      "whenZh": "要桌面插件与大量现成模块选 Cardinal；要浏览器里零安装试听选 web-synth。",
+      "adviceZh": "要桌面插件与大量现成模块选 Cardinal；要浏览器里零安装试听选 web-synth。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L5-L12",
+      "noteZh": "定位为 DPF 包装 VCV Rack 的自包含插件"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L16-L19",
+      "noteZh": "单二进制含 Rack 与第三方模块，不连官方商店"
+    },
+    {
+      "field": "cons[0]",
+      "source": "docs/BUILDING.md#L159-L161",
+      "noteZh": "不支持 MSVC，Windows 只能从 POSIX 交叉编译"
+    },
+    {
+      "field": "cons[1]",
+      "source": "docs/CARDINAL-MODULES.md#L23-L37",
+      "noteZh": "音频模块只有播放器，无录音/导出"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L69; docs/CARDINAL-MODULES.md#L37",
+      "noteZh": "8 路音频 IO 与 10 路 CV；按宿主采样率重采样"
+    }
+  ],
+  "blockerZh": "JUCE 子模块拉不到（GitHub 实测 <1B/s，用户已确认）；.gitmodules 里 90+ 个子模块（含 VCVRack/Rack、Carla、PawPaw、JUCE、QuickJS 与 60+ 个插件），单是 JUCE 就 >200MB 工具链级别，且成品是 GUI 插件/独立机架，没有 headless 渲染入口。",
+  "whatItWouldNeed": "Linux/WSL + mingw-w64 交叉编译环境，或直接装官方未签名 Windows 安装包；再配一个 Carla/DAW（或声卡回采）做录制，纯 CLI 走不通。",
+  "ceilingZh": "单实例最多 8 路音频进出加 10 路 CV（README#L69），Synth/FX 各 2 路输出；README 模块清单 83 条，git 子模块 89 个。采样率与位深不由它定：README 未声明固定采样率，Audio File 模块只在需要时重采样到宿主采样率（CARDINAL-MODULES.md#L37），位深随宿主，也未声明。没有录音或导出模块，文档里音频相关只有播放器，超过 30 秒的文件流式读盘，所以出 wav 只能靠 DAW 录制或系统回采。官方 Windows 32/64 位包免编译，但源码只能在 POSIX 上用 mingw 交叉编译。",
+  "capabilities": {
+    "maxDurationZh": "30 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "三变体封装：main/Synth/FX 只改 IO 适配宿主",
+    "89 子模块：Rack 与第三方模块编进单二进制，不连商店",
+    "音频文件模块：可读外部音频并按宿主采样率重采样",
+    "交叉编译出包：mingw 交叉编译出 Windows 包",
+    "无头模式：HEADLESS=true 去掉 GUI"
+  ],
+  "limits": [
+    "构建不支持 MSVC 且要求符号链接，Windows 本机无法编译，只能从 Linux/macOS 用 mingw 交叉编译",
+    "模块文档里的音频模块只有 Audio File 播放器，没有录音或导出模块，wav 只能靠 DAW 录制或声卡回采",
+    "89 个 git 子模块全靠 --recursive 拉取，本机仓库未初始化子模块，无法从源码重建",
+    "macOS 与 Windows 官方构建均未签名，安装会被系统当成不信任开发者",
+    "Windows 安装包未签名，SmartScreen 会拦，需要手动放行",
+    "独立版与插件都不带录音模块，想留 wav 必须另开 Carla/DAW 录"
+  ],
+  "signatureZh": "DPF 封装的 VCV Rack 模块化合成器",
+  "chooseWhenZh": "要在桌面宿主里搭复杂模块化音色、又不想被 VCV 商店绑定的合成器玩家与音效设计师",
+  "avoidWhenZh": "构建不支持 MSVC 且要求符号链接，Windows 本机无法编译，只能从 Linux/macOS 用 mingw 交叉编译",
+  "contrastWith": [
+    "surge-synthesizer__surge",
+    "supercollider__supercollider"
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "id": "haidog-yaqub__EzAudio",
+  "taglineZh": "高效 DiT 文生音频，24 kHz 单声道加可编辑修补",
+  "summaryZh": "EzAudio 用 MaskDiT 在 VAE 潜空间做扩散，算力需求低；VAE 是 oobleck 结构，24 kHz 单声道、下采样 480、latent 128。仓库只有一个 Python 类：EzAudio(model_name='s3_xl') 负责拉权重并生成 10 秒音频，支持 editing/inpainting 与 ControlNet。卖点是 24 kHz 与可编辑；短板是工程化低：没有 CLI、权重直连 HF，README 的 ControlNet 示例漏了 import。",
+  "whatItMakes": [
+    {
+      "type": "文本生成音频",
+      "exampleZh": "EzAudio(model_name='s3_xl').generate_audio(\"birds chirping\") 输出 24 kHz 单声道 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "局部音频编辑",
+      "exampleZh": "editing 接口用 mask_start=1、mask_length=5 只重画第 1–5 秒的内容",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频修补",
+      "exampleZh": "inpainting 给定 boundary，只重建中间被挖掉的一段",
+      "strength": "进阶能力"
+    },
+    {
+      "type": "能量条件生成",
+      "exampleZh": "EzAudio_ControlNet 以输入音频的能量包络控制生成节奏",
+      "strength": "进阶能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "音效局部重绘",
+      "whoZh": "游戏音频设计师",
+      "whyZh": "生成结果里只有一段不满意时，mask 后重画比整段重生成省时",
+      "deliverableZh": "修改后的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "短音效批量生成",
+      "whoZh": "内容创作者",
+      "whyZh": "24 kHz 比 AudioLDM 的 16 kHz 细节多，10 秒长度够做 UI/环境音",
+      "deliverableZh": "音效列表",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "节奏对齐的音效",
+      "whoZh": "视频剪辑",
+      "whyZh": "ControlNet 能量条件可让生成音量跟随画面节奏",
+      "deliverableZh": "对齐画面的音效",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "长音乐生成",
+      "whoZh": "音乐制作人",
+      "whyZh": "默认 10 秒、无节拍/结构条件、单声道，做完整曲目不现实",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "MaskDiT",
+      "descZh": "掩码式 DiT，训练与推理都更快"
+    },
+    {
+      "titleZh": "24kHz 采样",
+      "descZh": "VAE 下采样 480，latent 128"
+    },
+    {
+      "titleZh": "一个类搞定",
+      "descZh": "EzAudio 封装下载、加载与生成"
+    },
+    {
+      "titleZh": "局部编辑",
+      "descZh": "editing/inpainting 只改局部"
+    },
+    {
+      "titleZh": "权重直连 HF",
+      "descZh": "urllib 直连 huggingface.co"
+    }
+  ],
+  "ceilingsZh": "输出规格由 ckpts/vae/config.json 定死：sample_rate 24000、audio_channels 1、downsampling_ratio 480、latent_dim 128，只能出 24 kHz 单声道。生成参数默认 length=10 秒、guidance_scale=5、guidance_rescale=0.75、ddim_steps=100、eta=1。时长没有外推接口，超过 10 秒只能分段生成再拼。显存与权重体积 README 均未声明（批次表记 6GB 显存、权重约 2GB）；按 8GB 卡推算 length=10、ddim=100 可跑但要关掉其它进程。ControlNet 只提供能量这一种条件，没有 MIDI、节拍等结构控制。",
+  "workflowZh": "五步：clone 仓库 → 建 Python 环境装 requirements → 预置或镜像下 ckpt → 写 5 行 Python → 出 wav 后验收",
+  "workflow": [
+    {
+      "stepZh": "取代码",
+      "detailZh": "git clone https://github.com/haidog-yaqub/EzAudio.git（README 写的是 SSH 地址，需换 HTTPS）",
+      "effortZh": "2 分钟"
+    },
+    {
+      "stepZh": "装依赖",
+      "detailZh": "建 venv 后 pip install -r requirements.txt，走清华源",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "放权重",
+      "detailZh": "设 HF_ENDPOINT 镜像让 urllib 能下，或手动把 ezaudio_s3_xl.pt、1m.pt 放进 ckpts/",
+      "effortZh": "2GB，镜像 10 分钟"
+    },
+    {
+      "stepZh": "写调用",
+      "detailZh": "device='cuda'; ezaudio=EzAudio(model_name='s3_xl', device=device); ezaudio.generate_audio(text, length=10)",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "验收",
+      "detailZh": "ffprobe 确认 24 kHz/mono，verify_audio.ps1 确认非静音",
+      "effortZh": "1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "要成熟 CLI、diffusers 集成与多 checkpoint 对比选 AudioLDM；要 24 kHz、更省显存且需要局部编辑选 EzAudio",
+      "adviceZh": "要成熟 CLI、diffusers 集成与多 checkpoint 对比选 AudioLDM；要 24 kHz、更省显存且需要局部编辑选 EzAudio"
+    },
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要 44.1 kHz 立体声与更长片段选 stable-audio-tools；只要 10 秒内音效、权重小选 EzAudio",
+      "adviceZh": "要 44.1 kHz 立体声与更长片段选 stable-audio-tools；只要 10 秒内音效、权重小选 EzAudio"
+    },
+    {
+      "vs": "hkchengrex__MMAudio",
+      "whenZh": "要给视频自动配音、做音画同步选 MMAudio；只做纯文本到音效且要 inpainting 选 EzAudio",
+      "adviceZh": "要给视频自动配音、做音画同步选 MMAudio；只做纯文本到音效且要 inpainting 选 EzAudio"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "ceilingsZh",
+      "source": "ckpts/vae/config.json#L3-L5",
+      "noteZh": "sample_rate 24000、audio_channels 1、sample_size 12000"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "ckpts/vae/config.json#L33-L35",
+      "noteZh": "latent_dim 128、downsampling_ratio 480、io_channels 1"
+    },
+    {
+      "field": "whatItMakes[0]",
+      "source": "README.md#L40-L52",
+      "noteZh": "官方用法：EzAudio(model_name='s3_xl') 直接 generate"
+    },
+    {
+      "field": "workflow[2]",
+      "source": "api/ezaudio.py#L21-L27",
+      "noteZh": "权重 URL 全部指向 huggingface.co，urllib.request.urlretrieve 直连下载"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L25",
+      "noteZh": "安装步骤用 SSH 地址 git@github.com:haidog-yaqub/EzAudio.git"
+    },
+    {
+      "field": "workflow[4]",
+      "source": "api/ezaudio.py#L101-L102",
+      "noteZh": "generate_audio 默认 length=10、guidance_scale=5、ddim_steps=100"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "输出规格由 ckpts/vae/config.json 定死：sample_rate 24000、audio_channels 1、downsampling_ratio 480、latent_dim 128，只能出 24 kHz 单声道。生成参数默认 length=10 秒、guidance_scale=5、guidance_rescale=0.75、ddim_steps=100、eta=1。时长没有外推接口，超过 10 秒只能分段生成再拼。显存与权重体积 README 均未声明（批次表记 6GB 显存、权重约 2GB）；按 8GB 卡推算 length=10、ddim=100 可跑但要关掉其它进程。ControlNet 只提供能量这一种条件，没有 MIDI、节拍等结构控制。",
+  "capabilities": {
+    "maxDurationZh": "默认 10 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "24 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "平台未声明"
+  },
+  "differentiators": [
+    "MaskDiT：掩码式 DiT，训练与推理都更快",
+    "24kHz 采样：VAE 下采样 480，latent 128",
+    "一个类搞定：EzAudio 封装下载、加载与生成",
+    "局部编辑：editing/inpainting 只改局部",
+    "权重直连 HF：urllib 直连 huggingface.co"
+  ],
+  "limits": [
+    "README 的 ControlNet 示例没有 import EzAudio_ControlNet，照抄会 NameError，得自己从 api 里补类名",
+    "README 安装段用 git clone git@github.com: 的 SSH 地址，没配 SSH key 直接失败",
+    "仓库没有 CLI 也没有 app.py，出样例只能自己写 Python；ckpt 默认从 huggingface.co 直连 urllib 下载，本机取不到数据",
+    "README 几乎不写参数含义（length/ddim_steps/guidance_scale 只出现在示例里），调参只能读源码",
+    "ckpts/ezaudio-xl.yml 只是配置名，真正权重在 HF 仓库，首次运行会联网；离线环境必须预置到 ckpts/",
+    "默认 length=10 秒、ddim_steps=100，显存不足时会 OOM，需要降 length 到 5 秒",
+    "s3_xl 的 img_size=500 对应 10 秒，随意改 length 会与训练时的位置编码不匹配"
+  ],
+  "signatureZh": "高效 DiT 文生音频，24 kHz 单声道加可编辑修补",
+  "chooseWhenZh": "要在一个 Python 脚本里做「生成 + 局部重绘」音频编辑，且不想被 16 kHz 限制卡住的人",
+  "avoidWhenZh": "README 的 ControlNet 示例没有 import EzAudio_ControlNet，照抄会 NameError，得自己从 api 里补类名",
+  "contrastWith": [
+    "haoheliu__AudioLDM",
+    "Stability-AI__stable-audio-tools"
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "id": "teticio__audio-diffusion",
+  "taglineZh": "mel 谱当图片扩散，反变换回约 5.9 秒音频",
+  "summaryZh": "audio-diffusion 把音频切片转成 mel 谱图，再用图像扩散 DDPM/DDIM 生成新谱图，最后用 Griffin-Lim 还原成音频。好处是复用图像扩散生态：diffusers 的 UNet、调度器、AudioDiffusionPipeline 都能接，pip 包一行即可加载。产物是 22050 Hz 单声道、256×256 mel、hop 512，一段约 5.9 秒，高频受 mel 离散化限制。适合实验与教学，不适合生产力：没有批量 CLI，CPU 单段 20 分钟。",
+  "whatItMakes": [
+    {
+      "type": "扩散生成音频",
+      "exampleZh": "AudioDiffusion(model_id='teticio/audio-diffusion-256').generate_audio() 出 22050 Hz mono 片段",
+      "strength": "核心能力"
+    },
+    {
+      "type": "mel 谱图",
+      "exampleZh": "audio_to_images 把音频目录转成 256×256 mel 图，反向可还原音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频插值/变体",
+      "exampleZh": "在 latent 噪声空间里对两段音频插值，或用同种子生成多个变体",
+      "strength": "进阶能力"
+    },
+    {
+      "type": "无缝 loop",
+      "exampleZh": "Gradio app 输出循环片段并给出首尾衔接的 loop",
+      "strength": "进阶能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "扩散模型教学",
+      "whoZh": "课程/教程作者",
+      "whyZh": "音频即图像，可直接用图像扩散的直觉讲清楚，app 还能同时看谱图和波形",
+      "deliverableZh": "谱图+音频对照",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "小型音频数据集实验",
+      "whoZh": "研究者",
+      "whyZh": "scripts/audio_to_images.py 能把自有音频目录转成训练集，支持 64×64 到 256×256",
+      "deliverableZh": "自训模型与样本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "环境音/loop 素材",
+      "whoZh": "电子音乐人",
+      "whyZh": "5.9 秒 loop 适合做垫底氛围，但 CPU 生成慢且只有 mono",
+      "deliverableZh": "wav loop",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "批量音效生产",
+      "whoZh": "内容工厂",
+      "whyZh": "没有 CLI 批处理、单条要 20 分钟（无 GPU），产量上不去",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "音频即图像",
+      "descZh": "mel 谱图送进图像扩散，反向还原波形"
+    },
+    {
+      "titleZh": "扩散复用",
+      "descZh": "官方 pipeline 已并入 diffusers"
+    },
+    {
+      "titleZh": "DDIM 少步",
+      "descZh": "训练后可 ~50 步采样，比 DDPM 快数倍"
+    },
+    {
+      "titleZh": "潜空间扩散",
+      "descZh": "latent 版降低分辨率压力"
+    },
+    {
+      "titleZh": "Gradio",
+      "descZh": "app.py 同时出谱图、音频与 loop"
+    }
+  ],
+  "ceilingsZh": "Mel 类的默认参数就是硬上限：x_res=256、y_res=256、sample_rate=22050、n_fft=2048、hop_length=512、n_iter=32，因此单段时长 = 256×512/22050 ≈ 5.9 秒，且只有单声道；想更长要改 x_res 或 hop_length 并重训/换权重。Griffin-Lim 只迭代 32 次，相位重建粗糙，听感偏糊。README 说 DDIM 采样约 50 步即可，DDPM 则要训练时的完整步数；显存需求未声明，README 只要求商用级 GPU 做 256×256 训练，batch 2 加梯度累积 8。权重体积未声明（批次表记约 1GB 级），模型与 2022 年之后的 diffusers 版本不兼容。",
+  "workflowZh": "五步：pip 装 audiodiffusion → 设 HF 镜像 → 加载模型 → 生成/编辑 → 存 wav 并配谱图",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "pip install audiodiffusion（会拉 diffusers/librosa/torch，清华源）",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "配镜像",
+      "detailZh": "export HF_ENDPOINT=https://hf-mirror.com、HF_HOME=F 盘，否则权重下不动",
+      "effortZh": "2 分钟"
+    },
+    {
+      "stepZh": "加载模型",
+      "detailZh": "AudioDiffusion(model_id='teticio/audio-diffusion-256')，首次拉约 1GB",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "生成",
+      "detailZh": "pipeline() 或用 app.py 的 Gradio 界面调步数/种子",
+      "effortZh": "GPU 1–2 分钟/条，CPU 20 分钟"
+    },
+    {
+      "stepZh": "落盘",
+      "detailZh": "soundfile 写 wav，ffmpeg 出 mp3 与 showspectrumpic 配图",
+      "effortZh": "1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "要文本控制、16 kHz 且现成 CLI 选 AudioLDM；要做谱图扩散实验、看图像与音频对应关系选 audio-diffusion",
+      "adviceZh": "要文本控制、16 kHz 且现成 CLI 选 AudioLDM；要做谱图扩散实验、看图像与音频对应关系选 audio-diffusion"
+    },
+    {
+      "vs": "haidog-yaqub__EzAudio",
+      "whenZh": "要 24 kHz 与局部重绘选 EzAudio；要研究 mel 图像化路线、复用 diffusers 图像模型选 audio-diffusion",
+      "adviceZh": "要 24 kHz 与局部重绘选 EzAudio；要研究 mel 图像化路线、复用 diffusers 图像模型选 audio-diffusion"
+    },
+    {
+      "vs": "lucidrains__audiolm-pytorch",
+      "whenZh": "要分层语义 token + 声码器的 AudioLM 路线选 audiolm-pytorch；要最简单的图像扩散映射选 audio-diffusion",
+      "adviceZh": "要分层语义 token + 声码器的 AudioLM 路线选 audiolm-pytorch；要最简单的图像扩散映射选 audio-diffusion"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "ceilingsZh",
+      "source": "audiodiffusion/mel.py#L59-L67",
+      "noteZh": "默认 256×256、22050 Hz、n_fft 2048、hop 512、Griffin-Lim n_iter 32"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L50-L52",
+      "noteZh": "说明音频转 mel 图、DDPM 训练后再反变换回音频"
+    },
+    {
+      "field": "featureCallouts[1]",
+      "source": "README.md#L28",
+      "noteZh": "AudioDiffusionPipeline 已迁入 HuggingFace diffusers"
+    },
+    {
+      "field": "featureCallouts[2]",
+      "source": "README.md#L36",
+      "noteZh": "DDIM 可用约 50 步采样，远少于训练步数"
+    },
+    {
+      "field": "workflow[3]",
+      "source": "app.py#L20-L23",
+      "noteZh": "注释写明无 GPU 时单段要 20 分钟"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L75-L81",
+      "noteZh": "pip install . 或 pip install audiodiffusion，安装路径短"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "Mel 类的默认参数就是硬上限：x_res=256、y_res=256、sample_rate=22050、n_fft=2048、hop_length=512、n_iter=32，因此单段时长 = 256×512/22050 ≈ 5.9 秒，且只有单声道；想更长要改 x_res 或 hop_length 并重训/换权重。Griffin-Lim 只迭代 32 次，相位重建粗糙，听感偏糊。README 说 DDIM 采样约 50 步即可，DDPM 则要训练时的完整步数；显存需求未声明，README 只要求商用级 GPU 做 256×256 训练，batch 2 加梯度累积 8。权重体积未声明（批次表记约 1GB 级），模型与 2022 年之后的 diffusers 版本不兼容。",
+  "capabilities": {
+    "maxDurationZh": "5.9 秒",
+    "formatsZh": [
+      "wav",
+      "png"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "平台未声明"
+  },
+  "differentiators": [
+    "音频即图像：mel 谱图送进图像扩散，反向还原波形",
+    "扩散复用：官方 pipeline 已并入 diffusers",
+    "DDIM 少步：训练后可 ~50 步采样，比 DDPM 快数倍",
+    "潜空间扩散：latent 版降低分辨率压力",
+    "Gradio：app.py 同时出谱图、音频与 loop"
+  ],
+  "limits": [
+    "默认 22050 Hz 单声道、256×256 mel、hop_length 512，单段只有约 5.9 秒，且 mel 离散化会削掉高频细节",
+    "app.py 注释写明没有 GPU 时单段要 20 分钟，本机 8GB 卡能跑但批量出样效率低",
+    "README 明说 2022-02 之后的模型与旧版本不兼容，换 diffusers 版本就得重下权重或改代码",
+    "没有批量推理 CLI，只有 notebook 与 Gradio app，脚本化要自己读 audiodiffusion/pipeline.py",
+    "AudioDiffusionPipeline.from_pretrained 直接打 huggingface.co，本机必须设 HF_ENDPOINT 镜像，否则卡在下载",
+    "生成的 loop 要自己接交叉淡化，否则首尾爆音",
+    "仓库体积极小（0.28 MB / 62 文件），权重全在 HF，别指望 clone 完离线可用"
+  ],
+  "signatureZh": "mel 谱当图片扩散，反变换回约 5.9 秒音频",
+  "chooseWhenZh": "想做「音频即图像」扩散实验、或需要看 mel 图与音频对照的教学/研究场景",
+  "avoidWhenZh": "默认 22050 Hz 单声道、256×256 mel、hop_length 512，单段只有约 5.9 秒，且 mel 离散化会削掉高频细节",
+  "contrastWith": [
+    "haoheliu__AudioLDM",
+    "haidog-yaqub__EzAudio"
+  ]
+}

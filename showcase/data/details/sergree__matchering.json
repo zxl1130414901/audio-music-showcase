@@ -1,0 +1,188 @@
+{
+  "id": "sergree__matchering",
+  "taglineZh": "参考曲母带匹配，对齐响度/频响/峰值/宽度",
+  "summaryZh": "Matchering 2.0 是纯 Python 的母带匹配库：输入目标曲与参考曲，先分析两者的 RMS、频响、峰值振幅与立体声宽度，再用匹配 EQ、RMS 校正与自研 Hyrax brickwall limiter 把目标曲拉成参考曲的听感，最后写成 PCM16/PCM24 wav。内部固定 44.1 kHz，单段 15 s、整曲 900 s 上限，4 GB 内存即可 CPU 跑，MP3 输入需系统 FFmpeg。它极度依赖参考曲质量，更像批量对齐工具；GPL-3.0 许可需要留意。",
+  "whatItMakes": [
+    {
+      "type": "母带匹配",
+      "exampleZh": "把目标曲的 RMS/频响/峰值/立体声宽度对齐参考曲",
+      "strength": "核心能力"
+    },
+    {
+      "type": "限幅输出",
+      "exampleZh": "Hyrax brickwall limiter 收住峰值并写 PCM16/24",
+      "strength": "核心能力"
+    },
+    {
+      "type": "批处理脚本",
+      "exampleZh": "Python API 可循环处理多首曲目",
+      "strength": "可用"
+    },
+    {
+      "type": "手工创作",
+      "exampleZh": "没有编辑界面，不能做剪辑或编曲",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "Demo 提亮",
+      "whoZh": "独立音乐人",
+      "whyZh": "拿商业歌当参考，把自录 demo 对齐到同款响度与频响",
+      "deliverableZh": "PCM24 母带 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量母带",
+      "whoZh": "小型厂牌/后期工作室",
+      "whyZh": "脚本循环处理整张专辑，统一输出位深",
+      "deliverableZh": "整张专辑的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "A/B 参考",
+      "whoZh": "混音师",
+      "whyZh": "临时出 16bit 预览版做试听对比",
+      "deliverableZh": "PCM16 预览 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "原创编曲",
+      "whoZh": "制作人",
+      "whyZh": "它不提供剪辑、乐器或混音功能",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "四项对齐",
+      "descZh": "RMS、频响、峰值与立体声宽度"
+    },
+    {
+      "titleZh": "Hyrax 限幅",
+      "descZh": "自研限幅器收住峰值"
+    },
+    {
+      "titleZh": "PCM16/24",
+      "descZh": "一次输出两种位深的 wav"
+    },
+    {
+      "titleZh": "纯 CPU",
+      "descZh": "4 GB 内存即可跑，不依赖 GPU"
+    },
+    {
+      "titleZh": "批量脚本",
+      "descZh": "API 可循环处理多首曲目"
+    }
+  ],
+  "ceilingsZh": "内部采样率固定 44100 Hz，单段 max_piece_size 15 s、整曲 max_length 900 s，FFT 4096 点、lin_log_oversampling 4、RMS 校正 4 步、lowess_frac 0.0375；预览 30 s、每 5 s 分析一步、淡入 1 s。limiter 默认 attack 1、hold 1、release 3000，输出经 soundfile 写盘，示例给 PCM_16 与 PCM_24 两种 wav。README 要求 4 GB 内存，显卡不参与；更高采样率、更长曲目与其它编码格式的支持程度未声明。",
+  "workflowZh": "三步：安装 → 备参考曲 → 脚本批处理",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "python -m pip install -U matchering，MP3 输入另装系统 FFmpeg",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "准备素材",
+      "detailZh": "选一首风格接近、质量可靠的参考曲与待处理目标曲",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "跑批",
+      "detailZh": "调 mg.process(target=…, reference=…, results=[mg.pcm16(…), mg.pcm24(…)])",
+      "effortZh": "按曲长 1–10 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Anjok07__ultimatevocalremovergui",
+      "whenZh": "要 GUI 分轨/人声分离选 UVR；要命令行母带对齐且能写脚本选 matchering",
+      "adviceZh": "要 GUI 分轨/人声分离选 UVR；要命令行母带对齐且能写脚本选 matchering"
+    },
+    {
+      "vs": "kvoltmer__Audionaut",
+      "whenZh": "要剪辑、多轨与效果器选 Audionaut；只想把成品曲对齐参考母带选 matchering",
+      "adviceZh": "要剪辑、多轨与效果器选 Audionaut；只想把成品曲对齐参考母带选 matchering"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L17-L21",
+      "noteZh": "README 开头即说明目标曲与参考曲的四项匹配。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L105-L111",
+      "noteZh": "Windows 段给的就是一条 pip 安装命令。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L21-L21",
+      "noteZh": "RMS、频响、峰值与立体声宽度四项指标。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L137-L138",
+      "noteZh": "示例同时输出 16bit 与 24bit wav。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "README.md#L48-L48",
+      "noteZh": "自研 Hyrax 限幅器，纯 CPU 实现。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L19-L19",
+      "noteZh": "参考曲的选择直接决定成品听感。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L115-L115",
+      "noteZh": "MP3 读取要额外安装 FFmpeg。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "matchering/defaults.py#L64-L66",
+      "noteZh": "内部采样率与 900 s/15 s 上限都在 Config 默认值里。"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "内部采样率固定 44100 Hz，单段 max_piece_size 15 s、整曲 max_length 900 s，FFT 4096 点、lin_log_oversampling 4、RMS 校正 4 步、lowess_frac 0.0375；预览 30 s、每 5 s 分析一步、淡入 1 s。limiter 默认 attack 1、hold 1、release 3000，输出经 soundfile 写盘，示例给 PCM_16 与 PCM_24 两种 wav。README 要求 4 GB 内存，显卡不参与；更高采样率、更长曲目与其它编码格式的支持程度未声明。",
+  "capabilities": {
+    "maxDurationZh": "900 秒",
+    "formatsZh": [
+      "wav",
+      "flac"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "四项对齐：RMS、频响、峰值与立体声宽度",
+    "Hyrax 限幅：自研限幅器收住峰值",
+    "PCM16/24：一次输出两种位深的 wav",
+    "纯 CPU：4 GB 内存即可跑，不依赖 GPU",
+    "批量脚本：API 可循环处理多首曲目"
+  ],
+  "limits": [
+    "效果高度依赖参考曲，选错参考会把人声与低频一起搬歪，README 的卖点就是 sound like your favorite artist（README.md#L17-L21）",
+    "MP3 输入要另装系统 FFmpeg，否则只能读 wav/flac 等 libsndfile 支持的格式（README.md#L113-L119）",
+    "内部固定 44.1 kHz、单段 15 s、整曲 900 s 上限，长曲按 15 s 分块处理，CPU 上偏慢（matchering/defaults.py#L62-L75）",
+    "参考曲和目标曲都要能解码；mp3 没装 ffmpeg 会直接报错",
+    "输出默认开 limiter 与 normalize，做 AB 对比时要显式关掉",
+    "GPL-3.0，闭源商业产品里集成要注意许可"
+  ],
+  "signatureZh": "参考曲母带匹配，对齐响度/频响/峰值/宽度",
+  "chooseWhenZh": "有明确参考曲、想把 demo 快速对齐到商业母带响度与频响的独立音乐人",
+  "avoidWhenZh": "效果高度依赖参考曲，选错参考会把人声与低频一起搬歪，README 的卖点就是 sound like your favorite artist（README.md#L17-L21）",
+  "contrastWith": [
+    "Anjok07__ultimatevocalremovergui",
+    "kvoltmer__Audionaut"
+  ]
+}

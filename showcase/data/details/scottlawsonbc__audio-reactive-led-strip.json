@@ -1,0 +1,176 @@
+{
+  "id": "scottlawsonbc__audio-reactive-led-strip",
+  "taglineZh": "麦克风驱动 LED 灯带，FFT 分频推 ESP8266",
+  "summaryZh": "这套方案用 PyAudio 录 44.1 kHz 单声道，NumPy/SciPy 做 FFT 与 24 段 Mel 频带，按 energy/scroll/spectrum 算 RGB，经 UDP 发给 ESP8266 固件驱动 WS2812B，也可切树莓派或 Blinkstick。默认 60 颗灯、60 FPS、200–12000 Hz 带通。代价是必须有麦克风与灯带硬件，代码停留在 Python 2.7/3.5，scipy.ndimage.filters 在新版已移除，产物是灯效不是音频文件。",
+  "whatItMakes": [
+    {
+      "type": "实时灯效",
+      "exampleZh": "麦克风输入驱动 60 颗 WS2812B 逐帧变色",
+      "strength": "核心能力"
+    },
+    {
+      "type": "灯带固件",
+      "exampleZh": "ws2812_controller.ino 用 I2S 驱动灯带并接收 UDP 包",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱分析中间量",
+      "exampleZh": "24 段 Mel 能量数组供三种可视化效果消费",
+      "strength": "辅助能力"
+    },
+    {
+      "type": "GUI 预览",
+      "exampleZh": "PyQtGraph 窗口显示频谱滑杆与效果切换",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "桌面/房间氛围灯",
+      "whoZh": "DIY 玩家",
+      "whyZh": "接线图、固件、Python 协议齐全，照抄即可点亮",
+      "deliverableZh": "随音乐变化的灯带效果",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "音乐可视化教学",
+      "whoZh": "教师/社团",
+      "whyZh": "FFT→Mel→RGB 流程完整，代码短好讲",
+      "deliverableZh": "可演示代码与灯效",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "树莓派独立装置",
+      "whoZh": "嵌入式开发者",
+      "whyZh": "config 切 pi 后可脱离电脑，直接 GPIO 驱动",
+      "deliverableZh": "独立灯效盒子",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "硬件协议学习",
+      "whoZh": "物联网学习者",
+      "whyZh": "UDP 协议与 ESP8266 固件都很短，便于改",
+      "deliverableZh": "自建灯带控制器",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "三种效果",
+      "descZh": "energy/scroll/spectrum 切换"
+    },
+    {
+      "titleZh": "设备切换",
+      "descZh": "DEVICE 切三种硬件"
+    },
+    {
+      "titleZh": "Gamma 校正",
+      "descZh": "gamma_table.npy 提供预生成查找表"
+    },
+    {
+      "titleZh": "频段可调",
+      "descZh": "滑杆实时修改 MIN/MAX_FREQUENCY"
+    }
+  ],
+  "ceilingsZh": "输入固定 44.1 kHz 单声道（MIC_RATE），默认 60 颗灯、60 FPS、24 个 FFT 频带，带通 200–12000 Hz；ESP8266 协议每包最多 126 颗灯、总量上限 256 颗，灯数必须为偶数，N_PIXELS 要与固件 NUM_LEDS 一致。树莓派可超过 256 颗，但要关掉 GUI 才跑得动。没有任何音频文件输出，采样率/位深/时长只作用于录音输入；RGB 为 8-bit，gamma 表在 python/gamma_table.npy。灯效延迟未声明，实测受麦克风缓冲与 UDP 影响。",
+  "workflowZh": "六步：装依赖 → 烧固件 → 接线 → 改 config → 设默认麦克风 → 跑 visualization.py",
+  "workflow": [
+    {
+      "stepZh": "装 Python 依赖",
+      "detailZh": "pip install numpy scipy pyqtgraph pyaudio（或 conda）",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "烧固件",
+      "detailZh": "Arduino IDE 装 ESP8266 addon 与 NeoPixelBus，填 ssid/ip/NUM_LEDS",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "接线",
+      "detailZh": "ESP8266 RX1 接灯带 DIN，5V 独立供电并与板子共地",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "配 config",
+      "detailZh": "对齐 DEVICE、UDP_IP、N_PIXELS、MIC_RATE",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "启动",
+      "detailZh": "python visualization.py，可选关闭 GUI",
+      "effortZh": "即时"
+    },
+    {
+      "stepZh": "采集证据",
+      "detailZh": "手机录屏灯效或截图 GUI 频谱",
+      "effortZh": "5 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "djfun__audio-visualizer-python",
+      "whenZh": "要物理灯带/树莓派装置选本项目；只想把音频文件渲染成 mp4/gif 频谱动画选 djfun。",
+      "adviceZh": "要物理灯带/树莓派装置选本项目；只想把音频文件渲染成 mp4/gif 频谱动画选 djfun。"
+    },
+    {
+      "vs": "luisbocanegra__plasma-audio-visualizer",
+      "whenZh": "KDE 桌面条形频谱用 plasma；跨平台硬件灯带方案只有本仓库带 ESP8266 固件。",
+      "adviceZh": "KDE 桌面条形频谱用 plasma；跨平台硬件灯带方案只有本仓库带 ESP8266 固件。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L13-L21",
+      "noteZh": "三种输出设备与 ESP8266/树莓派/Blinkstick 的切换说明"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L36、L241-L242",
+      "noteZh": "ESP8266 最多 256 颗灯、灯数必须为偶数的限制"
+    },
+    {
+      "field": "pros[2]",
+      "source": "python/config.py#L58-L99",
+      "noteZh": "MIC_RATE、N_FFT_BINS、MIN/MAX_FREQUENCY 的默认值"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L23-L44",
+      "noteZh": "需要麦克风与 LED 硬件的硬件清单"
+    }
+  ],
+  "blockerZh": "项目产物是 LED 灯带的实时驱动（python/visualizer.py 读音频输入→FFT→串口写 Arduino），本身不输出音频；需要 LED 硬件 + Arduino，Windows 上无音频产物可验收。",
+  "whatItWouldNeed": "一套 WS2812B 灯带 + ESP8266（或树莓派）+ 5V 独立电源，以及可用的录音设备或虚拟声卡回环。",
+  "ceilingZh": "输入固定 44.1 kHz 单声道（MIC_RATE），默认 60 颗灯、60 FPS、24 个 FFT 频带，带通 200–12000 Hz；ESP8266 协议每包最多 126 颗灯、总量上限 256 颗，灯数必须为偶数，N_PIXELS 要与固件 NUM_LEDS 一致。树莓派可超过 256 颗，但要关掉 GUI 才跑得动。没有任何音频文件输出，采样率/位深/时长只作用于录音输入；RGB 为 8-bit，gamma 表在 python/gamma_table.npy。灯效延迟未声明，实测受麦克风缓冲与 UDP 影响。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "无音频输出"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "三种效果：energy/scroll/spectrum 切换",
+    "设备切换：DEVICE 切三种硬件",
+    "Gamma 校正：gamma_table.npy 提供预生成查找表",
+    "频段可调：滑杆实时修改 MIN/MAX_FREQUENCY"
+  ],
+  "limits": [
+    "必须有麦克风与 LED 灯带/ESP8266 硬件，产物是灯效而不是任何音频文件（README.md#L23-L44）",
+    "ESP8266 通道最多 256 颗灯且灯数必须为偶数，超了要换树莓派并关 GUI（README.md#L36、L241-L242）",
+    "代码按 Python 2.7/3.5 编写，visualization.py 仍 import scipy.ndimage.filters，新版 SciPy 已移除该模块（visualization.py#L5）",
+    "N_PIXELS 必须与固件 NUM_LEDS 完全一致，否则颜色映射错位",
+    "Windows 要把默认录音设备设为 Stereo Mix/Voicemeeter，否则拿到静音导致灯不亮（README.md#L214-L223）"
+  ],
+  "signatureZh": "麦克风驱动 LED 灯带，FFT 分频推 ESP8266",
+  "chooseWhenZh": "想用实体 LED 灯带做音乐可视化的硬件 DIY 玩家。",
+  "avoidWhenZh": "必须有麦克风与 LED 灯带/ESP8266 硬件，产物是灯效而不是任何音频文件（README.md#L23-L44）",
+  "contrastWith": [
+    "djfun__audio-visualizer-python",
+    "luisbocanegra__plasma-audio-visualizer"
+  ]
+}

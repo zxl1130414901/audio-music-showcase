@@ -1,0 +1,185 @@
+{
+  "id": "tyiannak__pyAudioAnalysis",
+  "taglineZh": "特征到分类一条龙的 Python 音频分析",
+  "summaryZh": "pyAudioAnalysis 是 2014 年起维护的 Python 音频分析库，覆盖特征提取（MFCC、色度、谱特征）、分类器训练/评估、静音去除、有声段分割、音乐/语音分类与情感回归。它把短时与中段特征、sklearn 模型和命令行入口封装在一起，audioAnalysis.py 一条命令就能出谱图或分段结果。依赖 NumPy/SciPy/scikit-learn/pydub，mp3 等格式转码调用系统 ffmpeg，适合教学、原型与批量传统特征分析。",
+  "whatItMakes": [
+    {
+      "type": "特征表",
+      "exampleZh": "MFCC/色度/谱特征导出 CSV",
+      "strength": "核心能力"
+    },
+    {
+      "type": "分类模型",
+      "exampleZh": "SVM/随机森林训练并落盘",
+      "strength": "核心能力"
+    },
+    {
+      "type": "分段结果",
+      "exampleZh": "dirSegment 切有声段与静音",
+      "strength": "核心能力"
+    },
+    {
+      "type": "回归/可视化",
+      "exampleZh": "情感回归与特征分布图",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给会议录音切静音并分段",
+      "whoZh": "做语音数据清洗的工程师",
+      "whyZh": "dirSegment 等 CLI 直接输出分段文件",
+      "deliverableZh": "分段音频与 segments 文本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学演示音频特征与分类器",
+      "whoZh": "音频/机器学习课程教师",
+      "whyZh": "README 配 wiki 与两篇教程，API 命名直白",
+      "deliverableZh": "可运行的 notebook 或 CLI 演示",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做音乐/语音二分类或情感回归原型",
+      "whoZh": "算法原型开发者",
+      "whyZh": "extract_features_and_train 一行完成特征+训练",
+      "deliverableZh": "训练好的 sklearn 模型与评估报告",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量生成特征表做聚类",
+      "whoZh": "数据科学家",
+      "whyZh": "短时+中段特征可直接进 pandas 与 sklearn",
+      "deliverableZh": "特征表与可视化",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "全流程 CLI",
+      "descZh": "频谱/分段等 CLI 子命令"
+    },
+    {
+      "titleZh": "短时+中段特征",
+      "descZh": "能量/谱质心/MFCC/色度"
+    },
+    {
+      "titleZh": "分类器训练",
+      "descZh": "训练/评估/模型保存一条龙"
+    },
+    {
+      "titleZh": "静音与分段",
+      "descZh": "有监督与无监督分割"
+    }
+  ],
+  "ceilingsZh": "短时分析窗 0.050 s、步长 0.050 s（pyAudioAnalysis/audioTrainTest.py 第 28-29 行），README 示例的中段特征用 1.0 s 窗/1.0 s 步（第 31 行）。重采样目标只给 8000/16000/32000/44100 四档（audioAnalysis.py 第 316、327 行），没有固定默认值，属于未声明。无模型权重/显存需求，分类器是 sklearn 模型落盘；非 wav 输入先经系统 ffmpeg 转码（audioBasicIO.py 第 47 行）。深度学习不在本仓库内，README 把 CNN 路线指向 deep_audio_features。",
+  "workflowZh": "四步：装依赖 → 跑 fileSpectrogram 验证 → 组织数据训练 → fileClassify/dirSegment 推理",
+  "workflow": [
+    {
+      "stepZh": "装环境",
+      "detailZh": "pip install -r requirements.txt 再 pip install -e .；确认 PATH 有 ffmpeg",
+      "effortZh": "5-15 分钟"
+    },
+    {
+      "stepZh": "跑单文件",
+      "detailZh": "python audioAnalysis.py fileSpectrogram -i data/doremi.wav",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "训练分类器",
+      "detailZh": "组织 classA/classB 文件夹，调用 aT.extract_features_and_train(..., \"svm\", \"svmSMtemp\")",
+      "effortZh": "20-60 分钟（视数据量）"
+    },
+    {
+      "stepZh": "批量推理",
+      "detailZh": "用 fileClassify 或 dirSegment 处理目标任务",
+      "effortZh": "10-30 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "要分类/分段/回归成品流程选 pyAudioAnalysis；要更快的时频变换与更多刻度选 audioFlux。",
+      "adviceZh": "要分类/分段/回归成品流程选 pyAudioAnalysis；要更快的时频变换与更多刻度选 audioFlux。"
+    },
+    {
+      "vs": "JorenSix__TarsosDSP",
+      "whenZh": "Python 数据分析与模型训练选 pyAudioAnalysis；Java/Android 实时处理选 TarsosDSP。",
+      "adviceZh": "Python 数据分析与模型训练选 pyAudioAnalysis；Java/Android 实时处理选 TarsosDSP。"
+    },
+    {
+      "vs": "aubio__aubio",
+      "whenZh": "要 onset/音高/节拍的轻量 C 工具链选 aubio；要 sklearn 分类与分段闭环选 pyAudioAnalysis。",
+      "adviceZh": "要 onset/音高/节拍的轻量 C 工具链选 aubio；要 sklearn 分类与分段闭环选 pyAudioAnalysis。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "README.md#L10",
+      "noteZh": "特征、训练、事件检测等功能面"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L38",
+      "noteZh": "CLI 子命令示例"
+    },
+    {
+      "field": "pros[3]",
+      "source": "LICENSE.md#L1-L2",
+      "noteZh": "Apache License 2.0 全文，允许商用改造"
+    },
+    {
+      "field": "cons[0]",
+      "source": "requirements.txt#L8",
+      "noteZh": "依赖只有 >= 下限，无锁文件"
+    },
+    {
+      "field": "cons[1]",
+      "source": "pyAudioAnalysis/audioBasicIO.py#L47",
+      "noteZh": "拼接 ffmpeg 命令做转码"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "pyAudioAnalysis/audioTrainTest.py#L28",
+      "noteZh": "短时窗与步长均为 0.05 s"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "短时分析窗 0.050 s、步长 0.050 s（pyAudioAnalysis/audioTrainTest.py 第 28-29 行），README 示例的中段特征用 1.0 s 窗/1.0 s 步（第 31 行）。重采样目标只给 8000/16000/32000/44100 四档（audioAnalysis.py 第 316、327 行），没有固定默认值，属于未声明。无模型权重/显存需求，分类器是 sklearn 模型落盘；非 wav 输入先经系统 ffmpeg 转码（audioBasicIO.py 第 47 行）。深度学习不在本仓库内，README 把 CNN 路线指向 deep_audio_features。",
+  "capabilities": {
+    "maxDurationZh": "0.050 秒",
+    "formatsZh": [
+      "wav",
+      "csv",
+      "png",
+      "txt"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "全流程 CLI：频谱/分段等 CLI 子命令",
+    "短时+中段特征：能量/谱质心/MFCC/色度",
+    "分类器训练：训练/评估/模型保存一条龙",
+    "静音与分段：有监督与无监督分割"
+  ],
+  "limits": [
+    "requirements.txt 只给 >= 下限（matplotlib>=3.4.2、scikit_learn>=0.24.2、imblearn 无版本），没有锁文件，Python 3.13 下依赖解析容易漂移。",
+    "非 wav 输入转码调用系统 ffmpeg 命令（audioBasicIO.py 第 47 行拼 command 执行），PATH 里没有 ffmpeg 会直接失败。",
+    "本体是传统特征 + sklearn 分类器，不含深度模型；CNN 方案指向另一个仓库 deep_audio_features，上深度学习要再装一套 PyTorch。",
+    "pydub 在 Python 3.13 依赖 audioop，官方已移除该模块，需要额外装 audioop-lts。",
+    "CLI 的 -s 采样率只允许 8000/16000/32000/44100 四档（audioAnalysis.py 第 316、327 行），传其他值会被 argparse 拒绝。",
+    "分类器模型用 pickle 落盘，跨 sklearn 版本加载可能告警或失败。"
+  ],
+  "signatureZh": "特征到分类一条龙的 Python 音频分析",
+  "chooseWhenZh": "用传统特征和 sklearn 快速做音频分类、分段、情感回归的教学或原型项目。",
+  "avoidWhenZh": "requirements.txt 只给 >= 下限（matplotlib>=3.4.2、scikit_learn>=0.24.2、imblearn 无版本），没有锁文件，Python 3.13 下依赖解析容易漂移。",
+  "contrastWith": [
+    "libAudioFlux__audioFlux",
+    "aubio__aubio"
+  ]
+}

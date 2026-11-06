@@ -1,0 +1,174 @@
+{
+  "id": "Text-to-Audio__AudioLCM",
+  "taglineZh": "LCM 文本生音频，2 步出 16 kHz WAV",
+  "summaryZh": "AudioLCM 是 ACM-MM 2024 官方实现，把文本到音频压到 2 步：文本嵌入 → ConcatDiT 预测 latent → AutoencoderKL 解 mel → BigVGAN 16 kHz 声码器出 wav。仓库有批量 InferAPI 和 CLI，权重分散在 ckpt、vocoder、CLAP、t5/bert。它比 AudioLDM 快，但只有 16 kHz，依赖锁在 pytorch-lightning 1.7/librosa 0.9，README 路径与目录有出入。",
+  "whatItMakes": [
+    {
+      "type": "文本生音效 WAV",
+      "exampleZh": "一句 prompt 出 16 kHz 短音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "批量音频",
+      "exampleZh": "AudioLCMBatchInfer 逐条跑 prompt 列表",
+      "strength": "核心能力"
+    },
+    {
+      "type": "mel 中间表示",
+      "exampleZh": "可选保存 .npy mel 供复用",
+      "strength": "辅助能力"
+    },
+    {
+      "type": "评估结果表",
+      "exampleZh": "CLI 跑数据集时写 result.csv",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "音效素材快速铺量",
+      "whoZh": "游戏音效师",
+      "whyZh": "2 步采样，单卡即可批量出条",
+      "deliverableZh": "一批 16 kHz WAV",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "论文复现/对比",
+      "whoZh": "音频研究者",
+      "whyZh": "官方代码、预训练权重与 ACM-MM 引用齐全",
+      "deliverableZh": "指标与样例",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "低显存实验",
+      "whoZh": "学生/爱好者",
+      "whyZh": "模型比 AudioLDM2 小，8GB 临界可跑",
+      "deliverableZh": "少量样例",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "文本条件数据增广",
+      "whoZh": "数据集构建者",
+      "whyZh": "批量 API 直接产 wav 加 npy",
+      "deliverableZh": "增广音频集",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "2 步 LCM",
+      "descZh": "ddim_steps 设为 2 即可出音"
+    },
+    {
+      "titleZh": "双 API",
+      "descZh": "单条与批量两个 API"
+    },
+    {
+      "titleZh": "BigVGAN",
+      "descZh": "16 kHz 波形由声码器重建"
+    },
+    {
+      "titleZh": "mel 可留存",
+      "descZh": "save_mel 开关可导出 .npy"
+    }
+  ],
+  "ceilingsZh": "输出固定 16 kHz 单声道（InferAPI 直接 soundfile.write(..., 16000)），latent 形状 20×312，CLI 默认 guidance 5、DDIM 2 步；batch_size 8、num_workers 32 只在训练配置里，推理按 prompt 逐条循环。README 未声明最长时长、显存占用或权重体积；实际要下 audiolcm.ckpt、BigVGAN、t5-v1_1-large、bert-base-uncased、CLAP_weights_2022.pth 五份。模型是 CLAP + ConcatDiT + AutoencoderKL + BigVGAN 四段，采样率上限被声码器锁在 16 kHz，不能直接出 44.1 kHz。",
+  "workflowZh": "五步：建 py3.10 环境 → 装旧版依赖 → 放五份权重 → 跑 CLI 或 InferAPI → 转码",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "Python 3.8–3.10 venv，3.13 装不动 pytorch-lightning 1.7",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "装依赖",
+      "detailZh": "pip install -r requirements.txt，再自装 torch/torchaudio",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "放权重",
+      "detailZh": "ckpt/audiolcm.ckpt、vocoder/logs/bigvnat16k93.5w、CLAP、t5、bert",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python scripts/txt2audio_for_lcm.py --ddim_steps 2 -b configs/audiolcm.yaml --sample_rate 16000 --vocoder-ckpt vocoder/logs/bigvnat16k93.5w -r ckpt/audiolcm.ckpt --outdir results --test-dataset audiocaps",
+      "effortZh": "1–3 分钟/条"
+    },
+    {
+      "stepZh": "转码",
+      "detailZh": "ffmpeg -i results/out.wav -ar 44100 -b:a 192k out.mp3",
+      "effortZh": "10 秒"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "AudioLDM 生态与文档更成熟但步数多；要 2 步低延迟且能接受 16 kHz 选 AudioLCM。",
+      "adviceZh": "AudioLDM 生态与文档更成熟但步数多；要 2 步低延迟且能接受 16 kHz 选 AudioLCM。"
+    },
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要 44.1 kHz 与干净 CLI 选 Stable Audio Open；AudioLCM 胜在 2 步和更小依赖。",
+      "adviceZh": "要 44.1 kHz 与干净 CLI 选 Stable Audio Open；AudioLCM 胜在 2 步和更小依赖。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L1-L5",
+      "noteZh": "ACM-MM 2024 与 latent consistency model 定位"
+    },
+    {
+      "field": "cons[0]",
+      "source": "requirements.txt#L4-L17",
+      "noteZh": "pytorch-lightning 1.7.0、librosa 0.9.2 等旧版本锁定"
+    },
+    {
+      "field": "pros[0]",
+      "source": "configs/audiolcm.yaml#L12-L20",
+      "noteZh": "mel_dim 20、mel_length 312、use_lcm True、50 步配置"
+    },
+    {
+      "field": "cons[2]",
+      "source": "pythonscripts/InferAPI.py#L95-L99",
+      "noteZh": "soundfile.write 固定 16000 采样率"
+    }
+  ],
+  "blockerZh": "卡在权重获取带宽上，不是代码跑不起来：本仓库必需权重共约 11.3GB（audiolcm.ckpt 实测 5.86GB、CLAP_weights_2022.pth 2.17GB、t5-v1_1-large 2.9GB（仓库只有 pytorch_model.bin）、BigVGAN best_netG.pt 0.42GB、bert-base-uncased 0.41GB）。实测 hf-mirror 前 2.2GB 用 201 秒（≈11MB/s），随后掉到 ≈1.1MB/s（主权重每 22 秒才 25MB），25 分钟累计只落 3.2GB，剩余 8.4GB 还需 80–90 分钟，远超单仓库 30 分钟上限。另外 8GB 显存也不够一把梭：LCM 主干 + autoencoder ≈5.5GB、BigVGAN ≈0.42GB，CLAP/BERT 0.41GB 与 T5-large 编码器 3.1GB 必须下放 CPU 才能跑（已写好在 CPU 侧编码的加载脚本）。",
+  "whatItWouldNeed": "完整 11.5GB 权重 + 稳定的 ≥10MB/s 带宽（或断点续传分多次拉）+ 8GB 显存（需把 CLAP/T5 条件编码器放 CPU 才勉强容纳）；代码侧还要打两个兼容补丁：torch.load 需 weights_only=False，CLAPWrapper 依赖已被 torch 2.6 移除的 torch._six（需注入兼容壳）。",
+  "ceilingZh": "输出固定 16 kHz 单声道（InferAPI 直接 soundfile.write(..., 16000)），latent 形状 20×312，CLI 默认 guidance 5、DDIM 2 步；batch_size 8、num_workers 32 只在训练配置里，推理按 prompt 逐条循环。README 未声明最长时长、显存占用或权重体积；实际要下 audiolcm.ckpt、BigVGAN、t5-v1_1-large、bert-base-uncased、CLAP_weights_2022.pth 五份。模型是 CLAP + ConcatDiT + AutoencoderKL + BigVGAN 四段，采样率上限被声码器锁在 16 kHz，不能直接出 44.1 kHz。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "npy",
+      "csv"
+    ],
+    "sampleRateZh": "16 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "2 步 LCM：ddim_steps 设为 2 即可出音",
+    "双 API：单条与批量两个 API",
+    "BigVGAN：16 kHz 波形由声码器重建",
+    "mel 可留存：save_mel 开关可导出 .npy"
+  ],
+  "limits": [
+    "依赖锁死旧栈：pytorch-lightning==1.7.0、librosa==0.9.2、huggingface_hub==0.20.2（requirements.txt#L4-L17）",
+    "README 要求 NVIDIA GPU + CUDA cuDNN，CPU 只是 device 回退（README.md#L58、InferAPI.py#L114）",
+    "输出仅 16 kHz，低于常见 44.1 kHz 交付标准（InferAPI.py#L98）",
+    "权重分散在 ckpt/vocoder/CLAP/t5/bert 五处，README 命令路径与仓库 configs/ 不一致（README.md#L66-L73、L88）",
+    "requirements.txt 把 torch 版本注释掉了，需自行装匹配 CUDA 的旧版 torch/torchaudio（requirements.txt#L1-L3）",
+    "README 里的 ./audiolcm.yaml、./audiolcm.ckpt 实际在 configs/audiolcm.yaml 与 ckpt/ 下，照抄会找不到文件"
+  ],
+  "signatureZh": "LCM 文本生音频，2 步出 16 kHz WAV",
+  "chooseWhenZh": "想在 8GB 级显存上快速批量生成 16 kHz 音效/环境声的研究或素材场景。",
+  "avoidWhenZh": "依赖锁死旧栈：pytorch-lightning==1.7.0、librosa==0.9.2、huggingface_hub==0.20.2（requirements.txt#L4-L17）",
+  "contrastWith": [
+    "haoheliu__AudioLDM",
+    "Stability-AI__stable-audio-tools"
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "id": "FluidSynth__fluidsynth",
+  "taglineZh": "SF2 采样合成器，MIDI 一条命令渲成 WAV",
+  "summaryZh": "FluidSynth 是 LGPL 的 C 语言 SoundFont 2 合成器：读 MIDI 事件，按 SF2/SF3/DLS 的采样与包络合成音频，可实时播放也可用 -F 离线快渲。API 兼有库与命令行，参数覆盖复音数（默认 256）、采样率（8000–96000）、声道组（默认立体声）；驱动层跨 ALSA/CoreAudio/WASAPI/DSound/JACK。仓库自带 1996 年 AWE 音色。音质取决于你喂的 SF2；Windows 上要自己 CMake + MSVC 构建。",
+  "whatItMakes": [
+    {
+      "type": "MIDI 渲染 WAV",
+      "exampleZh": "fluidsynth -F out.wav -r 44100 piano.sf2 song.mid 一次写完整个音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "实时 MIDI 合成",
+      "exampleZh": "接 MIDI 键盘后按 ASIO/WASAPI 低延迟发声",
+      "strength": "核心能力"
+    },
+    {
+      "type": "可嵌入的合成库",
+      "exampleZh": "调用 fluid_synth_noteon 等 API 把合成器塞进自研程序或游戏引擎",
+      "strength": "核心能力"
+    },
+    {
+      "type": "SoundFont 试听",
+      "exampleZh": "用 -g 调增益、-o synth.reverb.active=0 关混响来对比音色库",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "MIDI 批量烘音",
+      "whoZh": "编曲/素材制作",
+      "whyZh": "-F 不需声卡，服务器或本机都能批量把 .mid 转成 wav",
+      "deliverableZh": "wav/mp3 成品",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "游戏/工具内嵌合成",
+      "whoZh": "C/C++ 开发者",
+      "whyZh": "LGPL 库、API 稳定、体积小，可直接链接进引擎",
+      "deliverableZh": "带合成功能的程序",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "老 MIDI 工程复活",
+      "whoZh": "怀旧音乐爱好者",
+      "whyZh": "自带 AWE 音色，与 90 年代 MIDI 的音色映射接近",
+      "deliverableZh": "还原版录音",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "现代配乐制作",
+      "whoZh": "影视/游戏配乐",
+      "whyZh": "音质取决于 SF2，自带音色采样旧、无多采样层与 round-robin",
+      "deliverableZh": "分轨",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "离线快渲",
+      "descZh": "-F 直接写文件，无需声卡"
+    },
+    {
+      "titleZh": "复音 256",
+      "descZh": "复音默认 256，上限 65535"
+    },
+    {
+      "titleZh": "采样率可调",
+      "descZh": "8000–96000 Hz，默认 44100"
+    },
+    {
+      "titleZh": "多驱动支持",
+      "descZh": "ALSA/WASAPI/JACK 等五套驱动"
+    },
+    {
+      "titleZh": "自带音色",
+      "descZh": "自带 sf2/sf3/dls 样例音源"
+    }
+  ],
+  "ceilingsZh": "参数上限来自 fluid_synth.c 注册的 settings：synth.polyphony 默认 256、范围 1–65535；synth.sample-rate 默认 44100、范围 8000–96000；synth.audio-channels 默认 1 组（范围 1–128），即默认一对立体声，要 5.1 得自己加组。音色不生成，全部来自 SF2/SF3/DLS 采样，采样位深与循环点由音源文件决定，仓库自带的 sf2 版 VintageDreamsWaves-v2 只有 314 KB。命令行 -F 是整段渲染，长曲目一次写完，不分段也不流式；位深默认 16 bit，可选 s24/s32/float。",
+  "workflowZh": "四步：CMake + MSVC 构建 → 装/放 SF2 音源 → fluidsynth -F 渲染 MIDI → ffmpeg 转码验收",
+  "workflow": [
+    {
+      "stepZh": "构建",
+      "detailZh": "装 VS 生成工具与 CMake 后 cmake -Bbuild 再 cmake --build build --config Release；或 scoop/choco 装预编译包",
+      "effortZh": "20–45 分钟"
+    },
+    {
+      "stepZh": "备音源",
+      "detailZh": "直接用仓库 sf2/VintageDreamsWaves-v2.sf2，或换自己的 SF2",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "渲染",
+      "detailZh": "fluidsynth -F out.wav -r 44100 -g 1.0 sf2/VintageDreamsWaves-v2.sf2 input.mid",
+      "effortZh": "秒级到分钟级，取决于曲长"
+    },
+    {
+      "stepZh": "验收转码",
+      "detailZh": "ffprobe 看采样率/声道，verify_audio.ps1 查静音，再 ffmpeg 转 mp3",
+      "effortZh": "1–2 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "schellingb__TinySoundFont",
+      "whenZh": "只要几 KB 的嵌入式 SF2 播放库选 TinySoundFont；需要 CLI、多种音频驱动与效果器选 FluidSynth",
+      "adviceZh": "只要几 KB 的嵌入式 SF2 播放库选 TinySoundFont；需要 CLI、多种音频驱动与效果器选 FluidSynth"
+    },
+    {
+      "vs": "surge-synthesizer__surge",
+      "whenZh": "要算法合成、调制矩阵与大量音色选 Surge XT；只要按 MIDI 回放 SF2 采样、追求低 CPU 选 FluidSynth",
+      "adviceZh": "要算法合成、调制矩阵与大量音色选 Surge XT；只要按 MIDI 回放 SF2 采样、追求低 CPU 选 FluidSynth"
+    },
+    {
+      "vs": "grame-cncm__faust",
+      "whenZh": "要自己写 DSP 算法再编译成插件选 Faust；要用现成 SoundFont 音源快速出 MIDI 成品选 FluidSynth",
+      "adviceZh": "要自己写 DSP 算法再编译成插件选 Faust；要用现成 SoundFont 音源快速出 MIDI 成品选 FluidSynth"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "ceilingsZh",
+      "source": "src/synth/fluid_synth.c#L251-L258",
+      "noteZh": "polyphony 默认 256/上限 65535、audio-channels 默认 1、sample-rate 默认 44100 范围 8000–96000"
+    },
+    {
+      "field": "whatItMakes[0]",
+      "source": "src/fluidsynth.c#L475-L475",
+      "noteZh": "getopt 表里 fast-render 对应 -F，说明存在快速离线渲染参数"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.cmake.md#L3-L5",
+      "noteZh": "构建说明只有一句指向 fluidsynth.org wiki，仓库内无步骤"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L18",
+      "noteZh": "说明它读 MIDI 事件并用 SoundFont 合成，也可直接播放 MIDI 文件"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L38-L40",
+      "noteZh": "源码构建要参考 wiki 的 BuildingWithCMake"
+    },
+    {
+      "field": "summaryZh",
+      "source": "sf2/COPYRIGHT.txt#L1-L10",
+      "noteZh": "自带音色是 1996 年 AWE 版且禁止改写/转格式再分发"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "src/bindings/fluid_filerenderer.c#L51-L78",
+      "noteZh": "格式表列 s8/s16/s24/s32/u8/float/double，默认 SF_FORMAT_WAV|SF_FORMAT_PCM_16"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "参数上限来自 fluid_synth.c 注册的 settings：synth.polyphony 默认 256、范围 1–65535；synth.sample-rate 默认 44100、范围 8000–96000；synth.audio-channels 默认 1 组（范围 1–128），即默认一对立体声，要 5.1 得自己加组。音色不生成，全部来自 SF2/SF3/DLS 采样，采样位深与循环点由音源文件决定，仓库自带的 sf2 版 VintageDreamsWaves-v2 只有 314 KB。命令行 -F 是整段渲染，长曲目一次写完，不分段也不流式；位深默认 16 bit，可选 s24/s32/float。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "离线快渲：-F 直接写文件，无需声卡",
+    "复音 256：复音默认 256，上限 65535",
+    "采样率可调：8000–96000 Hz，默认 44100",
+    "多驱动支持：ALSA/WASAPI/JACK 等五套驱动",
+    "自带音色：自带 sf2/sf3/dls 样例音源"
+  ],
+  "limits": [
+    "README 只给 wiki 外链，构建步骤不在仓库内（README.cmake.md 第一句就把人送去 fluidsynth.org），离线看文档等于没有",
+    "env_probe 明确 winget 无 fluidsynth 包，本机又无 cmake/MSVC，只能 scoop/choco 或自己装 VS 生成工具",
+    "音质上限完全取决于外部 SF2 采样，仓库自带的是 1996 年的 AWE 音色，做现代配乐明显偏旧",
+    "命令行参数是 MIDI 合成器语义（-g 增益、-o 设置、-F 输出），不做音频后处理，转码/归一化要另接 ffmpeg",
+    "sf2/COPYRIGHT.txt 要求不得修改/转格式再分发，自带音色只能原样用",
+    "-F 渲染默认跟随 MIDI 时长，长曲目会一次写完整文件，F 盘 USB HDD 写入 69.7 MB/s 要留意",
+    "Windows 上若只装运行时库而没有 sndfile 支持，输出会退回 raw 音频，需要自己封 WAV 头"
+  ],
+  "signatureZh": "SF2 采样合成器，MIDI 一条命令渲成 WAV",
+  "chooseWhenZh": "要把 MIDI 工程批量烘成 WAV、或在自研程序里内嵌一个轻量 SF2 合成器的人",
+  "avoidWhenZh": "README 只给 wiki 外链，构建步骤不在仓库内（README.cmake.md 第一句就把人送去 fluidsynth.org），离线看文档等于没有",
+  "contrastWith": [
+    "schellingb__TinySoundFont",
+    "surge-synthesizer__surge"
+  ]
+}

@@ -1,0 +1,3140 @@
+{
+  "meta": {
+    "generatedAt": "2026-11-06T18:00:00+08:00",
+    "methodZh": "逐仓读 README 全文、依赖清单、入口脚本与 examples；每条 claim 的 source 指向仓库内具体文件（有行号则带 #Lx-Ly），quote 为原文片段，未改写；pros/cons 逐条覆盖。",
+    "disclaimerZh": "quote 只截取原文，不代表整段结论；README 宣称与源码/环境能力冲突时在 cons 与 details.blockerZh 中说明。",
+    "coverageZh": "claims 覆盖 56 个仓库的全部 pros/cons；filesRead 记录实际读过的文件。"
+  },
+  "repos": [
+    {
+      "id": "Anjok07__ultimatevocalremovergui",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "separate.py",
+        "UVR.py",
+        "gui_data/constants.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L12-L12",
+          "quote": "UVR's core developers trained all of the models provided in this package"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L21-L23",
+          "quote": "No prerequisites are required."
+        },
+        {
+          "target": "pros[2]",
+          "source": "gui_data/constants.py#L503-L508",
+          "quote": "MP3_BIT_RATES = ('96k', '128k', '160k', '224k', '256k', '320k')"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L254-L259",
+          "quote": "Memory allocation errors can usually be resolved by lowering the \"Segment\" or \"Window\" sizes."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L27-L31",
+          "quote": "You must install UVR to the main C:\\ drive. Installing UVR to a secondary drive will cause instability."
+        },
+        {
+          "target": "cons[1]",
+          "source": "separate.py#L68-L68",
+          "quote": "class SeperateAttributes:"
+        },
+        {
+          "target": "cons[2]",
+          "source": "gui_data/constants.py#L90-L104",
+          "quote": "NORMAL_REPO = \"https://github.com/TRvlvr/model_repo/releases/download/all_public_uvr_models/\""
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L239-L240",
+          "quote": "Nvidia GTX 1060 6GB is the minimum requirement for GPU conversions."
+        }
+      ]
+    },
+    {
+      "id": "facebookresearch__audiocraft",
+      "filesRead": [
+        "README.md",
+        "docs/MUSICGEN.md",
+        "requirements.txt",
+        "audiocraft/models/musicgen.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "docs/MUSICGEN.md#L50-L54",
+          "quote": "We provide a simple API and 10 pre-trained models."
+        },
+        {
+          "target": "pros[1]",
+          "source": "docs/MUSICGEN.md#L4-L9",
+          "quote": "MusicGen is a single stage auto-regressive Transformer model trained over a 32kHz EnCodec tokenizer with 4 codebooks s…"
+        },
+        {
+          "target": "pros[2]",
+          "source": "docs/MUSICGEN.md#L84-L86",
+          "quote": "# Will save under {idx}.wav, with loudness normalization at -14 db LUFS."
+        },
+        {
+          "target": "pros[3]",
+          "source": "docs/MUSICGEN.md#L53",
+          "quote": "`facebook/musicgen-melody`: 1.5B model, text to music and text+melody to music"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L48",
+          "quote": "AudioCraft contains inference and training code for two state-of-the-art AI based audio and music processing models"
+        },
+        {
+          "target": "cons[0]",
+          "source": "requirements.txt#L12-L17",
+          "quote": "torch==2.1.0"
+        },
+        {
+          "target": "cons[1]",
+          "source": "docs/MUSICGEN.md#L33",
+          "quote": "AudioCraft requires a GPU with at least 16 GB of memory for running inference with the medium-sized models (~1.5B para…"
+        },
+        {
+          "target": "cons[1]",
+          "source": "docs/MUSICGEN.md#L64",
+          "quote": "In order to use MusicGen locally **you must have a GPU**. We recommend 16GB of memory"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L76",
+          "quote": "The models weights in this repository are released under the CC-BY-NC 4.0 license"
+        },
+        {
+          "target": "cons[3]",
+          "source": "audiocraft/models/musicgen.py#L54",
+          "quote": "self.set_generation_params(duration=15)  # default duration"
+        },
+        {
+          "target": "cons[3]",
+          "source": "audiocraft/models/musicgen.py#L80",
+          "quote": "return MusicGen(name, compression_model, lm, max_duration=30)"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "docs/MUSICGEN.md#L20",
+          "quote": "We use 20K hours of licensed music to train MusicGen."
+        }
+      ]
+    },
+    {
+      "id": "AudioKit__AudioKit",
+      "filesRead": [
+        "README.md",
+        "Package.swift",
+        "Sources/AudioKit/AudioKit.docc/Nodes.md",
+        "Sources/AudioKit"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "Sources/AudioKit/AudioKit.docc/Nodes.md#L5-L33",
+          "quote": "AudioKit has several kinds of nodes:"
+        },
+        {
+          "target": "pros[1]",
+          "source": "Package.swift#L7",
+          "quote": "platforms: [.macOS(.v11), .iOS(.v13), .tvOS(.v13), .visionOS(.v1)],"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L31",
+          "quote": "The [AudioKit Cookbook](https://github.com/AudioKit/Cookbook) contains many recipes"
+        },
+        {
+          "target": "pros[3]",
+          "source": "Sources/AudioKit/AudioKit.docc/Nodes.md#L27-L29",
+          "quote": "This is for processing an audio quickly and saving it, rather than playing it in realtime through a speaker."
+        },
+        {
+          "target": "cons[0]",
+          "source": "Package.swift#L7",
+          "quote": "platforms: [.macOS(.v11), .iOS(.v13), .tvOS(.v13), .visionOS(.v1)],"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L17-L23",
+          "quote": "Using Xcode, you can add AudioKit and any of the other AudioKit libraries using _Collections_:"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L13",
+          "quote": "AudioKit is an audio synthesis, processing, and analysis platform for iOS, macOS (including Catalyst), and tvOS."
+        }
+      ]
+    },
+    {
+      "id": "supercollider__supercollider",
+      "filesRead": [
+        "README.md",
+        "README_WINDOWS.md",
+        "include/server/SC_WorldOptions.h",
+        "server/scsynth/SC_World.cpp"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L6",
+          "quote": "scsynth, a real-time audio server with hundreds of unit generators"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L31",
+          "quote": "Windows 10 64-bit and MSVC 2022"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L11",
+          "quote": "sclang comes with its own package manager, called Quarks."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L9",
+          "quote": "scide, an editing environment for sclang with an integrated help system"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README_WINDOWS.md#L217-L226",
+          "quote": "Required components"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L6",
+          "quote": "scsynth, a real-time audio server"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L105",
+          "quote": "SuperCollider is free software available under Version 3 the GNU General Public License."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "include/server/SC_WorldOptions.h#L64",
+          "quote": "uint32 mPreferredSampleRate = 0;"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "server/scsynth/SC_World.cpp#L588-L605",
+          "quote": "if (!inOptions->mNonRealTimeOutputFilename)"
+        }
+      ]
+    },
+    {
+      "id": "tyiannak__pyAudioAnalysis",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "pyAudioAnalysis/audioAnalysis.py",
+        "pyAudioAnalysis/audioBasicIO.py",
+        "pyAudioAnalysis/audioTrainTest.py",
+        "pyAudioAnalysis/ShortTermFeatures.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L10",
+          "quote": "Extract audio *features* and representations (e.g. mfccs, spectrogram, chromagram)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L38",
+          "quote": "python audioAnalysis.py fileSpectrogram -i data/doremi.wav"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L25",
+          "quote": "More examples and detailed tutorials can be found"
+        },
+        {
+          "target": "pros[3]",
+          "source": "LICENSE.md#L1-L2",
+          "quote": "Apache License"
+        },
+        {
+          "target": "cons[0]",
+          "source": "requirements.txt#L8",
+          "quote": "scikit_learn>=0.24.2"
+        },
+        {
+          "target": "cons[1]",
+          "source": "pyAudioAnalysis/audioBasicIO.py#L47",
+          "quote": "command = \"ffmpeg -i \\\"\" + f + \"\\\" -ar \" + str(sampling_rate)"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L83",
+          "quote": "training and using CNNs for audio classification (PyTorch)"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "pyAudioAnalysis/audioTrainTest.py#L28",
+          "quote": "shortTermWindow = 0.050"
+        }
+      ]
+    },
+    {
+      "id": "naudio__NAudio",
+      "filesRead": [
+        "README.md",
+        "global.json",
+        "Directory.Build.props",
+        "samples/NAudioConsoleTest/README.md",
+        "samples/MixDiff/MixDiff.csproj",
+        "src/NAudio.Core/NAudio.Core.csproj"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L18",
+          "quote": "* **The single `NAudio` assembly is split into focused packages** — take only what you need."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L72",
+          "quote": "  * FLAC, Ogg Vorbis, Opus and MP3 cross-platform with libsndfile"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L81",
+          "quote": "Mix and manipulate audio streams using a 32-bit floating point mixing engine"
+        },
+        {
+          "target": "pros[3]",
+          "source": "samples/NAudioConsoleTest/README.md#L3-L4",
+          "quote": "Interactive + scriptable harness for exercising NAudio against real audio hardware. 44 tests"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L51",
+          "quote": "* **[Documentation site](https://naudio.github.io/NAudio/)** — tutorials and the full API reference."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L20",
+          "quote": "* **Minimum target framework is `net9.0`**"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L223",
+          "quote": "NAudio is an open source audio API for .NET written in C# by Mark Heath"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L231",
+          "quote": "the WASAPI, WinMM, ASIO, DMO and WinForms packages remain Windows-only"
+        },
+        {
+          "target": "cons[3]",
+          "source": "samples/NAudioConsoleTest/README.md#L43-L44",
+          "quote": "(needs the MSVC build tools)"
+        }
+      ]
+    },
+    {
+      "id": "syedhali__EZAudio",
+      "filesRead": [
+        "README.md",
+        "EZAudio.podspec",
+        "EZAudioExamples/OSX/ExamplesOSX.xcworkspace"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L24-L24",
+          "quote": "I've designed six audio components and two interface components"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L195-L195",
+          "quote": "Provides access to the default device microphone in one line of code"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L1032-L1032",
+          "quote": "it's GPU-accelerated, can handle lots of points"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L1110-L1110",
+          "quote": "EZAudio is available under the MIT license."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L7-L7",
+          "quote": "EZAudio has recently been deprecated in favor of [AudioKit](https://github.com/audiokit/AudioKit)."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L60-L60",
+          "quote": "`EZAudio` was designed to work transparently across all iOS and OSX devices."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L64-L64",
+          "quote": "Within this repo you'll find the examples for iOS and OSX"
+        }
+      ]
+    },
+    {
+      "id": "surge-synthesizer__surge",
+      "filesRead": [
+        "README.md",
+        "CMakeLists.txt",
+        ".gitmodules",
+        "src/surge-python/tests/test_surgepy.py",
+        "src/surge-xt/cli/cli-main.cpp"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "src/surge-python/tests/test_surgepy.py#L28-L32",
+          "quote": "s.playNote(0, 60, 127, 0)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L47-L48",
+          "quote": "cmake --build build --config Release --target surge-staged-assets"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L52-L53",
+          "quote": "This will build all the Surge XT binary assets in the directory `build/surge_xt_products`"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L222",
+          "quote": "cmake -Bbuild -G\"Visual Studio 16 2019\" -A x64"
+        },
+        {
+          "target": "cons[0]",
+          "source": ".gitmodules#L10-L11",
+          "quote": "[submodule \"libs/JUCE\"]\n\tpath = libs/JUCE"
+        },
+        {
+          "target": "cons[1]",
+          "source": "CMakeLists.txt#L80",
+          "quote": "set(CMAKE_CXX_STANDARD 20)"
+        },
+        {
+          "target": "cons[2]",
+          "source": "src/surge-xt/cli/cli-main.cpp#L660",
+          "quote": "PRINTERR(\"Unable to open audio device: \" << res << \"!\");"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L84-L85",
+          "quote": "Due to licensing restrictions, VST2 builds of Surge XT **may not** be redistributed."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/surge-python/tests/test_surgepy.py#L28",
+          "quote": "s = surgepy.createSurge(44100)"
+        },
+        {
+          "target": "workflow[0]",
+          "source": "README.md#L110-L116",
+          "quote": "building with ASIO is often preferred for Surge XT standalone"
+        }
+      ]
+    },
+    {
+      "id": "Stability-AI__stable-audio-tools",
+      "filesRead": [
+        "README.md",
+        "pyproject.toml",
+        "run_gradio.py",
+        "stable_audio_tools/models/pretrained.py",
+        "stable_audio_tools/configs/model_configs/txt2audio/stable_audio_1_0.json"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L151-L159",
+          "quote": "currently limited to one of `\"autoencoder\", \"diffusion_uncond\", \"diffusion_cond\""
+        },
+        {
+          "target": "pros[1]",
+          "source": "stable_audio_tools/configs/model_configs/txt2audio/stable_audio_1_0.json#L2-L5",
+          "quote": "\"sample_rate\": 44100,"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L42-L69",
+          "quote": "A basic Gradio interface is provided to test out trained models."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L8-L23",
+          "quote": "We use [uv](https://docs.astral.sh/uv/) for fast, reproducible dependency management."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L44-L46",
+          "quote": "once you've accepted the terms for the model on Hugging Face"
+        },
+        {
+          "target": "cons[1]",
+          "source": "pyproject.toml#L9-L9",
+          "quote": "requires-python = \">=3.10,<3.11\""
+        },
+        {
+          "target": "cons[2]",
+          "source": "pyproject.toml#L28-L29",
+          "quote": "\"torch==2.7.1\","
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L25-L27",
+          "quote": "Follow the installation instructions in the Flash Attention repository to install it after running `uv sync`."
+        }
+      ]
+    },
+    {
+      "id": "MTG__essentia",
+      "filesRead": [
+        "README.md",
+        "doc/sphinxdoc/installing.rst",
+        "doc/sphinxdoc/streaming_extractor_music.rst",
+        "doc/sphinxdoc/extractors_out_of_box.rst",
+        "src/examples/python/models/models.yaml",
+        "setup.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L9",
+          "quote": "Furthermore, it includes a Vamp plugin to be used with Sonic Visualiser for visualization purposes."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L9",
+          "quote": "includes a number of predefined executable extractors for the available music descriptors"
+        },
+        {
+          "target": "pros[2]",
+          "source": "doc/sphinxdoc/streaming_extractor_music.rst#L11",
+          "quote": "analysis sample rate (audio will be converted to it before analysis, recommended and default value is 44100.0)"
+        },
+        {
+          "target": "pros[3]",
+          "source": "src/examples/python/models/models.yaml#L1-L4",
+          "quote": "algo_name: TensorflowPredictVGGish"
+        },
+        {
+          "target": "cons[0]",
+          "source": "doc/sphinxdoc/installing.rst#L209",
+          "quote": "Essentia C++ library and extractors based on it can be compiled and run correctly on Windows, but Python bindings are …"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L23",
+          "quote": "To use in Python (Linux `x86_64`, `i686`): `pip install essentia` or `pip install essentia-tensorflow`."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L9",
+          "quote": "Essentia is an open-source C++ library for audio analysis and audio-based music information retrieval"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L9",
+          "quote": "released under the Affero GPLv3 license"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/examples/python/models/models.yaml#L40-L42",
+          "quote": "openl3: algo-name: NULL sample_rate: 48000"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/examples/python/models/models.yaml#L96-L99",
+          "quote": "tempocnn: algo_name: TempoCNN sample_rate: 11025"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "doc/sphinxdoc/extractors_out_of_box.rst#L37",
+          "quote": "Given an audio file these extractors produce a yaml or json file with results."
+        }
+      ]
+    },
+    {
+      "id": "aubio__aubio",
+      "filesRead": [
+        "README.md",
+        "python/README.md",
+        "examples/utils.c",
+        "setup.py",
+        "VERSION",
+        ".appveyor.yml",
+        "python/demos/"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L54-L62",
+          "quote": "- `aubioonset` outputs the time stamp of detected note onsets"
+        },
+        {
+          "target": "pros[1]",
+          "source": "python/README.md#L53-L55",
+          "quote": "`demo_wav2midi.py` detects the notes in a file and uses [mido] to write the"
+        },
+        {
+          "target": "pros[2]",
+          "source": "examples/utils.c#L41-L43",
+          "quote": "uint_t buffer_size = 512;"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L29-L32",
+          "quote": "  - spectral filtering"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L8",
+          "quote": "[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/aubio.svg?label=Conda%20downloads)]"
+        },
+        {
+          "target": "cons[0]",
+          "source": ".appveyor.yml#L34-L35",
+          "quote": "PYTHONDIR: C:\\Python38"
+        },
+        {
+          "target": "cons[1]",
+          "source": "setup.py#L37-L40",
+          "quote": "sources = sorted(glob.glob(os.path.join('python', 'ext', '*.c')))"
+        },
+        {
+          "target": "cons[2]",
+          "source": "VERSION#L4",
+          "quote": "AUBIO_VERSION_STATUS='-alpha'"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L51-L52",
+          "quote": "- `aubiocut` slices sound files at onset or beat timestamps"
+        },
+        {
+          "target": "blockerZh",
+          "source": ".appveyor.yml#L8-L35",
+          "quote": "PYTHON_VERSION: 3.7.x"
+        }
+      ]
+    },
+    {
+      "id": "libAudioFlux__audioFlux",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "docs/installing.md",
+        "docs/examples.md",
+        "python/audioflux/stft.py",
+        "python/audioflux/__version__.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L74-L89",
+          "quote": "The above transform supports all the following frequency scale types"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L125-L127",
+          "quote": "**`pitch`** - YIN, STFT, etc algorithm."
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L133",
+          "quote": "currently supports Linux, macOS, Windows, iOS and Android systems"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L181",
+          "quote": "More detailed performance benchmark are provided in the Benchmark module."
+        },
+        {
+          "target": "cons[0]",
+          "source": "setup.py#L13-L15",
+          "quote": "if platform.startswith('win'):"
+        },
+        {
+          "target": "cons[1]",
+          "source": "python/audioflux/stft.py#L69",
+          "quote": "def __init__(self, radix2_exp=12, window_type=WindowType.RECT, slide_length=1024):"
+        },
+        {
+          "target": "cons[2]",
+          "source": "setup.py#L25",
+          "quote": "Only supports macOS/linux"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "python/audioflux/stft.py#L363",
+          "quote": "def y_coords(self, samplate=32000):"
+        }
+      ]
+    },
+    {
+      "id": "DISTRHO__Cardinal",
+      "filesRead": [
+        "README.md",
+        "docs/BUILDING.md",
+        "docs/CARDINAL-MODULES.md",
+        ".gitmodules"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L16",
+          "quote": "Cardinal contains Rack, some 3rd-party modules and a few internal utilities all in a single binary."
+        },
+        {
+          "target": "pros[0]",
+          "source": "README.md#L19",
+          "quote": "Cardinal does not load external modules and does not connect to the official Rack library/store."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L6",
+          "quote": "available in AudioUnit/CLAP/LV2/VST2/VST3 plugin formats and as a standalone app for FreeBSD, Linux, macOS, Windows an…"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L34",
+          "quote": "Cardinal releases have official builds for Linux, macOS and Windows."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L64",
+          "quote": "FX and Synth variants both have 2 audio outputs, while \"main\" has 8."
+        },
+        {
+          "target": "cons[0]",
+          "source": "docs/BUILDING.md#L159-L161",
+          "quote": "Cardinal does not support msvc, using mingw is required."
+        },
+        {
+          "target": "cons[1]",
+          "source": "docs/CARDINAL-MODULES.md#L27",
+          "quote": "This is a simple audio file player plugin."
+        },
+        {
+          "target": "cons[2]",
+          "source": "docs/BUILDING.md#L10-L11",
+          "quote": "Worth noting that, if cloning Cardinal from git, use of submodules is required."
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L44",
+          "quote": "Note: Neither the macOS or Windows builds are signed, so expect warnings saying they are from an \"untrusted developer\"."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L69",
+          "quote": "This variant provides 8 audio inputs and outputs and 10 CV inputs and outputs."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "docs/CARDINAL-MODULES.md#L33",
+          "quote": "Files are streamed from disk if longer than 30 seconds in length, otherwise loaded entirely on RAM."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "docs/CARDINAL-MODULES.md#L37",
+          "quote": "The audio files are played back as-is, with resampling only done when needed to match the host sample rate."
+        }
+      ]
+    },
+    {
+      "id": "grame-cncm__faust",
+      "filesRead": [
+        "README.md",
+        "build/README-MSYS2.md",
+        "build/README-MSVC.md",
+        "windows/README.md",
+        "architecture/sndfile.cpp",
+        "examples/README.md",
+        ".gitmodules"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L23",
+          "quote": "It can compile in different languages: C, C++, JAVA, LLVM IR, WebAssembly etc."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L41",
+          "quote": "examples/              : Faust programs examples organized by categories"
+        },
+        {
+          "target": "pros[2]",
+          "source": "architecture/sndfile.cpp#L248-L256",
+          "quote": "int sample_rate = loptrm(&argc, argv, \"--sample-rate\", \"-sr\", kSampleRate);"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L5",
+          "quote": "![Windows](https://github.com/grame-cncm/faust/actions/workflows/windows.yml/badge.svg)"
+        },
+        {
+          "target": "cons[0]",
+          "source": ".gitmodules#L1-L3",
+          "quote": "[submodule \"libraries\"]\n\tpath = libraries"
+        },
+        {
+          "target": "cons[1]",
+          "source": "build/README-MSYS2.md#L21-L26",
+          "quote": "- mingw-w64-x86_64-gcc"
+        },
+        {
+          "target": "cons[2]",
+          "source": "examples/README.md#L7-L10",
+          "quote": "faust2caqt filtering/vcfWahLab.dsp"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "architecture/sndfile.cpp#L256-L257",
+          "quote": "int num_samples = loptrm(&argc, argv, \"--samples\", \"-s\", ((end > 0) ? (end + kSampleRate) : kSampleRate * 5));"
+        },
+        {
+          "target": "blockerZh",
+          "source": "README.md#L98",
+          "quote": "Since release 2.5.18, Faust compilation and installation is based on [CMake](https://cmake.org/)."
+        }
+      ]
+    },
+    {
+      "id": "pkalogiros__AudioMass",
+      "filesRead": [
+        "README.md",
+        "src/ui.js",
+        "src/engine.js",
+        "src/index.html"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L18-L18",
+          "quote": "Run ```go run audiomass-server.go```"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L9-L9",
+          "quote": "AudioMass now ships with a full multitrack mode -- layer multiple tracks, drag clips around"
+        },
+        {
+          "target": "pros[2]",
+          "source": "src/ui.js#L325-L325",
+          "quote": "app.engine.DownloadFile ( value, format, kbps, export_sel, stereo, bit_depth, dither );"
+        },
+        {
+          "target": "pros[3]",
+          "source": "src/engine.js#L38-L38",
+          "quote": "var loadableAudioExtensions = /\\.(aac|aif|aiff|flac|m4a|mp3|oga|ogg|opus|wav|wave|webm)$/i;"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L15-L15",
+          "quote": "## Getting it to Run!"
+        },
+        {
+          "target": "cons[1]",
+          "source": "src/engine.js#L69-L69",
+          "quote": "var b = wavesurfer.backend && wavesurfer.backend.buffer;"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L27-L27",
+          "quote": "If you want to build the all.build.js minified file for delivery/publishing this then you can use uglify and run as:"
+        }
+      ]
+    },
+    {
+      "id": "chaosprint__glicol",
+      "filesRead": [
+        "README.md",
+        "js/README.md",
+        "js/package.json",
+        "rs/main/README.md",
+        "rs/main/examples/hello.rs",
+        "rs/synth/Cargo.toml"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L37",
+          "quote": "  - Near-native, garbage-collection-free and memory-safe real-time audio in web browsers"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L108",
+          "quote": "o: speed 2.0 >> seq 60 _~a _ 48__67"
+        },
+        {
+          "target": "pros[2]",
+          "source": "rs/main/README.md#L10",
+          "quote": "    println!(\"next block {:?}\", engine.next_block(vec![]));"
+        },
+        {
+          "target": "pros[3]",
+          "source": "js/README.md#L22",
+          "quote": "<script src=\"https://cdn.jsdelivr.net/gh/chaosprint/glicol@latest/js/src/glicol.js\"></script>"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L19",
+          "quote": "- live coding performance, either in browsers with your friends or in a VST plugin(experimental)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "rs/synth/Cargo.toml#L53",
+          "quote": "# cpal = \"0.14.0\""
+        },
+        {
+          "target": "cons[1]",
+          "source": "rs/main/README.md#L18",
+          "quote": "It compiles to WebAssembly and runs in browsers."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L187",
+          "quote": "> Note that Glicol is still highly experimental, so it can be risky for live performances."
+        },
+        {
+          "target": "cons[3]",
+          "source": "js/package.json#L3",
+          "quote": "\"version\": \"0.0.0\","
+        }
+      ]
+    },
+    {
+      "id": "scottlawsonbc__audio-reactive-led-strip",
+      "filesRead": [
+        "README.md",
+        "python/config.py",
+        "python/dsp.py",
+        "python/visualization.py",
+        "python/led.py",
+        "python/microphone.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L13",
+          "quote": "The repository includes everything needed to build an LED strip music visualizer (excluding hardware):"
+        },
+        {
+          "target": "pros[1]",
+          "source": "python/config.py#L6-L18",
+          "quote": "DEVICE = 'esp8266'"
+        },
+        {
+          "target": "pros[2]",
+          "source": "python/config.py#L58-L99",
+          "quote": "N_FFT_BINS = 24"
+        },
+        {
+          "target": "pros[3]",
+          "source": "python/config.py#L55",
+          "quote": "GAMMA_TABLE_PATH = os.path.join(os.path.dirname(__file__), 'gamma_table.npy')"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L31",
+          "quote": "WS2812B LED strip (such as Adafruit Neopixels). These can be purchased for as little as $5-15 USD per meter."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L241-L242",
+          "quote": "ESP8266 supports a maximum of 256 LEDs."
+        },
+        {
+          "target": "cons[2]",
+          "source": "python/visualization.py#L5",
+          "quote": "from scipy.ndimage.filters import gaussian_filter1d"
+        },
+        {
+          "target": "pitfalls[1]",
+          "source": "README.md#L215",
+          "quote": "On Windows, you can use \"Stereo Mix\" to copy the audio output stream into the audio input."
+        }
+      ]
+    },
+    {
+      "id": "pytorch__audio",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "src/torchaudio/__init__.py",
+        "examples/README.md",
+        "version.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L40-L41",
+          "quote": "[Spectrogram, AmplitudeToDB, MelScale, MelSpectrogram, MFCC, MuLawEncoding, MuLawDecoding, Resample]"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L48-L50",
+          "quote": "pip install torchaudio"
+        },
+        {
+          "target": "pros[1]",
+          "source": "setup.py#L111",
+          "quote": "Operating System :: Microsoft :: Windows"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L43",
+          "quote": "[Kaldi: spectrogram, fbank, mfcc]"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L11-L15",
+          "quote": "TorchAudio 2.11 works with `torch` 2.11 and with every future `torch` release ... installing TorchAudio does not pin `…"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L18-L20",
+          "quote": "We have transitioned TorchAudio into a maintenance phase. This migration process removed some user-facing features. Th…"
+        },
+        {
+          "target": "cons[1]",
+          "source": "setup.py#L133",
+          "quote": "install_requires=[\"torch>=2.11\"],"
+        },
+        {
+          "target": "cons[2]",
+          "source": "src/torchaudio/__init__.py#L32-L38",
+          "quote": "As of TorchAudio 2.9, this function relies on TorchCodec's decoding capabilities under the hood. ... the parameters ``…"
+        },
+        {
+          "target": "cons[3]",
+          "source": "examples/README.md#L8-L9",
+          "quote": "Because of this transition, the examples included here will no longer be maintained going forward. The scripts may not…"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "setup.py#L126",
+          "quote": "python_requires=\">=3.10\","
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L28-L32",
+          "quote": "Therefore, it is primarily a machine learning library and not a general signal processing library."
+        }
+      ]
+    },
+    {
+      "id": "haoheliu__AudioLDM",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "bin/audioldm",
+        "audioldm/utils.py",
+        "audioldm/pipeline.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L11-L13",
+          "quote": "- **Text-to-Audio Generation**: Generate audio given text input."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L105",
+          "quote": "[-b BATCHSIZE] [--ddim_steps DDIM_STEPS] [-gs GUIDANCE_SCALE] [-dur DURATION]"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L139",
+          "quote": "AudioLDM is available in the Hugging Face [🧨 Diffusers] library from v0.15.0 onwards."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L97",
+          "quote": "audioldm-m-full (6.85/10), audioldm-s-full (6.62/10), audioldm-s-text-ft (6/10), audioldm-m-text-ft (5.46/10)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L38",
+          "quote": "conda create -n audioldm python=3.8; conda activate audioldm"
+        },
+        {
+          "target": "cons[1]",
+          "source": "bin/audioldm#L8",
+          "quote": "os.path.join(os.path.expanduser(\"~\"), \".cache/audioldm\")"
+        },
+        {
+          "target": "cons[2]",
+          "source": "audioldm/utils.py#L62",
+          "quote": "sf.write(path, waveform[i, 0], samplerate=16000)"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L197",
+          "quote": "- GPU with 8GB of dedicated VRAM"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L125-L129",
+          "quote": "The sampling step for DDIM, DEFAULT 200"
+        },
+        {
+          "target": "workflow[4]",
+          "source": "README.md#L59-L62",
+          "quote": "audioldm -t \"A hammer is hitting a wooden surface\""
+        }
+      ]
+    },
+    {
+      "id": "sergree__matchering",
+      "filesRead": [
+        "README.md",
+        "matchering/defaults.py",
+        "matchering/results.py",
+        "setup.py",
+        "requirements.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L110-L110",
+          "quote": "python -m pip install -U matchering"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L21-L21",
+          "quote": "with the same [RMS], [FR], [peak amplitude] and [stereo width]"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L137-L137",
+          "quote": "mg.pcm16(\"my_song_master_16bit.wav\"),"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L48-L48",
+          "quote": "Our own open source [Hyrax] [brickwall limiter] was implemented for it"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L19-L19",
+          "quote": "**REFERENCE** (another track, like some kind of \"wet\" popular song, you want your target to sound like it)"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L115-L115",
+          "quote": "If you would like to enable *MP3 loading support*, you need to install the **[FFmpeg][FFmpeg]** library."
+        },
+        {
+          "target": "cons[2]",
+          "source": "matchering/defaults.py#L64-L64",
+          "quote": "internal_sample_rate: int = 44100,"
+        }
+      ]
+    },
+    {
+      "id": "lucidrains__audiolm-pytorch",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "audiolm_pytorch/__init__.py",
+        "audiolm_pytorch/soundstream.py",
+        "audiolm_pytorch/audiolm_pytorch.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L45-L49",
+          "quote": "pip install audiolm-pytorch"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L53-L59",
+          "quote": "If you want to use the pretrained 24kHz Encodec, just create an Encodec object as follows"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L273-L275",
+          "quote": "or with text condition, if given"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L344-L358",
+          "quote": "you can easily do multi gpu training by using the `accelerate` command as so"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L62-L83",
+          "quote": "First, `SoundStream` needs to be trained on a large corpus of audio data"
+        },
+        {
+          "target": "cons[1]",
+          "source": "setup.py#L21-L40",
+          "quote": "'fairseq',"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L394-L394",
+          "quote": "- [ ] cli tool, something like `audiolm generate <wav.file | text>` and save generated wav file to local directory"
+        }
+      ]
+    },
+    {
+      "id": "FluidSynth__fluidsynth",
+      "filesRead": [
+        "README.md",
+        "README.cmake.md",
+        "src/fluidsynth.c",
+        "src/synth/fluid_synth.c",
+        "sf2/COPYRIGHT.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "src/fluidsynth.c#L1268",
+          "quote": " -F, --fast-render=[file]"
+        },
+        {
+          "target": "pros[1]",
+          "source": "src/synth/fluid_synth.c#L251-L258",
+          "quote": "fluid_settings_register_int(settings, \"synth.polyphony\", 256, 1, 65535, 0);"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L9",
+          "quote": "**Windows 10**"
+        },
+        {
+          "target": "pros[3]",
+          "source": "sf2/COPYRIGHT.txt#L1",
+          "quote": " Vintage Dreams Waves v 2.0. for Creative Labs' AWE Soundcards"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.cmake.md#L3-L5",
+          "quote": "The latest information on how to compile FluidSynth using the cmake build system can be found in our wiki:"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L40",
+          "quote": "For information on how to build FluidSynth from source, please [refer to our wiki]"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L18",
+          "quote": "FluidSynth generates audio by reading and handling MIDI events from MIDI input devices by using a [SoundFont]"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L16",
+          "quote": "It is the software analogue of a MIDI synthesizer."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/synth/fluid_synth.c#L258",
+          "quote": "fluid_settings_register_num(settings, \"synth.sample-rate\", 44100.0, 8000.0, 96000.0, 0);"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/synth/fluid_synth.c#L254",
+          "quote": "fluid_settings_register_int(settings, \"synth.audio-channels\", 1, 1, 128, 0);"
+        }
+      ]
+    },
+    {
+      "id": "hkchengrex__MMAudio",
+      "filesRead": [
+        "README.md",
+        "docs/MODELS.md",
+        "demo.py",
+        "pyproject.toml",
+        "mmaudio/model/sequence_config.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L20",
+          "quote": "Moreover, a synchronization module aligns the generated audio with the video frames."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L96-L97",
+          "quote": "inference only takes around 6GB of GPU memory (in 16-bit mode) which should fit in most modern GPUs."
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L90",
+          "quote": "The models will be downloaded automatically when you run the demo script."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L107",
+          "quote": "The output (audio in `.flac` format, and video in `.mp4` format) will be saved in `./output`."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L49",
+          "quote": "We have only tested this on Ubuntu."
+        },
+        {
+          "target": "cons[1]",
+          "source": "docs/MODELS.md#L12-L16",
+          "quote": "mmaudio_large_44k_v2.pth</a> | 3.9G |"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L183",
+          "quote": "The checkpoints are released on Hugging Face under the CC-BY-NC 4.0 license"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L139",
+          "quote": "The model sometimes generates unintelligible human speech-like sounds"
+        },
+        {
+          "target": "pitfalls[0]",
+          "source": "demo.py#L72",
+          "quote": "dtype = torch.float32 if args.full_precision else torch.bfloat16"
+        }
+      ]
+    },
+    {
+      "id": "JorenSix__TarsosDSP",
+      "filesRead": [
+        "README.md",
+        "build.gradle",
+        "settings.gradle",
+        "core/build.gradle",
+        "examples/build.gradle",
+        "jvm/src/main/java/be/tarsos/dsp/io/jvm/AudioDispatcherFactory.java",
+        "examples/src/main/java/be/tarsos/dsp/example/cli/feature_extractor/PitchExtractor.java"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L5",
+          "quote": "in pure Java and without any other external dependencies"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L7",
+          "quote": "a number of pitch detection algorithms: YIN, the Mcleod Pitch method and a Dynamic Wavelet Algorithm"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L86",
+          "quote": "java -jar examples/build/libs/examples-all.jar feature_extractor pitch audio.mp3"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L25",
+          "quote": "implementation 'be.tarsos.dsp:core:2.5'"
+        },
+        {
+          "target": "cons[0]",
+          "source": "core/build.gradle#L73",
+          "quote": "name = 'GNU GENERAL PUBLIC LICENSE Version 3'"
+        },
+        {
+          "target": "cons[1]",
+          "source": "settings.gradle#L2-L5",
+          "quote": "Lets Gradle auto-provision the JDK declared by each module's toolchain"
+        },
+        {
+          "target": "cons[2]",
+          "source": "examples/build.gradle#L13",
+          "quote": "languageVersion = JavaLanguageVersion.of(17)"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "examples/src/main/java/be/tarsos/dsp/example/cli/feature_extractor/PitchExtractor.java#L23",
+          "quote": "Calculates pitch in Hz for each block of 2048 samples."
+        }
+      ]
+    },
+    {
+      "id": "milkytracker__MilkyTracker",
+      "filesRead": [
+        "README.md",
+        "INSTALL.md",
+        "CMakeLists.txt",
+        ".gitmodules",
+        "src/tracker/wav/WAVExportArgs.cpp",
+        "src/tracker/wav/WAVUtils.cpp",
+        "src/tools/milkycli/CMakeLists.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "src/tracker/wav/WAVExportArgs.cpp#L92-L97",
+          "quote": "parser.addOption(\"-sample-rate\", true, \"Sample rate in Hz (default: from settings or 44100)\");"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L10-L12",
+          "quote": "user experience of the popular DOS program Fasttracker II, with"
+        },
+        {
+          "target": "pros[2]",
+          "source": "INSTALL.md#L28-L31",
+          "quote": "MilkyTracker now uses CMake to produce the build files. This replaces the"
+        },
+        {
+          "target": "pros[3]",
+          "source": "CMakeLists.txt#L237",
+          "quote": "add_subdirectory(src/tools/milkycli)"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L4",
+          "quote": "[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/milkytracker/MilkyTracker?branch="
+        },
+        {
+          "target": "cons[0]",
+          "source": ".gitmodules#L1-L3",
+          "quote": "path = src/submodules/rtaudio"
+        },
+        {
+          "target": "cons[1]",
+          "source": "INSTALL.md#L26-L31",
+          "quote": "MilkyTracker now uses CMake to produce the build files."
+        },
+        {
+          "target": "cons[2]",
+          "source": "src/tracker/wav/WAVExportArgs.cpp#L92-L98",
+          "quote": "parser.addOption(\"-output\", true, \"Output file name\");"
+        },
+        {
+          "target": "cons[3]",
+          "source": "INSTALL.md#L37-L38",
+          "quote": "**NOTE:** The use of `FORCESDL` is for developers only. No support is provided"
+        }
+      ]
+    },
+    {
+      "id": "ZFTurbo__Music-Source-Separation-Training",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "inference.py",
+        "docs/pretrained_models.md",
+        "configs/config_musdb18_mdx23c.yaml",
+        "scripts/"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L11-L27",
+          "quote": "* MDX23C based on [KUIELab TFC TDF v3 architecture](https://github.com/kuielab/sdx23/). Key: `mdx23c`."
+        },
+        {
+          "target": "pros[1]",
+          "source": "docs/pretrained_models.md#L68",
+          "quote": "MUSDB test avg: 10.08 (bass: 9.23, drums: 11.81 vocals: 11.42 other: 7.88)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L67-L72",
+          "quote": "    --model_type mdx23c \\"
+        },
+        {
+          "target": "pros[3]",
+          "source": "inference.py#L148-L151",
+          "quote": "            if peak <= 1.0 and args.pcm_type != 'FLOAT':"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L117",
+          "quote": "pip install msst"
+        },
+        {
+          "target": "cons[0]",
+          "source": "requirements.txt#L9-L11",
+          "quote": "segmentation_models_pytorch==0.3.3"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L80",
+          "quote": "All batch sizes in config are adjusted to use with single NVIDIA A6000 48GB."
+        },
+        {
+          "target": "cons[2]",
+          "source": "requirements.txt#L35-L36",
+          "quote": "wxpython==4.2.2"
+        },
+        {
+          "target": "cons[3]",
+          "source": "docs/pretrained_models.md#L45",
+          "quote": "model_bandit_plus_dnr_sdr_11.47.chpt"
+        }
+      ]
+    },
+    {
+      "id": "lucidrains__soundstorm-pytorch",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "soundstorm_pytorch/soundstorm.py",
+        "soundstorm_pytorch/trainer.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L50-L50",
+          "quote": "steps = 18,          # 18 steps, as in original maskgit paper"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L106-L106",
+          "quote": "generated_audio = model.generate(seconds = 30, batch_size = 2)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L156-L156",
+          "quote": "- [x] allow for variable lengthed sequence training and generation"
+        },
+        {
+          "target": "pros[3]",
+          "source": "setup.py#L28-L28",
+          "quote": "torch>=2.2"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L68-L68",
+          "quote": "To directly train on raw audio, you need to pass in your pretrained `SoundStream` into `SoundStorm`."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L159-L159",
+          "quote": "- [ ] turn it into a command line tool"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L111-L111",
+          "quote": "This is a work-in-progress, as `spear-tts-pytorch` only has the model architecture complete"
+        }
+      ]
+    },
+    {
+      "id": "cycfi__q",
+      "filesRead": [
+        "README.md",
+        "CMakeLists.txt",
+        ".gitmodules",
+        "example/fm_synth/fm_synth.cpp",
+        "example/va_synth/va_synth.cpp",
+        "q_io/src/audio_file.cpp"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L33",
+          "quote": "Header-Only DSP Core, No Third-Party Dependencies"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L38",
+          "quote": "macOS, Windows and Linux"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L43",
+          "quote": "Full MIDI 2.0: UMP, Per-Note Expression, MPE, MIDI-CI"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L90",
+          "quote": "None is installed by hand: CMake brings each in, pinned, the first time you configure."
+        },
+        {
+          "target": "cons[0]",
+          "source": ".gitmodules#L1-L3",
+          "quote": "[submodule \"infra\"]"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L84",
+          "quote": "Audio and MIDI input and output for a desktop application: devices, streams and audio files"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L86",
+          "quote": "It is off by default."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "example/fm_synth/fm_synth.cpp#L40",
+          "quote": "float sps = 48000.0f;"
+        }
+      ]
+    },
+    {
+      "id": "DBraun__DawDreamer",
+      "filesRead": [
+        "README.md",
+        "setup.py",
+        "pyproject.toml",
+        "examples/xml_synth_sound_rendering/README.md",
+        "examples/xml_synth_sound_rendering/main.py",
+        "examples/dj_mixing/README.md"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L54-L60",
+          "quote": "64-bit Python 3.11-3.14"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L68-L68",
+          "quote": "Using Faust, let's make a stereo sine-tone at 440 Hz and -6 dB. You can run this code as-is."
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L32-L33",
+          "quote": "MIDI playback in absolute time and PPQN time"
+        },
+        {
+          "target": "pros[3]",
+          "source": "examples/xml_synth_sound_rendering/README.md#L4-L4",
+          "quote": "DawDreamer releases the GIL while rendering, so worker threads render truly in parallel inside a single process."
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L108-L108",
+          "quote": "INSTRUMENT_PATH = \"path/to/instrument.dll\""
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L147-L147",
+          "quote": "DawDreamer must be imported **before** JAX or other LLVM-based libraries"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L177-L177",
+          "quote": "DawDreamer is licensed under GPLv3 to make it easier to comply with all of the dependent projects."
+        }
+      ]
+    },
+    {
+      "id": "kosua20__MIDIVisualizer",
+      "filesRead": [
+        "README.md",
+        "CMakeLists.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L6-L6",
+          "quote": "Binaries for Windows, macOS and Ubuntu (experimental) are available in the [Releases tab]"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L23-L23",
+          "quote": "--size 1920 1080 --config my/config.ini --export video.mp4  --format MPEG4"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L56-L56",
+          "quote": "--particles-count   Particles count (integer in [1,512])"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L43-L43",
+          "quote": "output format (values: PNG, MPEG2, MPEG4, PRORES)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L13-L13",
+          "quote": "Note that MIDIVisualizer is currently not able to *play* soundtracks, only *display* them."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L76-L76",
+          "quote": "MIDIVisualizer is not generated with a Microsoft developer certificate, thus the warning."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L99-L99",
+          "quote": "For licensing reasons only MPEG-2 and MPEG-4 exports are supported for now in the release builds."
+        }
+      ]
+    },
+    {
+      "id": "SamiPerttu__fundsp",
+      "filesRead": [
+        "README.md",
+        "Cargo.toml",
+        "examples/file.rs",
+        "src/write.rs"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L108-L109",
+          "quote": "Connectivity errors are detected during compilation, saving"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L269-L277",
+          "quote": "uses 64-bit internal state for components to maximize audio quality."
+        },
+        {
+          "target": "pros[2]",
+          "source": "examples/file.rs#L6-L10",
+          "quote": "let wave1 = Wave::render(44100.0, 10.0, &mut (pink()));"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L213-L216",
+          "quote": "Buffers are always 64 samples long (`MAX_BUFFER_SIZE`)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L695-L699",
+          "quote": "wave2.save_wav16(\"test.wav\").expect(\"Could not save wave.\");"
+        },
+        {
+          "target": "cons[1]",
+          "source": "Cargo.toml#L33-L38",
+          "quote": "cpal = { version = \"0.17.0\", features = [\"audio_thread_priority\"] }"
+        },
+        {
+          "target": "cons[2]",
+          "source": "Cargo.toml#L7-L12",
+          "quote": "edition = \"2024\""
+        },
+        {
+          "target": "pitfalls[0]",
+          "source": "examples/file.rs#L8-L10",
+          "quote": "let path = std::path::Path::new(\"test.wav\");"
+        }
+      ]
+    },
+    {
+      "id": "steffest__BassoonTracker",
+      "filesRead": [
+        "readme.md",
+        "package.json",
+        "index.html",
+        "dev.html",
+        "js/player.js",
+        "js/tracker.js"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "readme.md#L22-L45",
+          "quote": "Up to 32 channels"
+        },
+        {
+          "target": "pros[1]",
+          "source": "readme.md#L52-L52",
+          "quote": "Export to .mod, .xm, .wav, and .mp3"
+        },
+        {
+          "target": "pros[2]",
+          "source": "readme.md#L79-L81",
+          "quote": "BassoonTracker doesn't need building, the build step is **optional**, there are no runtime dependencies"
+        },
+        {
+          "target": "pros[3]",
+          "source": "readme.md#L49-L51",
+          "quote": "Includes the historic ST-01 and ST-02 sample disks, released in 1987"
+        },
+        {
+          "target": "cons[0]",
+          "source": "readme.md#L72-L77",
+          "quote": "BassoonTracker is a web application that runs in your browser."
+        },
+        {
+          "target": "cons[1]",
+          "source": "readme.md#L67-L68",
+          "quote": "When writing XM files, patterns are not packed"
+        },
+        {
+          "target": "cons[2]",
+          "source": "readme.md#L62-L70",
+          "quote": "Safari doesn't support WebAudio StereoPanners so songs will be played in mono on Safari."
+        }
+      ]
+    },
+    {
+      "id": "Text-to-Audio__AudioLCM",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "configs/audiolcm.yaml",
+        "pythonscripts/InferAPI.py",
+        "scripts/txt2audio_for_lcm.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L92",
+          "quote": "python scripts/txt2audio_for_lcm.py  --ddim_steps 2 -b configs/audiolcm.yaml"
+        },
+        {
+          "target": "pros[1]",
+          "source": "pythonscripts/InferAPI.py#L135",
+          "quote": "def AudioLCMBatchInfer(ori_prompts,"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L63",
+          "quote": "Simply download the weights from [Huggingface](https://huggingface.co/liuhuadai/AudioLCM)."
+        },
+        {
+          "target": "pros[3]",
+          "source": "pythonscripts/InferAPI.py#L98",
+          "quote": "soundfile.write(wav_path, wav, 16000)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "requirements.txt#L4-L17",
+          "quote": "pytorch-lightning==1.7.0"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L58",
+          "quote": "clone this repo in your local machine provided with NVIDIA GPU + CUDA cuDNN"
+        },
+        {
+          "target": "cons[2]",
+          "source": "pythonscripts/InferAPI.py#L98",
+          "quote": "soundfile.write(wav_path, wav, 16000)"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L66-L73",
+          "quote": "audiolcm.ckpt and put it into ./ckpts"
+        },
+        {
+          "target": "pitfalls[1]",
+          "source": "README.md#L88",
+          "quote": "See requirements in `requirement.txt`:"
+        }
+      ]
+    },
+    {
+      "id": "KinWaiCheuk__nnAudio",
+      "filesRead": [
+        "README.md",
+        "Installation/setup.py",
+        "Installation/nnAudio/__init__.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L24",
+          "quote": "nnAudio is an audio processing toolbox using PyTorch convolutional neural network as its backend."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L43-L53",
+          "quote": "| CQT | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L27",
+          "quote": "torchaudio is still very difficult to install under the Windows environment due to `sox`."
+        },
+        {
+          "target": "pros[3]",
+          "source": "Installation/setup.py#L40-L44",
+          "quote": "        \"torch>=1.6.0\","
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L37",
+          "quote": "https://kinwaicheuk.github.io/nnAudio/index.html"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L3",
+          "quote": "A new version of nnAudio has been released"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L14",
+          "quote": "Due to time constraints, the original author is no longer able to do regular code review."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L30",
+          "quote": "pip install git+https://github.com/KinWaiCheuk/nnAudio.git#subdirectory=Installation"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L24",
+          "quote": "spectrograms can be generated from audio on-the-fly during neural network training"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L93",
+          "quote": "You need at least 1931 MiB GPU memory to pass all the unit tests"
+        },
+        {
+          "target": "workflow[0]",
+          "source": "README.md#L34",
+          "quote": "pip install nnaudio==0.3.4"
+        }
+      ]
+    },
+    {
+      "id": "Natooz__MidiTok",
+      "filesRead": [
+        "README.md",
+        "pyproject.toml",
+        "benchmarks/miditok_tokenize/README.md",
+        "src/miditok/",
+        "docs/"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L110",
+          "quote": "* [PerTok](https://www.arxiv.org/abs/2410.02060)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L39",
+          "quote": "config = TokenizerConfig(num_velocities=16, use_chords=True, use_programs=True)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L67",
+          "quote": "tokenizer.train(vocab_size=30000, files_paths=files_paths)"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L56-L57",
+          "quote": "from miditok.pytorch_data import DatasetMIDI, DataCollator"
+        },
+        {
+          "target": "pros[4]",
+          "source": "benchmarks/miditok_tokenize/README.md#L21",
+          "quote": "| REMI       | 38.97±32.92 ms | 24.55±52.25 ms | 11.00±7.73 ms |"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L16",
+          "quote": "MidiTok can tokenize MIDI and abc files, i.e. convert them into sequences of tokens"
+        },
+        {
+          "target": "cons[1]",
+          "source": "pyproject.toml#L41-L43",
+          "quote": "\"tokenizers>=0.13.0\","
+        },
+        {
+          "target": "cons[2]",
+          "source": "pyproject.toml#L11",
+          "quote": "requires-python = \">=3.10\""
+        }
+      ]
+    },
+    {
+      "id": "schellingb__TinySoundFont",
+      "filesRead": [
+        "README.md",
+        "tsf.h",
+        "examples/example1.c",
+        "examples/example2.c",
+        "examples/example3.c"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L8",
+          "quote": "The library is a single C header file so it is extremely simple to integrate in your C/C++ projects."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L33",
+          "quote": "C standard libraries for fopen, math and malloc"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L29",
+          "quote": "which come with a sample SoundFont file and build and play sound on Win32, Win64, Linux and MacOSX"
+        },
+        {
+          "target": "pros[3]",
+          "source": "tsf.h#L190-L191",
+          "quote": "You can either render as signed 16-bit values (tsf_render_short) or as 32-bit float values (tsf_render_float)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "examples/example2.c#L29",
+          "quote": "deviceConfig = ma_device_config_init(ma_device_type_playback);"
+        },
+        {
+          "target": "cons[1]",
+          "source": "examples/example3.c#L7",
+          "quote": "#define TML_IMPLEMENTATION"
+        },
+        {
+          "target": "cons[2]",
+          "source": "examples/example2.c#L43",
+          "quote": "g_TinySoundFont = tsf_load_filename(\"florestan-subset.sf2\");"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "tsf.h#L1531",
+          "quote": "f->outSampleRate = (float)(samplerate >= 1 ? samplerate : 44100.0f);"
+        }
+      ]
+    },
+    {
+      "id": "stargatedaw__stargate",
+      "filesRead": [
+        "README.md",
+        "src/README.md",
+        "src/windows/README.md",
+        "src/windows/msys2_deps.sh",
+        "src/windows/requirements.txt",
+        ".gitmodules"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L19-L24",
+          "quote": "- A digital audio workstation (DAW) with a powerful pattern-based workflow"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L25-L34",
+          "quote": "Runs on Windows, Mac and Linux, x86 and ARM."
+        },
+        {
+          "target": "pros[2]",
+          "source": "src/README.md#L12-L13",
+          "quote": "The audio/dsp engine is written in C and runs as a separate process,"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L29-L31",
+          "quote": "hardware: Raspberry Pi 4, or a 15 year old laptop"
+        },
+        {
+          "target": "cons[0]",
+          "source": "src/windows/msys2_deps.sh#L3-L20",
+          "quote": "mingw-w64-x86_64-ffmpeg"
+        },
+        {
+          "target": "cons[1]",
+          "source": ".gitmodules#L1-L11",
+          "quote": "[submodule \"src/vendor/portaudio-binaries\"]"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L18-L35",
+          "quote": "- A basic wave editor"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L50-L54",
+          "quote": "under version 3 of the License."
+        }
+      ]
+    },
+    {
+      "id": "teticio__audio-diffusion",
+      "filesRead": [
+        "README.md",
+        "app.py",
+        "audiodiffusion/mel.py",
+        "requirements.txt",
+        "pyproject.toml",
+        "setup.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L78-L82",
+          "quote": "pip install audiodiffusion"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L50",
+          "quote": "Audio can be represented as images by transforming to a [mel spectrogram]"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L36",
+          "quote": "These have the benefit that samples can be generated with much fewer steps (~50) than used in training."
+        },
+        {
+          "target": "pros[3]",
+          "source": "app.py#L17-L19",
+          "quote": "demo = gr.Interface(\n    fn=generate_spectrogram_audio_and_loop,"
+        },
+        {
+          "target": "cons[0]",
+          "source": "audiodiffusion/mel.py#L61-L65",
+          "quote": "x_res: int = 256"
+        },
+        {
+          "target": "cons[1]",
+          "source": "app.py#L22",
+          "quote": "20 minutes without a GPU."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L30",
+          "quote": "(they are now no longer compatible with previous versions of this repo)"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L12",
+          "quote": "## audio-diffusion [![Open in Colab]"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "audiodiffusion/mel.py#L63-L67",
+          "quote": "sample_rate: int = 22050"
+        },
+        {
+          "target": "featureCallouts[1]",
+          "source": "README.md#L28",
+          "quote": "has been migrated to the Hugging Face `diffusers` package"
+        }
+      ]
+    },
+    {
+      "id": "ivcylc__OpenMusic",
+      "filesRead": [
+        "readme.md",
+        "qamdt.yml",
+        "requirements.txt",
+        "audioldm_train/config/mos_as_token/qa_mdt.yaml",
+        "infer/infer.sh",
+        "infer/infer_mos5.py",
+        "gradio/gradio_app.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "readme.md#L3",
+          "quote": "Paper accepted at IJCAI-25"
+        },
+        {
+          "target": "pros[1]",
+          "source": "readme.md#L20",
+          "quote": "We have succeeded in extending our model to inf-long music generation in a zero-shot manner"
+        },
+        {
+          "target": "pros[2]",
+          "source": "audioldm_train/config/mos_as_token/qa_mdt.yaml#L30",
+          "quote": "sampling_rate: &sampling_rate 16000"
+        },
+        {
+          "target": "pros[3]",
+          "source": "readme.md#L37",
+          "quote": "python gradio/gradio_app.py"
+        },
+        {
+          "target": "cons[0]",
+          "source": "qamdt.yml#L10",
+          "quote": "ld_impl_linux-64=2.38=h1181459_1"
+        },
+        {
+          "target": "cons[1]",
+          "source": "requirements.txt#L207",
+          "quote": "torch==2.3.0"
+        },
+        {
+          "target": "cons[2]",
+          "source": "readme.md#L68",
+          "quote": "you need to download extra ckpts needed in ./audioldm_train/config/mos_as_token/qa_mdt.yaml"
+        },
+        {
+          "target": "cons[3]",
+          "source": "infer/infer_mos5.py#L117",
+          "quote": "assert torch.cuda.is_available(), \"CUDA is not available\""
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "audioldm_train/config/mos_as_token/qa_mdt.yaml#L59",
+          "quote": "duration: 10.24"
+        }
+      ]
+    },
+    {
+      "id": "BazedFrog__SongGeneration-Studio",
+      "filesRead": [
+        "README.md",
+        "install.js",
+        "models.py",
+        "requirements.txt",
+        "main.py",
+        "model_server.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "install.js#L8-L33",
+          "quote": "git clone https://github.com/tencent-ailab/SongGeneration app"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L52-L56",
+          "quote": "🎵 **Full Mix** — The complete song"
+        },
+        {
+          "target": "pros[2]",
+          "source": "models.py#L24-L57",
+          "quote": "Chinese + English, 10GB VRAM, max 2m30s"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L60-L65",
+          "quote": "📤 Export to FLAC or MP4 video"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L71-L75",
+          "quote": "| 🎮 **GPU** | NVIDIA 10GB VRAM | NVIDIA 24GB+ VRAM |"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L85",
+          "quote": "4. Wait for models to download (~15GB)"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L127-L130",
+          "quote": "This launcher is provided for personal, educational, and research purposes."
+        },
+        {
+          "target": "pitfalls[0]",
+          "source": "install.js#L35-L38",
+          "quote": "Override Tencent's requirements with our tested working versions"
+        }
+      ]
+    },
+    {
+      "id": "BambooTracker__BambooTracker",
+      "filesRead": [
+        "README.md",
+        "FILEIO.md",
+        "IMPORTANT.md",
+        "BambooTracker/main.cpp",
+        "BambooTracker/gui/wave_export_settings_dialog.cpp",
+        ".gitmodules"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L33",
+          "quote": "BambooTracker is a cross-platform music tracker for the Yamaha YM2608 (OPNA) sound chip which was used in NEC PC-8801/…"
+        },
+        {
+          "target": "pros[1]",
+          "source": "FILEIO.md#L44-L49",
+          "quote": "The tracker can export a song to the following files: - .wav (WAVE file) - .vgm (VGM file) - .s98 (S98 file)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "BambooTracker/gui/wave_export_settings_dialog.cpp#L41",
+          "quote": "constexpr uint32_t SAMPLE_RATES[] = { 8000, 16000, 22050, 32000, 44100, 48000, 55466, 96000, 192000, 249600 };"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L95-L97",
+          "quote": "### Releases (Windows, macOS, Linux)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L85-L89",
+          "quote": "### Releases (Windows, macOS, Linux)"
+        },
+        {
+          "target": "pros[3]",
+          "source": "FILEIO.md#L9-L18",
+          "quote": "- .bti (BambooTracker instrument file) - .dmp (DefleMask preset file) - .tfi (TFM Music Maker instrument file) - .vgi …"
+        },
+        {
+          "target": "cons[0]",
+          "source": "BambooTracker/main.cpp#L61-L67",
+          "quote": "QApplicationWrapper a(argc, argv);"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L163-L166",
+          "quote": "- Qt (5.5 or higher) - Qt Tools (qmake, lrelease, ...) - A Qt-supported C++ compiler (GCC, Clang, MSVC, ...) - make"
+        },
+        {
+          "target": "cons[2]",
+          "source": "FILEIO.md#L21",
+          "quote": "ADPCM waveform editor supports .wav import (16-bit mono 2k-55.5kHz)."
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L33",
+          "quote": "BambooTracker is a cross-platform music tracker for the Yamaha YM2608 (OPNA) sound chip"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "IMPORTANT.md#L59",
+          "quote": "FM synthesis frequency is changed from 110933Hz to 55466Hz."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L330",
+          "quote": "real_chip: Compile with support for SCCI and C86CTL interfaces to a real OPNA chip. (Default on Windows)"
+        }
+      ]
+    },
+    {
+      "id": "Ameobea__web-synth",
+      "filesRead": [
+        "README.md",
+        "package.json",
+        "Justfile",
+        "engine"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L21-L21",
+          "quote": "compiling code for synthesizers, effects, and other audio nodes from Rust"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L27-L27",
+          "quote": "Versatile 8-operator polyphonic FM Synthesizer"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L32-L32",
+          "quote": "MIDI file import and export"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L37-L37",
+          "quote": "Dynamic compilation of DSP code written in [Faust](https://faust.grame.fr/) and [Soul](https://soul.dev) via WebAssembly"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L59-L59",
+          "quote": "You must have several tools installed in order to build this tool for development:"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L51-L51",
+          "quote": "the whole application state is serialized to the browser's local storage every time the tab is closed"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L55-L55",
+          "quote": "_Note that these docs might be somewhat out of date."
+        }
+      ]
+    },
+    {
+      "id": "squiggythings__WaveTracker",
+      "filesRead": [
+        "README.md",
+        "WaveTracker/WaveTracker.csproj",
+        "WaveTracker/Source/Audio/AudioEngine.cs",
+        "WaveTracker/Source/UI/ConfigurationDialog.cs",
+        "WaveTracker/Source/SettingsProfile.cs",
+        "WaveTracker/Source/Audio/AudioContextWindows.cs"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L13-L14",
+          "quote": "- Draw and edit up to 100 waveforms - Up to 100 instrument macros to control various aspects of the sound"
+        },
+        {
+          "target": "pros[1]",
+          "source": "WaveTracker/Source/Audio/AudioEngine.cs#L225",
+          "quote": "Wav wav = new Wav(Wav.FloatToPCM16(wavSamples.ToArray()), 2, (uint)SampleRate);"
+        },
+        {
+          "target": "pros[2]",
+          "source": "WaveTracker/Source/UI/ConfigurationDialog.cs#L87",
+          "quote": "AddDropdown(\"Sample rate\", \"The output sample rate of WaveTracker\", [\"11025 Hz\", \"22050 Hz\", \"44100 Hz\", \"48000 Hz\", \"…"
+        },
+        {
+          "target": "pros[3]",
+          "source": "WaveTracker/Source/Audio/AudioEngine.cs#L97-L99",
+          "quote": "public static void SetSampleRate(int sampleRate, int oversampling) { SampleRate = sampleRate; TrueSampleRate = SampleR…"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L18",
+          "quote": "- Built in oscilloscope and piano roll visualizer"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L6",
+          "quote": "[WaveTracker](https://www.wavetracker.org) is a free and open source music-making software for Windows."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L8",
+          "quote": "**If you are looking to download WaveTracker, visit the [itch.io](https://squiggygames.itch.io/wavetracker) page.**"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L12",
+          "quote": "- Realtime playback and editing"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L17",
+          "quote": "- Export to .wav"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "WaveTracker/Source/SettingsProfile.cs#L98-L99",
+          "quote": "public SampleRate SampleRate { get; set; } = SampleRate._44100; public int Oversampling { get; set; } = 2;"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "WaveTracker/Source/Audio/AudioContextWindows.cs#L30",
+          "quote": "public int SampleRate { get; private set; } = 48000;"
+        }
+      ]
+    },
+    {
+      "id": "alibaba__unified-audio",
+      "filesRead": [
+        "README.md",
+        "environment.yml",
+        "requirements.txt",
+        "QuarkAudio-HCodec/README.md",
+        "QuarkAudio-HCodec/HCodec-2.0/audio_tokenizer.py",
+        "QuarkAudio-HCodec/HCodec-2.0/conf/large_12.5hz_config.yaml",
+        "QuarkAudio-UniSE/README.md",
+        "QuarkAudio-UniSE/conf/config.yaml",
+        "QuarkAudio-UniSE/test.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L30",
+          "quote": "- 🌍 **Multitask Support**: SE, SR, TSE, SS, EDIT, VC, LASS, TTA, and more — all in a single model."
+        },
+        {
+          "target": "pros[1]",
+          "source": "QuarkAudio-HCodec/README.md#L43",
+          "quote": "| **H-Codec-2.0** | Full-bandwidth 48kHz support      | 48 kHz        | Fixed          |"
+        },
+        {
+          "target": "pros[2]",
+          "source": "QuarkAudio-UniSE/README.md#L34",
+          "quote": "| **TSE** | Target Speaker Extraction | ✅ Stable | Extract target speaker using reference enrollment audio |"
+        },
+        {
+          "target": "pros[3]",
+          "source": "QuarkAudio-HCodec/README.md#L67-L73",
+          "quote": "## 🎯 Quick Start: Run Inference in 3 Minutes"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L50",
+          "quote": "| **TTA** | Text to Audio  |⏳ Developing | Generate speech or environmental sounds directly from text prompts"
+        },
+        {
+          "target": "cons[1]",
+          "source": "environment.yml#L9",
+          "quote": "- pkgs/main/linux-64::_libgcc_mutex==0.1=main"
+        },
+        {
+          "target": "cons[2]",
+          "source": "requirements.txt#L44",
+          "quote": "sox==1.5.0"
+        },
+        {
+          "target": "cons[3]",
+          "source": "QuarkAudio-HCodec/HCodec-2.0/audio_tokenizer.py#L87",
+          "quote": "tokenizer = HCodecTokenizer(pt_path='./ckpt/large_12.5hz_weights.pt',"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "QuarkAudio-HCodec/HCodec-2.0/conf/large_12.5hz_config.yaml#L22-L28",
+          "quote": "  codebook_size: 1024\n  num_quantizers: 16"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "QuarkAudio-UniSE/conf/config.yaml#L16",
+          "quote": "cut_duration: [5.0, 5.0]  # 5.0 seconds"
+        }
+      ]
+    },
+    {
+      "id": "luisbocanegra__plasma-audio-visualizer",
+      "filesRead": [
+        "README.md",
+        "package/metadata.json",
+        "package/contents/config/main.xml",
+        "CMakeLists.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L12-L12",
+          "quote": "Audio visualizer widget powered by [CAVA](https://github.com/karlstav/cava) for the KDE Plasma Desktop"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L25-L25",
+          "quote": "yay -S plasma6-applets-audio-visualizer"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L49-L49",
+          "quote": "Qt/Python websockets are used to communicate with CAVA if the C++ plugin is not installed manually or can't be loaded"
+        },
+        {
+          "target": "pros[3]",
+          "source": "package/contents/config/main.xml#L10-L11",
+          "quote": "<default>60</default>"
+        },
+        {
+          "target": "cons[0]",
+          "source": "package/metadata.json#L26-L26",
+          "quote": "\"X-Plasma-API-Minimum-Version\": \"6.0\""
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L40-L40",
+          "quote": "sudo pacman -Syu cava qt6-websockets python-websockets"
+        },
+        {
+          "target": "cons[2]",
+          "source": "CMakeLists.txt#L6-L7",
+          "quote": "set(QT_MIN_VERSION \"6.6.0\")"
+        }
+      ]
+    },
+    {
+      "id": "torchsynth__torchsynth",
+      "filesRead": [
+        "README.md",
+        "docs/source/getting-started/quickstart.md",
+        "torchsynth/config.py",
+        "setup.py",
+        "requirements.txt",
+        "examples/simplesynth.py"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L16-L19",
+          "quote": "It synthesizes audio 16200x faster than realtime (714MHz) on a single GPU. This is of particular interest to audio ML …"
+        },
+        {
+          "target": "pros[1]",
+          "source": "docs/source/getting-started/quickstart.md#L30",
+          "quote": "# All audio batches are [128, 176400], i.e. 128 4-second sounds at 44100Hz"
+        },
+        {
+          "target": "pros[2]",
+          "source": "torchsynth/config.py#L11-L14",
+          "quote": "This batch size is a nice trade-off between speed and memory consumption. On a typical GPU this consumes ~2.3GB of mem…"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L13-L14",
+          "quote": "torchsynth is based upon traditional modular synthesis written in pytorch. It is GPU-optional and differentiable."
+        },
+        {
+          "target": "cons[0]",
+          "source": "docs/source/getting-started/quickstart.md#L15-L17",
+          "quote": "You will need to `pip install torchaudio` in order to save the WAV file. Alternately, you could modify the code slight…"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L13-L14",
+          "quote": "torchsynth is based upon traditional modular synthesis written in pytorch."
+        },
+        {
+          "target": "cons[2]",
+          "source": "torchsynth/config.py#L81-L86",
+          "quote": "if batch_size % BASE_REPRODUCIBLE_BATCH_SIZE != 0.0: raise ValueError(\"Reproducibility currently only supported with b…"
+        },
+        {
+          "target": "cons[3]",
+          "source": "setup.py#L100-L103",
+          "quote": "Programming Language :: Python :: 3.7"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "torchsynth/config.py#L53-L56",
+          "quote": "sample_rate: Optional[int] = 44100, buffer_size_seconds: Optional[float] = 4.0, control_rate: Optional[int] = 441"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "README.md#L52-L54",
+          "quote": "a dataset of 1024 4-second sounds rendered from the Voice synthesizer"
+        }
+      ]
+    },
+    {
+      "id": "haidog-yaqub__EzAudio",
+      "filesRead": [
+        "README.md",
+        "api/ezaudio.py",
+        "ckpts/vae/config.json",
+        "ckpts/ezaudio-xl.yml",
+        "requirements.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L47",
+          "quote": "ezaudio = EzAudio(model_name='s3_xl', device=device)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L57-L58",
+          "quote": "mask_start=1, mask_length=5)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "ckpts/vae/config.json#L4-L5",
+          "quote": "    \"sample_rate\": 24000,\n    \"audio_channels\": 1,"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L72",
+          "quote": "controlnet = EzAudio_ControlNet(model_name='energy', device=device)"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L66",
+          "quote": "from api.ezaudio import EzAudio"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L25",
+          "quote": "git clone git@github.com:haidog-yaqub/EzAudio.git"
+        },
+        {
+          "target": "cons[2]",
+          "source": "api/ezaudio.py#L21",
+          "quote": "'url': 'https://huggingface.co/OpenSound/EzAudio/resolve/main/ckpts/s3/ezaudio_s3_xl.pt',"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L38",
+          "quote": "You can use the model with the following code:"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "api/ezaudio.py#L101-L102",
+          "quote": "def generate_audio(self, text, length=10,"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "ckpts/vae/config.json#L34",
+          "quote": "        \"downsampling_ratio\": 480,"
+        }
+      ]
+    },
+    {
+      "id": "TencentARC__AudioStory",
+      "filesRead": [
+        "README.md",
+        "install_audiostory.sh",
+        "evaluate/inference.py",
+        "configs/audiostory_llm_qwen25_3b_lora.yaml"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L105-L105",
+          "quote": "sequentially producing captions, semantic tokens, and residual tokens for each audio clip"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L15-L15",
+          "quote": "capable of handling video dubbing, audio continuation, and long-form narrative audio synthesis"
+        },
+        {
+          "target": "pros[2]",
+          "source": "evaluate/inference.py#L287-L293",
+          "quote": "parser.add_argument(\"--target_sr\", type=int, default=32000, help=\"Output sample rate\")"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L131-L131",
+          "quote": "Download model checkpoint from [Huggingface Models](https://huggingface.co/TencentARC/AudioStory-3B)."
+        },
+        {
+          "target": "cons[0]",
+          "source": "install_audiostory.sh#L3-L19",
+          "quote": "pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L131-L140",
+          "quote": "Download model checkpoint from [Huggingface Models](https://huggingface.co/TencentARC/AudioStory-3B)."
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L151-L157",
+          "quote": "- [ ] Release training codes of all three stages."
+        }
+      ]
+    },
+    {
+      "id": "Signalsmith-Audio__dsp",
+      "filesRead": [
+        "README.md",
+        "CMakeLists.txt",
+        "include/signalsmith-dsp/fft.h",
+        "include/signalsmith-dsp/filters.h",
+        "include/signalsmith-dsp/delay.h"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L13-L19",
+          "quote": "using Delay = signalsmith::delay::Delay<float>;"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L3",
+          "quote": "A C++11 header-only library, providing classes/templates for (mostly audio) signal-processing tasks."
+        },
+        {
+          "target": "pros[2]",
+          "source": "CMakeLists.txt#L3-L4",
+          "quote": "add_library(signalsmith-dsp INTERFACE)"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L30-L36",
+          "quote": "Tests (and source-scripts for the above docs) are available in a separate repo:"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L30-L34",
+          "quote": "Tests (and source-scripts for the above docs) are available in a separate repo:"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L5",
+          "quote": "More detail is in the [main project page](https://signalsmith-audio.co.uk/code/dsp/)"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L13",
+          "quote": "Just include the header file(s) you need, and start using classes:"
+        }
+      ]
+    },
+    {
+      "id": "lks-ai__ComfyUI-StableAudioSampler",
+      "filesRead": [
+        "README.md",
+        "nodes.py",
+        "util_config.py",
+        "requirements.txt"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L43",
+          "quote": "Includes all of the original Stable Audio Open parameters"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L42-L47",
+          "quote": "Sampler outputs a Spectrogram image (experimental)"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L49-L50",
+          "quote": "### Example Workflows"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L18",
+          "quote": "Place the files in the `models/audio_checkpoints` folder."
+        },
+        {
+          "target": "cons[0]",
+          "source": "nodes.py#L87-L88",
+          "quote": "import folder_paths # type: ignore"
+        },
+        {
+          "target": "cons[1]",
+          "source": "requirements.txt#L7",
+          "quote": "flash_attn"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L27",
+          "quote": "There will definitely be issues because this is so new and it was coded quickly so we couldn't test it out."
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L40",
+          "quote": "Audio to Audio (like in the Gradio Example) **Still working on fix for this**"
+        },
+        {
+          "target": "pitfalls[0]",
+          "source": "nodes.py#L80-L88",
+          "quote": "comfy_path = os.path.abspath(os.path.join(current_path, '../../../comfy'))"
+        }
+      ]
+    },
+    {
+      "id": "djfun__audio-visualizer-python",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "pyproject.toml",
+        "src/avp/cli.py",
+        "src/avp/core.py",
+        "src/avp/encoder-options.json",
+        "src/avp/components/"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L5-L6",
+          "quote": "This is a little GUI tool which creates an audio visualization video from an input audio file."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L137",
+          "quote": "- `avp -c 0 image path=src/tests/data/test.jpg -c 1 classic color=180,180,180 -c 2 text \"title=Episode 371\""
+        },
+        {
+          "target": "pros[2]",
+          "source": "src/avp/encoder-options.json#L2-L7",
+          "quote": "\"container\": \"mp4\","
+        },
+        {
+          "target": "pros[3]",
+          "source": "requirements.txt#L1-L3",
+          "quote": "numpy==2.4.1"
+        },
+        {
+          "target": "pros[4]",
+          "source": "README.md#L7",
+          "quote": "The program works on **Linux**, **macOS**, and **Windows**."
+        },
+        {
+          "target": "cons[0]",
+          "source": "src/avp/cli.py#L36-L37",
+          "quote": "app = QApplication(sys.argv)"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L161",
+          "quote": "[Pillow-SIMD](https://github.com/uploadcare/pillow-simd) may be used as a drop-in replacement for Pillow"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L55",
+          "quote": "- Download and install [FFmpeg](https://www.ffmpeg.org/download.html). Use the GPL-licensed static builds."
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L52",
+          "quote": "- Install Python from the Windows Store"
+        }
+      ]
+    },
+    {
+      "id": "kvoltmer__Audionaut",
+      "filesRead": [
+        "README.md",
+        "docs/features.md",
+        "docs/manual/09-export.md",
+        ".gitmodules",
+        "Submodules/"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L119",
+          "quote": "audionaut-cli export  song.audium -o mix.wav --sample-rate 48000 --bit-depth 24"
+        },
+        {
+          "target": "pros[1]",
+          "source": "docs/manual/09-export.md#L18-L22",
+          "quote": "| **WAV** | lossless | 16, 24 or 32 | |"
+        },
+        {
+          "target": "pros[2]",
+          "source": "docs/features.md#L47-L49",
+          "quote": "Splits a clip into **Drums, Bass, Other and Vocals** tracks with Demucs"
+        },
+        {
+          "target": "pros[3]",
+          "source": "docs/features.md#L86-L89",
+          "quote": "- **MCP server** (`audionaut-mcp` on npm, also in the official MCP"
+        },
+        {
+          "target": "cons[0]",
+          "source": ".gitmodules#L1-L3",
+          "quote": "path = Submodules/JUCE"
+        },
+        {
+          "target": "cons[1]",
+          "source": "docs/features.md#L104-L106",
+          "quote": "**Windows (x64):** an installer. It is not code-signed yet, so SmartScreen"
+        },
+        {
+          "target": "cons[2]",
+          "source": "docs/features.md#L116-L117",
+          "quote": "- Plugin hosting (VST3 / AU / LV2), effects and automation envelopes"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L145-L147",
+          "quote": "On Windows, the app is a GUI"
+        }
+      ]
+    },
+    {
+      "id": "thxxx__VTS",
+      "filesRead": [
+        "README.md",
+        "HF_MODEL_CARD.md",
+        "requirements.txt",
+        "infer.py",
+        "vts/utils/utils.py",
+        "vts/model/module_voice.py",
+        "setup_vts_local.sh"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L169-L174",
+          "quote": "The dynamic tensor has 12 channels derived from spectral centroid, RMS, and chroma-index features."
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L177-L186",
+          "quote": "Default sampling uses 64 ODE steps."
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L149-L151",
+          "quote": "This repository is inference-only. Training scripts and dataset manifests are not included in this package."
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L140-L146",
+          "quote": "--diagnose"
+        },
+        {
+          "target": "cons[0]",
+          "source": "infer.py#L78-L82",
+          "quote": "repo_id=\"Daniel777/textalignment\","
+        },
+        {
+          "target": "cons[1]",
+          "source": "requirements.txt#L16-L19",
+          "quote": "torch==2.4.1; platform_system != \"Linux\" or platform_machine != \"x86_64\""
+        },
+        {
+          "target": "cons[2]",
+          "source": "HF_MODEL_CARD.md#L69-L71",
+          "quote": "The model is optimized for short sound-effect style clips."
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L56-L56",
+          "quote": "Training code, datasets, notebooks, RunPod handler, Supabase upload code"
+        }
+      ]
+    },
+    {
+      "id": "Orastron__brickworks",
+      "filesRead": [
+        "README.md",
+        "examples/README.md",
+        "test/Makefile",
+        "include/bw_ap1.h"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L3",
+          "quote": "Brickworks is a music DSP toolkit that supplies you with the fundamental building blocks"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L9",
+          "quote": "synth and an effect examples in VST3, LV2, Web Audio, Daisy Seed, Android app, iOS app, and command line program formats"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L18",
+          "quote": "Alternatively, we offer a commercial license that doesn't restrict usage"
+        },
+        {
+          "target": "pros[3]",
+          "source": "test/Makefile#L4-L8",
+          "quote": "build/bw_math: bw_math.c ../include/bw_math.h"
+        },
+        {
+          "target": "cons[0]",
+          "source": "examples/README.md#L5",
+          "quote": "The common code is copied/generated by an external tool called Tibia"
+        },
+        {
+          "target": "cons[1]",
+          "source": "examples/README.md#L27",
+          "quote": "Windows (via [MSYS2/Mingw-w64](https://www.msys2.org/)), macOS, and Linux OSes are supported."
+        },
+        {
+          "target": "cons[2]",
+          "source": "examples/README.md#L7",
+          "quote": "Building for any platform requires a recent enough version of GNU Make installed."
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "include/bw_ap1.h#L157",
+          "quote": "static inline void bw_ap1_set_sample_rate("
+        }
+      ]
+    },
+    {
+      "id": "mlm-games__yadaw",
+      "filesRead": [
+        "README.md",
+        "quick_start.md",
+        "Cargo.toml",
+        "src/constants.rs",
+        "src/audio_export.rs"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L3",
+          "quote": "A basic daw for sound effects (works on Android too, but not as functional). Is also pretty lightweight (<20mb)"
+        },
+        {
+          "target": "pros[1]",
+          "source": "quick_start.md#L14-L17",
+          "quote": "1. Click \"Add MIDI Track\" 2. Click \"+ Plugins\" and load a CLAP/LV2/VST3 instrument"
+        },
+        {
+          "target": "pros[1]",
+          "source": "quick_start.md#L38-L40",
+          "quote": "1. Expand a track to show automation lanes 2. Click \"+\" to add a parameter"
+        },
+        {
+          "target": "pros[2]",
+          "source": "src/audio_export.rs#L53-L57",
+          "quote": "(ExportFormat::Wav, 32) => Ok(SampleFormat::F32),"
+        },
+        {
+          "target": "pros[3]",
+          "source": "src/constants.rs#L5",
+          "quote": "pub const RECORDING_BUFFER_SIZE: usize = 44100 * 60 * 5; // 5 minutes at 44.1kHz"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L11",
+          "quote": "windows doesn't have a release build, and needs to be compiled manually for now"
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L19",
+          "quote": "Partial plugin support (LV2, VST3 (experimental and lacks few features, will not work with timer based UIs like geonki…"
+        },
+        {
+          "target": "cons[2]",
+          "source": "quick_start.md#L45-L48",
+          "quote": "1. File → Export (or Ctrl+E) 2. Choose range (loop region or full project) 3. Select output location 4. Click Export"
+        },
+        {
+          "target": "cons[3]",
+          "source": "src/audio_export.rs#L57",
+          "quote": "(ExportFormat::Ogg, _) => Ok(SampleFormat::F32),"
+        },
+        {
+          "target": "ceilingsZh",
+          "source": "src/constants.rs#L4-L6",
+          "quote": "pub const MAX_BUFFER_SIZE: usize = 8192;"
+        }
+      ]
+    },
+    {
+      "id": "SAIL-PRLab__Foley-Omni",
+      "filesRead": [
+        "README.md",
+        "requirements.txt",
+        "config.json",
+        "inference.py",
+        "inference_v2st.py",
+        "inference_fusion.yaml",
+        "inference_v2st.yaml",
+        "scripts/download_release_ckpts.sh"
+      ],
+      "claims": [
+        {
+          "target": "pros[0]",
+          "source": "README.md#L35-L36",
+          "quote": "jointly generates synchronized **speech**, **sound effects**, and **music**"
+        },
+        {
+          "target": "pros[1]",
+          "source": "README.md#L157-L165",
+          "quote": "The `resp` field can contain any subset of the following blocks"
+        },
+        {
+          "target": "pros[2]",
+          "source": "README.md#L215-L217",
+          "quote": "is released under [MIT](MODEL_LICENSE)"
+        },
+        {
+          "target": "pros[3]",
+          "source": "README.md#L109-L113",
+          "quote": "Batch inference:"
+        },
+        {
+          "target": "cons[0]",
+          "source": "README.md#L104-L105",
+          "quote": "The current public  checkpoint is designed for videos **up to 10 seconds**."
+        },
+        {
+          "target": "cons[1]",
+          "source": "README.md#L62-L63",
+          "quote": "pip install flash_attn==2.7.4.post1 --no-build-isolation"
+        },
+        {
+          "target": "cons[2]",
+          "source": "README.md#L87-L87",
+          "quote": "Wan2.2-TI2V-5B/"
+        },
+        {
+          "target": "cons[3]",
+          "source": "README.md#L224-L225",
+          "quote": "Hugging Face checkpoints are **CC BY-NC 4.0**"
+        }
+      ]
+    }
+  ]
+}

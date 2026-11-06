@@ -1,0 +1,189 @@
+{
+  "id": "SAIL-PRLab__Foley-Omni",
+  "taglineZh": "文本+视频生成对白/音效/音乐整轨的 5B DiT",
+  "summaryZh": "Foley-Omni 面向 Video-to-Soundtrack：给视频和结构化文本，联合生成同步的对白、音效与音乐，也支持纯文本单任务。DiT 主干 dim=3072、30 层，发布 v2st.pth 与 Wan2.2-TI2V-5B 权重，UniPC 50 步、CFG 5.0，默认 16kHz，产出 mp4 或 wav。代价是仅支持 ≤10 秒视频、flash-attn 需编译、8GB 显存跑不动，且 MMAudio 权重为 CC BY-NC 4.0。",
+  "whatItMakes": [
+    {
+      "type": "视频整轨拟音",
+      "exampleZh": "输入 10 秒视频与三段式文本，输出带对白+音效+音乐的 mp4",
+      "strength": "核心能力"
+    },
+    {
+      "type": "单任务音效/语音/音乐",
+      "exampleZh": "只给 [AUDIO_CAPTION] 或 [MUSIC]，跑 t2a 或 vt2a 生成 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "批量视频推理",
+      "exampleZh": "一个 JSON 列出多条 video_path 与 resp，脚本循环出片",
+      "strength": "辅助能力"
+    },
+    {
+      "type": "视觉特征预提取",
+      "exampleZh": "预生成 CLIP 与 Sync 特征，后续复用避免重复解码视频",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "短视频/广告拟音",
+      "whoZh": "短视频后期与广告音效师",
+      "whyZh": "一次生成对白、环境音与配乐，省掉多轨对齐",
+      "deliverableZh": "带新声轨的 mp4",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "游戏预告片音效铺底",
+      "whoZh": "游戏音频设计师",
+      "whyZh": "按画面给出 [WORDS]/[AUDIO_CAPTION]/[MUSIC] 三段提示",
+      "deliverableZh": "10 秒以内的预告片段音轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "无声素材补声",
+      "whoZh": "纪录片剪辑师",
+      "whyZh": "原视频静音也能按描述生成同步声轨",
+      "deliverableZh": "mp4 或分离的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "研究多模态音频生成",
+      "whoZh": "多模态方向研究员",
+      "whyZh": "可单独替换视觉特征或文本编码器做消融",
+      "deliverableZh": "实验 checkpoint 与指标",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "三轨联合",
+      "descZh": "对白、音效、音乐共享一个 DiT"
+    },
+    {
+      "titleZh": "结构化提示",
+      "descZh": "三段标记可任选组合"
+    },
+    {
+      "titleZh": "50 步采样",
+      "descZh": "audio_guidance_scale=5.0"
+    },
+    {
+      "titleZh": "批量 JSON",
+      "descZh": "一次配多条视频路径"
+    },
+    {
+      "titleZh": "特征预提取",
+      "descZh": "CLIP 与 Sync 特征可缓存"
+    }
+  ],
+  "ceilingsZh": "默认 sample_rate=16000，源码同时允许 16000 与 44100 两档；视频时长上限 10 秒（README 明确要求裁到 ≤10s）。DiT 配置为 dim=3072、num_layers=30、num_heads=24、text_len=512，主干目录名 Wan2.2-TI2V-5B 表示 5B 参数；推理 50 步 UniPC、audio_guidance_scale=5.0、shift=5.0，fp8 与 cpu_offload 默认关闭。README 未声明权重总体积与显存下限；按 5B bf16 主干估算远超本机 8GB（此为估算，非 README 数据）。",
+  "workflowZh": "六步：conda 3.10 → 装 torch 2.6/cu124 → 装依赖与 flash-attn → 下 ckpts → 裁 10s 视频写 JSON → 跑 inference_v2st.py",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "conda create -n foley-omni python=3.10，装 torch==2.6.0 + cu124",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "装依赖",
+      "detailZh": "pip install -r requirements.txt，再装 flash_attn==2.7.4.post1 --no-build-isolation",
+      "effortZh": "20–60 分钟（需编译）"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "bash scripts/download_release_ckpts.sh CocoBro/Foley-Omni",
+      "effortZh": "30–90 分钟"
+    },
+    {
+      "stepZh": "准备输入",
+      "detailZh": "把视频裁到 ≤10s，按 examples/video_text_example.json 写 resp",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python inference_v2st.py --config-file inference_v2st.yaml，可加 --fp8 或 --cpu-offload",
+      "effortZh": "5–20 分钟/条"
+    },
+    {
+      "stepZh": "取结果",
+      "detailZh": "从 outputs/v2st 目录取 mp4 与 json 摘要",
+      "effortZh": "即时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "hkchengrex__MMAudio",
+      "whenZh": "只要视频配一条音效轨、显存有限选 MMAudio；要同时出对白+音效+音乐选 Foley-Omni",
+      "adviceZh": "只要视频配一条音效轨、显存有限选 MMAudio；要同时出对白+音效+音乐选 Foley-Omni"
+    },
+    {
+      "vs": "TencentARC__AudioStory",
+      "whenZh": "要几十秒长篇叙事配音选 AudioStory；要 10 秒内精确到画面的拟音选 Foley-Omni",
+      "adviceZh": "要几十秒长篇叙事配音选 AudioStory；要 10 秒内精确到画面的拟音选 Foley-Omni"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L35-L36",
+      "noteZh": "声明 Video-to-Soundtrack 任务与 speech/SFX/music 联合生成"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "inference_v2st.yaml#L1-L36",
+      "noteZh": "dim=3072、30 层、24 头、50 步、CFG 5.0、fp8/cpu_offload 默认 False"
+    },
+    {
+      "field": "cons",
+      "source": "README.md#L104-L105",
+      "noteZh": "公共 checkpoint 仅支持 ≤10s 视频"
+    },
+    {
+      "field": "blockerZh",
+      "source": "README.md#L42-L67",
+      "noteZh": "conda + bash 的 Linux 流程，flash_attn 2.7.4.post1 需编译"
+    },
+    {
+      "field": "pros",
+      "source": "README.md#L210-L225",
+      "noteZh": "代码 Apache-2.0、Foley-Omni checkpoint MIT、第三方权重非商用"
+    }
+  ],
+  "blockerZh": "权重体积与显存双重超标：HF 上 ckpts/Foley-Omni/v2st.pth 单个文件 HEAD 实测 22.2 GB，另需 Wan2.2-TI2V-5B 的 T5 编码器 11.4 GB；合计远超本批 10 GB 额度，8 GB 显存也装不下 5B 视频分支（需 ≥24 GB）。仓库还要求 Python 3.10 + CUDA 12.4 与预抽 CLIP/sync 特征。",
+  "whatItWouldNeed": "≥40 GB 权重磁盘空间；24 GB 显存显卡（或 CPU offload + 极慢推理）；Python 3.10 独立环境；MMAudio VAE/Synchformer 配套权重；输入视频片段。",
+  "ceilingZh": "默认 sample_rate=16000，源码同时允许 16000 与 44100 两档；视频时长上限 10 秒（README 明确要求裁到 ≤10s）。DiT 配置为 dim=3072、num_layers=30、num_heads=24、text_len=512，主干目录名 Wan2.2-TI2V-5B 表示 5B 参数；推理 50 步 UniPC、audio_guidance_scale=5.0、shift=5.0，fp8 与 cpu_offload 默认关闭。README 未声明权重总体积与显存下限；按 5B bf16 主干估算远超本机 8GB（此为估算，非 README 数据）。",
+  "capabilities": {
+    "maxDurationZh": "上限 10 秒",
+    "formatsZh": [
+      "mp4",
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "三轨联合：对白、音效、音乐共享一个 DiT",
+    "结构化提示：三段标记可任选组合",
+    "50 步采样：audio_guidance_scale=5.0",
+    "批量 JSON：一次配多条视频路径",
+    "特征预提取：CLIP 与 Sync 特征可缓存"
+  ],
+  "limits": [
+    "公共 checkpoint 只支持 10 秒以内视频，README 明确要求先把每条视频裁到 ≤10s",
+    "安装强依赖 flash_attn==2.7.4.post1（--no-build-isolation 编译），README 只给 conda + bash 的 Linux 流程",
+    "捆绑 Wan2.2-TI2V-5B 的 5B 主干与 MMAudio VAE，8GB 显存跑不动，README 未给显存下限",
+    "MMAudio 上游权重为 CC BY-NC 4.0，整条管线不能直接商用",
+    "README 的 git clone 地址写 NJU-Speech/Foley-Omni，与当前 SAIL-PRLab/Foley-Omni 不一致",
+    "纯文本入口 inference.py 只接受 t2a/vt2a 且输出 wav；v2st 入口才输出 mp4",
+    "fp8 与 cpu_offload 默认 False，小显存卡必须手动打开或直接换卡"
+  ],
+  "signatureZh": "文本+视频生成对白/音效/音乐整轨的 5B DiT",
+  "chooseWhenZh": "有 ≥24GB 显存、要做 10 秒内视频精确拟音（对白+音效+音乐一起出）的工作室或研究组",
+  "avoidWhenZh": "公共 checkpoint 只支持 10 秒以内视频，README 明确要求先把每条视频裁到 ≤10s",
+  "contrastWith": [
+    "hkchengrex__MMAudio",
+    "TencentARC__AudioStory"
+  ]
+}

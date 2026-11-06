@@ -1,0 +1,200 @@
+{
+  "id": "surge-synthesizer__surge",
+  "taglineZh": "双场景混合合成器，源码出 VST3/CLAP 插件",
+  "summaryZh": "Surge XT 是 Vember Audio 商业合成器开源化后的产物，属混合合成：波表、经典波形、FM 与环形调制。仓库是 C++/JUCE 源码，CMake 产出 VST3、CLAP、AU 与独立程序，另带 pybind11 的 surgepy，可离线渲染缓冲，不开 DAW 也能出 wav。音色资产充足：641 个 factory 音色、2920 个第三方音色、178 个波表。代价是构建重：25 个子模块为空，要 CMake 3.22 与 C++20，Windows 还得装 VS。",
+  "whatItMakes": [
+    {
+      "type": "插件与独立合成器",
+      "exampleZh": "构建后得到 surge-xt VST3/CLAP 插件与独立演奏程序",
+      "strength": "核心能力"
+    },
+    {
+      "type": "离线音频缓冲",
+      "exampleZh": "surgepy 里 createSurge(44100) + playNote(0,60,127,0) + processMultiBlock(buf) 得到 float 缓冲",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音色/波表素材",
+      "exampleZh": "从 patches_factory 与 patches_3rdparty 取 3561 个 .fxp 作为素材库",
+      "strength": "核心能力"
+    },
+    {
+      "type": "合成器开发基座",
+      "exampleZh": "以 JUCE + CMake 工程为模板做自己的插件，复用其 DSP 与 UI 结构",
+      "strength": "进阶能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "电子音乐音色设计",
+      "whoZh": "电子音乐制作人",
+      "whyZh": "3561 个现成音色与 178 个波表可快速改参，双 scene 能做分层与拆分",
+      "deliverableZh": "自定义音色与 loop",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量合成器出样",
+      "whoZh": "样例/数据集制作",
+      "whyZh": "surgepy 可在 Python 里按 MIDI 事件渲染成固定块，便于批量生成同音色多音高样本",
+      "deliverableZh": "批量 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "插件工程学习",
+      "whoZh": "C++ 音频开发者",
+      "whyZh": "CMake + JUCE + 多格式目标的完整工程，比教程项目更接近生产",
+      "deliverableZh": "可构建的插件工程",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "游戏/影视配乐",
+      "whoZh": "配乐师",
+      "whyZh": "需要宿主 DAW 做编排，单靠仓库源码没有时间轴与导出工程",
+      "deliverableZh": "分轨音频",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "移动端/嵌入式",
+      "whoZh": "嵌入式音频团队",
+      "whyZh": "JUCE 桌面工程体积大，25 个子模块与 C++20 依赖不适合资源受限设备",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "双场景结构",
+      "descZh": "两个 scene 可分层、拆分或交叉淡化"
+    },
+    {
+      "titleZh": "混合合成",
+      "descZh": "波表/经典波形 + FM/环形调制"
+    },
+    {
+      "titleZh": "离线调用",
+      "descZh": "surgepy 可 playNote、分块渲染"
+    },
+    {
+      "titleZh": "音色资产多",
+      "descZh": "641+2920 音色，178 波表"
+    },
+    {
+      "titleZh": "多格式产物",
+      "descZh": "VST3/CLAP/AU/独立版与 VST2"
+    }
+  ],
+  "ceilingsZh": "采样率不由仓库固定：插件跟随宿主，独立版与 CLI 可用 --sample-rate 指定，surgepy 测试里用 createSurge(44100)。位深 README 未声明。复音数与最大声道数 README 与源码均未给默认值，只能写「未声明」。音色侧有实测计数：resources/data/patches_factory 641 个 .fxp、patches_3rdparty 2920 个 .fxp、wavetables 178 个波表，合计 3561 个音色。离线渲染的最小单位是 processMultiBlock 的块，块大小由调用者传 buf 决定，仓库未声明单次上限；输出只有音频缓冲，不含时间轴或工程文件，批量出样要自己拼 wav 头。",
+  "workflowZh": "六步：装 VS 桌面 C++ → 拉 25 个子模块 → CMake 配置 → 构建 surge-staged-assets → 装宿主或用 surgepy → 导出 wav",
+  "workflow": [
+    {
+      "stepZh": "装工具链",
+      "detailZh": "Visual Studio 2022 桌面 C++ 工作负载 + CMake 3.22+，或直接用官网安装包跳过构建",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "拉子模块",
+      "detailZh": "git submodule update --init --recursive，libs/JUCE 等 25 个仓库全空",
+      "effortZh": "10–30 分钟，取决于网速"
+    },
+    {
+      "stepZh": "配置",
+      "detailZh": "cmake -Bbuild -DCMAKE_BUILD_TYPE=Release，Windows 用 VS 生成器",
+      "effortZh": "3–5 分钟"
+    },
+    {
+      "stepZh": "构建",
+      "detailZh": "cmake --build build --config Release --target surge-staged-assets",
+      "effortZh": "20–60 分钟"
+    },
+    {
+      "stepZh": "出声",
+      "detailZh": "装 VST3 后用宿主弹奏，或编译 surgepy 跑 test_surgepy.py 的 render 流程",
+      "effortZh": "10 分钟起"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "FluidSynth__fluidsynth",
+      "whenZh": "只要按 MIDI 回放 SF2 采样、追求轻量与批处理选 fluidsynth；要做算法合成、改音色结构选 Surge XT",
+      "adviceZh": "只要按 MIDI 回放 SF2 采样、追求轻量与批处理选 fluidsynth；要做算法合成、改音色结构选 Surge XT"
+    },
+    {
+      "vs": "schellingb__TinySoundFont",
+      "whenZh": "要把合成器嵌进游戏/小工具、只要几 KB 级库选 TinySoundFont；要完整合成器与现成音色库选 Surge",
+      "adviceZh": "要把合成器嵌进游戏/小工具、只要几 KB 级库选 TinySoundFont；要完整合成器与现成音色库选 Surge"
+    },
+    {
+      "vs": "Orastron__brickworks",
+      "whenZh": "想用浏览器里搭 DSP 图再导出插件选 brickworks；要成熟商业级合成器音色与社区选 Surge XT",
+      "adviceZh": "想用浏览器里搭 DSP 图再导出插件选 brickworks；要成熟商业级合成器音色与社区选 Surge XT"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "whatItMakes[1]",
+      "source": "src/surge-python/tests/test_surgepy.py#L24-L33",
+      "noteZh": "createSurge(44100)、playNote(0, 60, 127, 0)、processMultiBlock(buf) 构成离线渲染最小例"
+    },
+    {
+      "field": "workflow[3]",
+      "source": "README.md#L42-L53",
+      "noteZh": "官方构建链：submodule → cmake -Bbuild → --target surge-staged-assets 产出 build/surge_xt_products"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L124-L153",
+      "noteZh": "pybind 绑定需单独 cmake --target surgepy，产物是 .so/.dll"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L11-L16",
+      "noteZh": "说明是 2018 年 GPL3 开源的商业混合合成器"
+    },
+    {
+      "field": "workflow[1]",
+      "source": ".gitmodules",
+      "noteZh": "列出 25 个 submodule（libs/JUCE、libs/sst 等），仓库内目录为空"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L214-L236",
+      "noteZh": "Windows 需 VS2019/VS2017 的 CMake 生成器与 -A 位宽参数"
+    }
+  ],
+  "blockerZh": "25 个子模块全为空，不拉取无法 cmake；CMake 3.22 + C++20 需要 VS 桌面 C++ 工作负载，本机没有；构建产物要在 DAW/宿主里才能演奏，本机未验证 ASIO 实时音频；离线出样只能自己编译 surgepy。",
+  "whatItWouldNeed": "Visual Studio 2022 桌面 C++ 工作负载 + CMake 3.22、git submodule update --init --recursive（25 个仓库）、以及一个 VST3/CLAP 宿主（或用 surgepy 编译 Python 绑定替代）。",
+  "ceilingZh": "采样率不由仓库固定：插件跟随宿主，独立版与 CLI 可用 --sample-rate 指定，surgepy 测试里用 createSurge(44100)。位深 README 未声明。复音数与最大声道数 README 与源码均未给默认值，只能写「未声明」。音色侧有实测计数：resources/data/patches_factory 641 个 .fxp、patches_3rdparty 2920 个 .fxp、wavetables 178 个波表，合计 3561 个音色。离线渲染的最小单位是 processMultiBlock 的块，块大小由调用者传 buf 决定，仓库未声明单次上限；输出只有音频缓冲，不含时间轴或工程文件，批量出样要自己拼 wav 头。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "双场景结构：两个 scene 可分层、拆分或交叉淡化",
+    "混合合成：波表/经典波形 + FM/环形调制",
+    "离线调用：surgepy 可 playNote、分块渲染",
+    "音色资产多：641+2920 音色，178 波表",
+    "多格式产物：VST3/CLAP/AU/独立版与 VST2"
+  ],
+  "limits": [
+    "libs/ 下 25 个子模块全为空（JUCE、sst、pybind11 等 0 文件），直接 cmake 会立刻缺依赖，必须 git submodule update --init --recursive",
+    "CMakeLists.txt 要求 CMake 3.22 与 C++20，本机无 VS/CMake，光装桌面 C++ 工作负载就要 6GB 以上",
+    "src/surge-xt/cli 的 CLI 是实时播放器（连音频设备、从 stdin 读事件），不是离线导出器，出样例仍要自己写 surgepy 脚本",
+    "README 限制 VST2 不可再分发，VST3 构建后还要手工拷到系统插件目录或配合宿主才可用",
+    "不要指望双击仓库里的 exe；本仓库只有源码，安装包在官网发布页",
+    "surgepy 需要先编译 Python 绑定，且 AudioIO 回调里不能直接调 numpy 重操作，离线渲染要按 processMultiBlock 分块拿缓冲",
+    "音色文件按类别散落在 patches_factory/patches_3rdparty，批量挑音色要自己写遍历逻辑"
+  ],
+  "signatureZh": "双场景混合合成器，源码出 VST3/CLAP 插件",
+  "chooseWhenZh": "要做电子音色设计、需要大量现成音色/波表素材，或想把合成器嵌进自研 Python 管线的音乐技术开发者",
+  "avoidWhenZh": "libs/ 下 25 个子模块全为空（JUCE、sst、pybind11 等 0 文件），直接 cmake 会立刻缺依赖，必须 git submodule update --init --recursive",
+  "contrastWith": [
+    "FluidSynth__fluidsynth",
+    "schellingb__TinySoundFont"
+  ]
+}

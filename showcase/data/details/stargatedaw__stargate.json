@@ -1,0 +1,183 @@
+{
+  "id": "stargatedaw__stargate",
+  "taglineZh": "Python/PyQt + C 引擎的一体化 EDM DAW",
+  "summaryZh": "Stargate 是 DAW：界面用 Python + PyQt6，音频/DSP 引擎用 GNU89 C 另起进程、通过 UDP 通信，自带 pattern 音序器、乐器/效果器、波形编辑器、路由矩阵与侧链，主打 EDM。官方支持 Windows/macOS/Linux x86/ARM，Windows 提供便携 U 盘安装；最低硬件树莓派 4 或 15 年双核 1GB。代价是源码构建要 MSYS2 + mingw 全套音频库、三个子模块为空，且无 headless/CLI，导出必须走 GUI。",
+  "whatItMakes": [
+    {
+      "type": "完整 DAW 工程",
+      "exampleZh": "新建工程，用 pattern 音序器编曲并保存 .stargate 工程",
+      "strength": "核心能力"
+    },
+    {
+      "type": "编曲/混音导出",
+      "exampleZh": "通过路由矩阵与 sidechain 混好后从 GUI 导出音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "乐器与效果插件",
+      "exampleZh": "使用内置 synth、采样器与 EQ/压缩/失真等效果器",
+      "strength": "核心能力"
+    },
+    {
+      "type": "波形编辑器",
+      "exampleZh": "录制后裁剪、复制、粘贴波形片段",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "EDM 编曲与 demo 制作",
+      "whoZh": "电子音乐制作人",
+      "whyZh": "pattern 工作流、侧链与内置效果器覆盖 EDM 常见链路",
+      "deliverableZh": "工程文件与混音导出音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "旧机或低配设备做音乐",
+      "whoZh": "预算有限的爱好者",
+      "whyZh": "README 称树莓派 4 或 15 年双核 1GB 内存即可跑",
+      "deliverableZh": "可播放的工程与音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学 DAW 架构",
+      "whoZh": "音频工程教师",
+      "whyZh": "C 引擎 + Python UI 分工清晰，可讲进程隔离与 UDP 通信",
+      "deliverableZh": "架构讲解与演示工程",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "插件与路由实验",
+      "whoZh": "音频插件开发者",
+      "whyZh": "路由矩阵与 sidechain 内建，源码可改信号链",
+      "deliverableZh": "自定义构建的 DAW",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "音序工作流",
+      "descZh": "以 pattern 为单位编曲"
+    },
+    {
+      "titleZh": "路由侧链",
+      "descZh": "可视化连线与 sidechain"
+    },
+    {
+      "titleZh": "内置插件套件",
+      "descZh": "乐器与效果器随包提供"
+    },
+    {
+      "titleZh": "独立引擎",
+      "descZh": "C 引擎独立进程，UDP 通信"
+    },
+    {
+      "titleZh": "便携安装",
+      "descZh": "Windows 可装进 U 盘带走"
+    }
+  ],
+  "ceilingsZh": "README 未声明通道数、采样率、位深与最长工程时长，只给硬件下限：树莓派 4 或 15 年双核 CPU、1GB RAM、720p–4K 显示，平台覆盖 Windows/macOS/Linux 的 x86 与 ARM。音频设备通过 Portaudio/Portmidi 访问，实际采样率与位深受设备与引擎设置控制，README 未写默认值。导出格式 README 只写「导出」，批次评估记录为 wav，源码未见命令行导出参数。",
+  "workflowZh": "五步：装 MSYS2 → 初始化子模块并装依赖 → 编译 C 引擎 → 装 PyQt6 → 启动 GUI 编曲导出",
+  "workflow": [
+    {
+      "stepZh": "装 MSYS2 依赖",
+      "detailZh": "pacman -S git make 后执行 ./windows/msys2_deps.sh 与 make mingw_deps（ffmpeg/fftw/flac/lame/ogg/sndfile/vorbis/opus/portaudio/portmidi/rubberband）",
+      "effortZh": "30–60 分钟"
+    },
+    {
+      "stepZh": "拉子模块",
+      "detailZh": "git submodule update --init --recursive，portaudio-binaries/soundtouch/sbsms 当前为空目录",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "编译引擎",
+      "detailZh": "cd engine；. mingw64-source-me.sh；make mingw",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "装 UI",
+      "detailZh": "python -m venv venv\\stargate；pip install -r windows\\requirements.txt（PyQt6、Nuitka）",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "出样",
+      "detailZh": "启动 Stargate，新建工程编曲混音，从 File 菜单导出音频",
+      "effortZh": "30 分钟到数小时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "mlm-games__yadaw",
+      "whenZh": "要在浏览器里改工程、轻量协作用 yadaw；要完整插件套件、路由矩阵与侧链用 Stargate",
+      "adviceZh": "要在浏览器里改工程、轻量协作用 yadaw；要完整插件套件、路由矩阵与侧链用 Stargate"
+    },
+    {
+      "vs": "DBraun__DawDreamer",
+      "whenZh": "要用 Python 脚本化加载 VST 离线渲染选 DawDreamer；要现成 DAW 界面编曲用 Stargate",
+      "adviceZh": "要用 Python 脚本化加载 VST 离线渲染选 DawDreamer；要现成 DAW 界面编曲用 Stargate"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L19-L24",
+      "noteZh": "列出 pattern、插件、波形编辑器、路由矩阵与 sidechain"
+    },
+    {
+      "field": "pros",
+      "source": "README.md#L25-L34",
+      "noteZh": "平台覆盖与 Windows 便携安装说明"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L29-L31",
+      "noteZh": "最低硬件为树莓派 4 或 15 年双核 1GB 内存"
+    },
+    {
+      "field": "blockerZh",
+      "source": "src/windows/msys2_deps.sh#L1-L21",
+      "noteZh": "需 MSYS2 安装 ffmpeg/fftw/flac/lame/ogg/sndfile/vorbis/opus/portaudio/portmidi/rubberband"
+    },
+    {
+      "field": "cons",
+      "source": ".gitmodules#L1-L11",
+      "noteZh": "portaudio-binaries、soundtouch、sbsms 三个子模块"
+    }
+  ],
+  "blockerZh": "构建链全缺：源码为 C++（src/sglib、sgui）+ Python 打包，Makefile 需要 make 与 C++ 编译器；本机 cmake/gcc/clang/MSVC 全部缺失，且 .gitmodules 里的 portaudio-binaries、soundtouch、sbsms 三个子模块目录为空（未初始化），直接 make 会因缺依赖失败。仓库不发预编译 Windows 包。",
+  "whatItWouldNeed": "MSVC（或 mingw）+ cmake/make + git submodule update --init 三个子模块 + PortAudio/PortMidi；若走 CLI 渲染，还需先用 GUI 生成 “Copy cmd args” 的工程参数。",
+  "ceilingZh": "README 未声明通道数、采样率、位深与最长工程时长，只给硬件下限：树莓派 4 或 15 年双核 CPU、1GB RAM、720p–4K 显示，平台覆盖 Windows/macOS/Linux 的 x86 与 ARM。音频设备通过 Portaudio/Portmidi 访问，实际采样率与位深受设备与引擎设置控制，README 未写默认值。导出格式 README 只写「导出」，批次评估记录为 wav，源码未见命令行导出参数。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "音序工作流：以 pattern 为单位编曲",
+    "路由侧链：可视化连线与 sidechain",
+    "内置插件套件：乐器与效果器随包提供",
+    "独立引擎：C 引擎独立进程，UDP 通信",
+    "便携安装：Windows 可装进 U 盘带走"
+  ],
+  "limits": [
+    "源码构建要 MSYS2 + mingw 全套音频库（ffmpeg/fftw/flac/lame/vorbis/opus/portaudio/portmidi/rubberband）",
+    "src/vendor 下 portaudio-binaries、soundtouch、sbsms 三个子模块目录为空，必须先 git submodule update",
+    "没有 CLI/headless 出样入口，编曲与导出只能靠 GUI 手动完成",
+    "GPL-3.0 许可：闭源分发或把引擎嵌入商业产品会受到 copyleft 约束",
+    "src/windows/README 的 clone 地址是 stargateaudio/stargate，与当前 stargatedaw/stargate 不一致",
+    "编译必须在 MSYS2 终端执行，PowerShell 里跑 make mingw 会缺依赖",
+    "Windows 安装器会触发 SmartScreen，需要 More Info → Install Anyway"
+  ],
+  "signatureZh": "Python/PyQt + C 引擎的一体化 EDM DAW",
+  "chooseWhenZh": "想要完整 EDM 编曲/混音/导出流程、且接受 GUI 操作与重型源码构建的桌面用户",
+  "avoidWhenZh": "源码构建要 MSYS2 + mingw 全套音频库（ffmpeg/fftw/flac/lame/vorbis/opus/portaudio/portmidi/rubberband）",
+  "contrastWith": [
+    "mlm-games__yadaw",
+    "DBraun__DawDreamer"
+  ]
+}

@@ -1,0 +1,28 @@
+# 白名单式忽略：仓库根目录下只发布站点与样例层，其余全部排除
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/manifest.json
+!/manifest.md
+!/showcase/
+!/_samples/
+
+# _reports 只带两份定版文档
+!/_reports/
+/_reports/*
+!/_reports/final_report.md
+!/_reports/acceptance_playwright.md
+
+# 构建缓存
+node_modules/
+.npm-cache/
+coverage/
+.vite/
+*.local
+
+# 以下目录/条目由上面的 /* 覆盖，此处仅作说明：
+#   <owner>__<repo>\  56 个上游源码克隆
+#   _env\  _models\  _tmp\
+#   showcase\app\public\（应用内 junction）
+#   _reports 其余批次日志与中间脚本

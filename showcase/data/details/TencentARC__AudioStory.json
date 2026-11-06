@@ -1,0 +1,178 @@
+{
+  "id": "TencentARC__AudioStory",
+  "taglineZh": "LLM 拆解叙事 + Flux 解码，生成约 50 秒长音频",
+  "summaryZh": "AudioStory 把长音频生成拆成 LLM 推理 + DiT 解码：Qwen2.5-3B 加 LoRA 把叙事拆成带时间戳子事件，逐段产出 caption、语义与残差 token，由 Flux detokenizer 和 Oobleck VAE 还原波形，段间 3 秒 crossfade。支持视频配音、续写与长叙事，默认 50 秒、32kHz 输出。代价是 3B 串联、绑定 deepspeed/xformers 与 torch 2.1，只给 Linux 流程，8GB 显存跑 50 秒很勉强。",
+  "whatItMakes": [
+    {
+      "type": "长叙事音频",
+      "exampleZh": "按一句剧情描述拆成多段 caption，拼成 50 秒有声故事",
+      "strength": "核心能力"
+    },
+    {
+      "type": "视频配音",
+      "exampleZh": "输入视频，为画面生成对白、音效与环境声",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频续写",
+      "exampleZh": "给一段开头音频，按指令继续生成后续情节",
+      "strength": "核心能力"
+    },
+    {
+      "type": "分段 caption/token",
+      "exampleZh": "每段输出带 <timestamp> 的音频描述与语义/残差 token",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "动画或短片配音",
+      "whoZh": "动画短片制作者",
+      "whyZh": "可一次生成几十秒连贯的对白+环境声，不用逐段拼接",
+      "deliverableZh": "32kHz wav 与分段 caption",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "有声故事/播客片头",
+      "whoZh": "播客与有声内容作者",
+      "whyZh": "instruction 里直接写总时长与剧情走向",
+      "deliverableZh": "长音频 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "环境声叙事",
+      "whoZh": "声音设计师",
+      "whyZh": "通过 caption 控制每段的声景变化与转场",
+      "deliverableZh": "多段声景拼成的长轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "研究长音频一致性",
+      "whoZh": "长音频生成研究员",
+      "whyZh": "LLM 规划 + 逐段解码的框架可替换各模块",
+      "deliverableZh": "推理结果与消融实验",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "事件拆解",
+      "descZh": "Qwen2.5-3B + LoRA 规划段落"
+    },
+    {
+      "titleZh": "双查询桥接",
+      "descZh": "语义与残差 token 逐段衔接"
+    },
+    {
+      "titleZh": "3 秒交叉淡化",
+      "descZh": "段间默认 3 秒 crossfade"
+    },
+    {
+      "titleZh": "32kHz 输出",
+      "descZh": "Oobleck VAE 解码采样率"
+    }
+  ],
+  "ceilingsZh": "输出采样率默认 32000Hz（inference.py 的 --target_sr 默认 32000）；总时长由 --total_duration 控制，README 示例用 50，演示里出现 35.1/36.6/49.9 秒；每段时长来自 caption 里的 <timestamp>，段间 crossfade 默认 3 秒。模型为 Qwen2.5-3B-Instruct + LoRA(r=32) 与 Flux detokenizer + Oobleck VAE；--max_new_tokens 默认 1600、guidance 4.0。README 未声明权重大小、显存下限与最长时长硬上限。",
+  "workflowZh": "五步：Linux conda 3.10 → bash 装依赖 → 下 3B 权重 → 写指令 → inference.py 出 wav",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "conda create -n audiostory python=3.10 -y，激活后准备 CUDA 12.1",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "装依赖",
+      "detailZh": "bash install_audiostory.sh：torch 2.1.0/cu121、deepspeed 0.15.1、xformers 0.0.22.post7",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "从 HF TencentARC/AudioStory-3B 拉 ckpt/audiostory-3B，另备 ckpt/Flux_detokenizer",
+      "effortZh": "20–60 分钟"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python evaluate/inference.py --model_path ckpt/audiostory-3B --total_duration 50 --prompt \"...\"",
+      "effortZh": "5–20 分钟"
+    },
+    {
+      "stepZh": "取结果",
+      "detailZh": "evaluate/<save_folder_name>/generated_audio_demo_4.0/*.wav",
+      "effortZh": "即时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "SAIL-PRLab__Foley-Omni",
+      "whenZh": "要 10 秒内精确拟音选 Foley-Omni；要几十秒连贯叙事或视频配音选 AudioStory",
+      "adviceZh": "要 10 秒内精确拟音选 Foley-Omni；要几十秒连贯叙事或视频配音选 AudioStory"
+    },
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "单事件短音效选 AudioLDM；需要指令拆解、分段规划与长音频拼接选 AudioStory",
+      "adviceZh": "单事件短音效选 AudioLDM；需要指令拆解、分段规划与长音频拼接选 AudioStory"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L109-L125",
+      "noteZh": "LLM 推理 + Flux detokenizer + VAE 的两段式流程"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "evaluate/inference.py#L256-L295",
+      "noteZh": "target_sr 默认 32000、total_duration 默认 50、guidance 4.0"
+    },
+    {
+      "field": "cons",
+      "source": "install_audiostory.sh#L3-L21",
+      "noteZh": "固定 torch 2.1.0、deepspeed 0.15.1 与 xformers 0.0.22.post7"
+    },
+    {
+      "field": "pros",
+      "source": "README.md#L38-L44",
+      "noteZh": "视频配音、音频续写、长叙事三种能力"
+    },
+    {
+      "field": "pitfalls",
+      "source": "README.md#L151-L157",
+      "noteZh": "训练代码、AudioStory-10K 与 Gradio demo 均在 TODO"
+    }
+  ],
+  "blockerZh": "权重总量与显存超限：AudioStory-3B 权重含 Qwen2.5-3B-Instruct 两片 safetensors（单片 3.97 GB，合计约 7.9 GB）加两个音频 detokenizer，合计约 10 GB+，超出本批 10 GB 额度；3B LLM + 音频 codec 在 8 GB 显存只能强量化，长音频推理官方建议 ≥16 GB（A100 级别）。install_audiostory.sh 绑定 Python 3.10 与多个 Git 依赖。",
+  "whatItWouldNeed": "≥16 GB 显存（建议 24 GB）；约 10–12 GB 权重落 _models；Python 3.10 环境；长文本分段与音频拼接策略；可选 HF Token（仓库 gated=False，实测公开）。",
+  "ceilingZh": "输出采样率默认 32000Hz（inference.py 的 --target_sr 默认 32000）；总时长由 --total_duration 控制，README 示例用 50，演示里出现 35.1/36.6/49.9 秒；每段时长来自 caption 里的 <timestamp>，段间 crossfade 默认 3 秒。模型为 Qwen2.5-3B-Instruct + LoRA(r=32) 与 Flux detokenizer + Oobleck VAE；--max_new_tokens 默认 1600、guidance 4.0。README 未声明权重大小、显存下限与最长时长硬上限。",
+  "capabilities": {
+    "maxDurationZh": "默认 3 秒",
+    "formatsZh": [
+      "wav",
+      "mp4"
+    ],
+    "sampleRateZh": "32000 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "事件拆解：Qwen2.5-3B + LoRA 规划段落",
+    "双查询桥接：语义与残差 token 逐段衔接",
+    "3 秒交叉淡化：段间默认 3 秒 crossfade",
+    "32kHz 输出：Oobleck VAE 解码采样率"
+  ],
+  "limits": [
+    "install_audiostory.sh 固定 torch 2.1.0/cu121、deepspeed 0.15.1、xformers 0.0.22.post7，Windows 无官方支持",
+    "3B Qwen2.5 + Flux detokenizer + Oobleck VAE 串联，README 默认生成 50 秒，8GB 显存装不下",
+    "训练代码与 AudioStory-10K 数据集均未发布，Gradio demo 也在未勾选的 TODO 里",
+    "README 示例路径 ckpt/audiostory-3B 与脚本默认 audiostory_3b 大小写不一致；另需自备 ckpt/Flux_detokenizer，README 未给下载来源",
+    "总时长只是提示词约束，实际长度由每段 timestamp 决定，可能提前结束或被截断",
+    "manifest 未记录 license，README 指向的 Apache-2.0 链接在别的仓库，仓内没有 LICENSE 文件"
+  ],
+  "signatureZh": "LLM 拆解叙事 + Flux 解码，生成约 50 秒长音频",
+  "chooseWhenZh": "需要几十秒连贯叙事音频或动画配音、且有 Linux + 16GB 以上显存的团队",
+  "avoidWhenZh": "install_audiostory.sh 固定 torch 2.1.0/cu121、deepspeed 0.15.1、xformers 0.0.22.post7，Windows 无官方支持",
+  "contrastWith": [
+    "hkchengrex__MMAudio",
+    "haoheliu__AudioLDM"
+  ]
+}

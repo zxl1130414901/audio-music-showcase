@@ -1,0 +1,182 @@
+{
+  "id": "Orastron__brickworks",
+  "taglineZh": "一组 C 头文件，拼装自己的音频引擎内核",
+  "summaryZh": "Brickworks 是 Orastron 维护的 C 头文件 DSP 构件库，include/ 下是一个个独立模块，覆盖振荡器、滤波器、包络、延迟、混响、失真、动力学等；每个模块提供 set_sample_rate 与 process 接口，直接嵌进自己的引擎。examples/ 演示如何把同一份 DSP 代码接到 VST3、LV2、Web Audio、Daisy Seed、Android、iOS 与命令行。仓库本身不含构建骨架，示例样板由外部 Tibia 工具生成。",
+  "whatItMakes": [
+    {
+      "type": "效果链模块",
+      "exampleZh": "bw_reverb/bw_delay/bw_comp 串进自研引擎",
+      "strength": "核心能力"
+    },
+    {
+      "type": "合成器 voice",
+      "exampleZh": "振荡器+ADSR+滤波器组合成单音",
+      "strength": "核心能力"
+    },
+    {
+      "type": "插件/板卡目标",
+      "exampleZh": "套用 VST3/LV2 或 Daisy Seed 示例",
+      "strength": "附加能力"
+    },
+    {
+      "type": "离线 wav",
+      "exampleZh": "CLI 示例配 tinywav 读写 wav",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给自研音频引擎补混响或压缩器",
+      "whoZh": "写 DAW/音频中间件的 C/C++ 工程师",
+      "whyZh": "bw_reverb、bw_comp 是单头文件，不绑定宿主",
+      "deliverableZh": "引擎内的效果模块",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做跨格式的吉他/合成器效果插件",
+      "whoZh": "独立插件开发者",
+      "whyZh": "examples 已给 VST3、LV2、Web Audio、iOS/Android 样板",
+      "deliverableZh": "VST3/LV2 插件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "在 Daisy Seed 等板卡上跑效果器",
+      "whoZh": "嵌入式音频硬件开发者",
+      "whyZh": "C 头文件无动态分配依赖，examples 有板卡目标",
+      "deliverableZh": "板卡固件",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "离线批量处理 wav",
+      "whoZh": "音频数据工程师",
+      "whyZh": "命令行示例配合 tinywav 直接读写 wav",
+      "deliverableZh": "处理后的 wav 文件",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "独立构件",
+      "descZh": "振荡器到混响按模块拆分"
+    },
+    {
+      "titleZh": "多宿主示例",
+      "descZh": "VST3/LV2/Web/Daisy/CLI"
+    },
+    {
+      "titleZh": "双许可授权",
+      "descZh": "GPLv3 或商业 license 可选"
+    },
+    {
+      "titleZh": "回归测试",
+      "descZh": "test/Makefile 用 gcc 跑用例"
+    }
+  ],
+  "ceilingsZh": "采样率未声明固定值：每个构件由调用方通过 bw_xxx_set_sample_rate 传入，例如 bw_ap1_set_sample_rate（include/bw_ap1.h 第 155-157 行）；块大小也逐块交给 process，没有统一默认。头文件按振荡器、滤波器、包络、延迟、混响等模块拆分，无 GPU、权重、显存概念。复音数由各合成示例自行管理，未声明上限；include/bw_rand.h 的随机源来自 public domain 实现（README 第 20 行）。",
+  "workflowZh": "四步：装 Node 与 Make → 放 Tibia 并生成样板 → make 编译目标 → 换成自己的 DSP 或跑 CLI",
+  "workflow": [
+    {
+      "stepZh": "准备 Tibia 与 Node",
+      "detailZh": "下载 Tibia 0.5.2，放在 Brickworks 同级目录，npm install dot 或设 NODE_PATH",
+      "effortZh": "10-15 分钟"
+    },
+    {
+      "stepZh": "生成样板",
+      "detailZh": "在 examples/ 执行 ./tibia_gen.sh（或只生成某一个示例）",
+      "effortZh": "2-5 分钟"
+    },
+    {
+      "stepZh": "编译目标",
+      "detailZh": "cd 到 example/platform 执行 make；Windows 走 MSYS2 并给 LDFLAGS 加 -static",
+      "effortZh": "5-15 分钟"
+    },
+    {
+      "stepZh": "改 DSP",
+      "detailZh": "先跑自带示例，再替换 src 里的 bw_* 组合；CLI 需 tinywav/midi-parser",
+      "effortZh": "30 分钟起"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "cycfi__q",
+      "whenZh": "要 C 头文件、自己掌控处理图选 Brickworks；要 C++20 现代 API、MIDI 2.0 与插件全家桶选 Q。",
+      "adviceZh": "要 C 头文件、自己掌控处理图选 Brickworks；要 C++20 现代 API、MIDI 2.0 与插件全家桶选 Q。"
+    },
+    {
+      "vs": "SamiPerttu__fundsp",
+      "whenZh": "要 Rust 音频 DSP 图与泛型节点选 fundsp；要 C 生态、宿主示例与商业授权选 Brickworks。",
+      "adviceZh": "要 Rust 音频 DSP 图与泛型节点选 fundsp；要 C 生态、宿主示例与商业授权选 Brickworks。"
+    },
+    {
+      "vs": "grame-cncm__faust",
+      "whenZh": "想用 Faust 语言自动生成多后端代码选 Faust；想手写 C 并逐构件调参选 Brickworks。",
+      "adviceZh": "想用 Faust 语言自动生成多后端代码选 Faust；想手写 C 并逐构件调参选 Brickworks。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "README.md#L3",
+      "noteZh": "定位为音乐 DSP 构件工具箱"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L9",
+      "noteZh": "示例覆盖 VST3/LV2/Web/Daisy/Android/iOS/CLI"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L18",
+      "noteZh": "GPLv3 之外提供商业授权"
+    },
+    {
+      "field": "cons[0]",
+      "source": "examples/README.md#L5",
+      "noteZh": "样板由外部 Tibia 生成"
+    },
+    {
+      "field": "cons[1]",
+      "source": "examples/README.md#L27",
+      "noteZh": "Windows 需 MSYS2/Mingw-w64"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "include/bw_ap1.h#L157",
+      "noteZh": "采样率由 set_sample_rate 传入"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样率未声明固定值：每个构件由调用方通过 bw_xxx_set_sample_rate 传入，例如 bw_ap1_set_sample_rate（include/bw_ap1.h 第 155-157 行）；块大小也逐块交给 process，没有统一默认。头文件按振荡器、滤波器、包络、延迟、混响等模块拆分，无 GPU、权重、显存概念。复音数由各合成示例自行管理，未声明上限；include/bw_rand.h 的随机源来自 public domain 实现（README 第 20 行）。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "独立构件：振荡器到混响按模块拆分",
+    "多宿主示例：VST3/LV2/Web/Daisy/CLI",
+    "双许可授权：GPLv3 或商业 license 可选",
+    "回归测试：test/Makefile 用 gcc 跑用例"
+  ],
+  "limits": [
+    "示例不是开箱即用：README 很短，细节全在官网；examples/README 第 5 行要求先跑 tibia_gen.sh 生成样板，依赖外部 Tibia 工具。",
+    "Windows 构建必须装 MSYS2/Mingw-w64 并给 LDFLAGS 加 -static（examples/README 第 27 行），本机没有 make/gcc，命令行示例还要另拉 tinywav 与 midi-parser。",
+    "仓库没有 CMake 或包管理器安装目标，也没有预编译二进制，接入现有工程要手工拷 include 并自己写构建脚本。",
+    "必须先安装 Node.js/npm 并放好 Tibia 0.5.2、npm install dot，否则 tibia_gen.sh 生成不出样板代码。",
+    "VST3 示例还要单独下载 Steinberg vst3_c_api 放到同级目录，或改 vars-pre.mk 的 CFLAGS_EXTRA。",
+    "Linux/macOS 与 Windows 的静态链接参数不同，Windows 漏加 -static 会在加载时缺 DLL。"
+  ],
+  "signatureZh": "一组 C 头文件，拼装自己的音频引擎内核",
+  "chooseWhenZh": "想拿现成 C 构件快速搭自定义效果器/合成器，并能接受 GPL 或购买商业授权的团队。",
+  "avoidWhenZh": "示例不是开箱即用：README 很短，细节全在官网；examples/README 第 5 行要求先跑 tibia_gen.sh 生成样板，依赖外部 Tibia 工具。",
+  "contrastWith": [
+    "cycfi__q",
+    "Signalsmith-Audio__dsp"
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "id": "lucidrains__soundstorm-pytorch",
+  "taglineZh": "SoundStorm 的 PyTorch 并行音频生成",
+  "summaryZh": "soundstorm-pytorch 是 lucidrains 对 Google SoundStorm 的 PyTorch 复现：把 MaskGIT 的并行解掩码套在 SoundStream 的 RVQ token 上，默认 18 步从全 mask 生成 token，再接 SoundStream 解码成波形。仓库含 accelerate 训练器与变长 mask，pip 一条命令装。但它只是架构实现：没有预训练权重、没有 CLI，要自己准备 codebook 或先训 SoundStream。",
+  "whatItMakes": [
+    {
+      "type": "并行 token 生成",
+      "exampleZh": "MaskGIT 式解掩码，默认 18 步出一整段 token",
+      "strength": "核心能力"
+    },
+    {
+      "type": "波形重建",
+      "exampleZh": "接 SoundStream 解码器把 token 还原成音频",
+      "strength": "核心能力"
+    },
+    {
+      "type": "训练",
+      "exampleZh": "accelerate 训练器、变长 mask 与分组 RVQ",
+      "strength": "可用"
+    },
+    {
+      "type": "开箱推理",
+      "exampleZh": "无权重无 CLI，只能先自己训练",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "架构复现",
+      "whoZh": "音频生成研究者",
+      "whyZh": "读或改 SoundStorm 的 Conformer 与 MaskGIT 实现",
+      "deliverableZh": "可训练的实验代码",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "自有数据训练",
+      "whoZh": "有 GPU 与音频数据的团队",
+      "whyZh": "先训 SoundStream 再训并行生成器",
+      "deliverableZh": "自训模型与生成音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "TTS 研究",
+      "whoZh": "语音合成研究者",
+      "whyZh": "接 TextToSemantic 做语音 token 生成实验",
+      "deliverableZh": "实验 token 与波形",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "直接配音",
+      "whoZh": "内容创作者",
+      "whyZh": "没有权重与推理脚本，不能拿来就出成品音频",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "18 步采样",
+      "descZh": "并行解掩码，非逐 token 自回归"
+    },
+    {
+      "titleZh": "波形解码",
+      "descZh": "token 可直接还原成波形"
+    },
+    {
+      "titleZh": "变长训练",
+      "descZh": "训练与生成都可传 mask"
+    },
+    {
+      "titleZh": "分组 RVQ",
+      "descZh": "支持分组残差向量量化配置"
+    },
+    {
+      "titleZh": "CFG 支持",
+      "descZh": "内置 CFG 依赖，可做引导采样"
+    }
+  ],
+  "ceilingsZh": "示例配置为 conformer dim=512、depth=2、codebook_size=1024、num_quantizers=12，steps=18、schedule='cosine'；generate(1024) 生成 1024 个 token，generate(seconds=30) 按采样率与 SoundStream 累计降采样换算长度。模型参数量、显存占用与客观音质指标 README 未声明；没有官方权重，训练数据规模与所需 GPU 时数也未给出。默认开启 flash attention，训练器基于 accelerate；setup.py 声明 torch>=2.2、audiolm-pytorch>=1.2.8、spear-tts-pytorch>=0.4.0。",
+  "workflowZh": "三步：安装 → 自备 SoundStream 编码 → 训练并生成",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "pip install soundstorm-pytorch，确认 torch>=2.2 与 CUDA 可用",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "自备编码",
+      "detailZh": "先训 SoundStream 或准备 codebook id，形状 (batch, seq, 12)",
+      "effortZh": "数小时到数天"
+    },
+    {
+      "stepZh": "训练与生成",
+      "detailZh": "用 Trainer 训 SoundStorm，再 generate(seconds=30) 解码出 wav",
+      "effortZh": "按数据规模而定"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "lucidrains__audiolm-pytorch",
+      "whenZh": "要完整的 AudioLM/SoundStream 组件与训练流程选 audiolm-pytorch；只想复现并行 SoundStorm 头选本项目",
+      "adviceZh": "要完整的 AudioLM/SoundStream 组件与训练流程选 audiolm-pytorch；只想复现并行 SoundStorm 头选本项目"
+    },
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "要现成权重直接出音乐选 audiocraft；要研究 mask 并行生成架构选 soundstorm-pytorch",
+      "adviceZh": "要现成权重直接出音乐选 audiocraft；要研究 mask 并行生成架构选 soundstorm-pytorch"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L7-L7",
+      "noteZh": "README 自述是 MaskGIT 加 SoundStream token 的 Conformer 实现。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L50-L63",
+      "noteZh": "默认 18 步并行解掩码。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L106-L106",
+      "noteZh": "按时长直接生成并解码。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L156-L156",
+      "noteZh": "变长训练已在 to-do 中勾选完成。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "setup.py#L20-L29",
+      "noteZh": "依赖声明里含 torch>=2.2 与 audiolm-pytorch。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L68-L68",
+      "noteZh": "必须自备 SoundStream 权重或自己训。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L159-L159",
+      "noteZh": "CLI 仍在待办、未实现。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L111-L111",
+      "noteZh": "TTS 链路依赖的工程尚未完成预训练与回译逻辑。"
+    }
+  ],
+  "blockerZh": "仓库只有模型定义与训练代码，没有任何预训练权重；README 的用法全部是“先训练再加载”，并要求额外提供已训练的 SoundStream 编码器与 TTS 文本编码器（spear-tts-pytorch 仍是 WIP）。本机没有训练数据，也没有数十小时 GPU 预算。",
+  "whatItWouldNeed": "训练数据（音频 + 转写/语义标签）、预训练 SoundStream/EnCodec、数小时到数十小时 GPU（8 GB 只能极小 batch）、文本编码器权重。",
+  "ceilingZh": "示例配置为 conformer dim=512、depth=2、codebook_size=1024、num_quantizers=12，steps=18、schedule='cosine'；generate(1024) 生成 1024 个 token，generate(seconds=30) 按采样率与 SoundStream 累计降采样换算长度。模型参数量、显存占用与客观音质指标 README 未声明；没有官方权重，训练数据规模与所需 GPU 时数也未给出。默认开启 flash attention，训练器基于 accelerate；setup.py 声明 torch>=2.2、audiolm-pytorch>=1.2.8、spear-tts-pytorch>=0.4.0。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "18 步采样：并行解掩码，非逐 token 自回归",
+    "波形解码：token 可直接还原成波形",
+    "变长训练：训练与生成都可传 mask",
+    "分组 RVQ：支持分组残差向量量化配置",
+    "CFG 支持：内置 CFG 依赖，可做引导采样"
+  ],
+  "limits": [
+    "没有任何预训练权重，必须自己准备编码后的 codebook id，或先按 audiolm-pytorch 训一个 SoundStream（README.md#L54-L68）",
+    "没有 CLI，to-do 里 turn it into a command line tool 仍未勾选（README.md#L157-L159）",
+    "TTS 全链路依赖 spear-tts-pytorch 的 TextToSemantic，而该项目预训练、伪标注与回译逻辑尚未完成（README.md#L109-L111）",
+    "codebook_size 必须与所用 SoundStream 一致（示例 1024），否则 token 解不回音频",
+    "num_quantizers=12 与分组 RVQ 配置要和训练时的 SoundStream 对齐",
+    "没有权重时 generate 只能出随机 token，不能当推理工具用"
+  ],
+  "signatureZh": "SoundStorm 的 PyTorch 并行音频生成",
+  "chooseWhenZh": "要复现或改造 SoundStorm 架构、自己有音频数据与 GPU 可训练的研究者",
+  "avoidWhenZh": "没有任何预训练权重，必须自己准备编码后的 codebook id，或先按 audiolm-pytorch 训一个 SoundStream（README.md#L54-L68）",
+  "contrastWith": [
+    "lucidrains__audiolm-pytorch",
+    "facebookresearch__audiocraft"
+  ]
+}

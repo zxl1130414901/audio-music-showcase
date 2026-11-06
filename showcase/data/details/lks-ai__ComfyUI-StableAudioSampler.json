@@ -1,0 +1,173 @@
+{
+  "id": "lks-ai__ComfyUI-StableAudioSampler",
+  "taglineZh": "ComfyUI 节点：Stable Audio 采样",
+  "summaryZh": "仓库把 stable-audio-open-1.0 包成 ComfyUI 节点：nodes.py 注入依赖路径，提供 Loader、Prompt、Pre-Conditioning、Sampler 四节点，透传 cfg_scale、seed、negative prompt、steps，输出 wav 与频谱图。模型放 models/audio_checkpoints。代价是必须挂 ComfyUI 宿主，依赖 flash_attn，README 称未充分测试，2025-01 后停更。",
+  "whatItMakes": [
+    {
+      "type": "文本生音频",
+      "exampleZh": "prompt 加 seconds_total 出 44.1 kHz 立体声片段",
+      "strength": "核心能力"
+    },
+    {
+      "type": "ComfyUI 工作流",
+      "exampleZh": "把音频节点接进现有图像或视频流程",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱图 PNG",
+      "exampleZh": "Sampler 同时输出实验性频谱图",
+      "strength": "辅助能力"
+    },
+    {
+      "type": "临时循环 wav",
+      "exampleZh": "temp/stableaudiosampler.wav 供循环试听",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "ComfyUI 用户加音频",
+      "whoZh": "已有 ComfyUI 的创作者",
+      "whyZh": "不用另装 Python 环境，节点直出音频",
+      "deliverableZh": "WAV 加频谱 PNG",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "音效/氛围短片段",
+      "whoZh": "游戏或视频作者",
+      "whyZh": "10 秒内 beats/ambience 快速迭代",
+      "deliverableZh": "短 WAV",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "参数扫描实验",
+      "whoZh": "研究者",
+      "whyZh": "cfg_scale/sigma_min/steps 可批量对比",
+      "deliverableZh": "一组变体样本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "图生视频配乐",
+      "whoZh": "多模态工作流作者",
+      "whyZh": "音频输出可接 VHS/视频节点合成",
+      "deliverableZh": "带音轨视频",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "四节点链路",
+      "descZh": "四节点顺序连接即可"
+    },
+    {
+      "titleZh": "半精度开关",
+      "descZh": "fp16 可省显存，代价是轻微降质"
+    },
+    {
+      "titleZh": "全参数透传",
+      "descZh": "cfg/steps/sigma 可调"
+    },
+    {
+      "titleZh": "频谱预览",
+      "descZh": "采样同时出实验性频谱 PNG"
+    }
+  ],
+  "ceilingsZh": "配置写死 44.1 kHz、双声道、sample_size 2097152（约 47.6 秒理论值），T5-base 提示词最长 128 token，seconds_start/seconds_total 上限 512。README 实测 3060 只到 10 秒，再长要更多显存拼接；半精度可选。权重体积 README 未声明，需从 HF gated 仓库手动下 model.safetensors 与 model.config.json 放 models/audio_checkpoints。节点只做采样，不做混音/拼接/升采样，Stereo 与 Tiling 仍在 roadmap。",
+  "workflowZh": "五步：装 ComfyUI → 放节点与权重 → 装依赖 → 连四节点 → 队列出 wav",
+  "workflow": [
+    {
+      "stepZh": "装 ComfyUI",
+      "detailZh": "git clone ComfyUI 并装匹配的 torch",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "放节点",
+      "detailZh": "clone 到 custom_nodes，pip install -r requirements.txt",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "放权重",
+      "detailZh": "HF 下 model.safetensors 与 model.config.json 到 models/audio_checkpoints",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "连节点",
+      "detailZh": "Loader→Prompt→PreConditioning→Sampler→SaveAudio",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "出样",
+      "detailZh": "填 prompt 与 seconds_total，Queue 后取 temp wav 与频谱",
+      "effortZh": "1–3 分钟/条"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要纯 CLI/脚本化批量选上游 stable-audio-tools；已在 ComfyUI 搭流程选本节点。",
+      "adviceZh": "要纯 CLI/脚本化批量选上游 stable-audio-tools；已在 ComfyUI 搭流程选本节点。"
+    },
+    {
+      "vs": "Text-to-Audio__AudioLCM",
+      "whenZh": "AudioLCM 2 步、16 kHz、独立 Python；本节点 44.1 kHz 但必须挂宿主并用 gated 权重。",
+      "adviceZh": "AudioLCM 2 步、16 kHz、独立 Python；本节点 44.1 kHz 但必须挂宿主并用 gated 权重。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L11-L27",
+      "noteZh": "3060 最长 10 秒、权重手动放置与未充分测试的说明"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L31-L47",
+      "noteZh": "四个节点与 cfg_scale/steps/sigma_min 等参数透传"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "util_config.py#L1-L8",
+      "noteZh": "44100 Hz、双声道与 sample_size 2097152"
+    },
+    {
+      "field": "cons[0]",
+      "source": "nodes.py#L80-L94",
+      "noteZh": "动态注入路径并 import folder_paths/comfy.utils"
+    }
+  ],
+  "blockerZh": "需 HF Token 同意 gated 条款，用户已决定不申请。仓库依赖的 stabilityai/stable-audio-open-1.0 在 HuggingFace 上是 gated 模型，README 明确要求先登录并设置 HF_TOKEN 才能下载 model.safetensors 与 model.config.json；本机未申请、未下载、未绕过限制，因此无法产出样例。",
+  "whatItWouldNeed": "一个已通过 gated 条款审批的 HuggingFace 账号与 HF_TOKEN；stable-audio-open-1.0 约 2.5GB safetensors + config；可运行的 ComfyUI 主机（本仓库只是 ComfyUI 节点，不含 ComfyUI 本体）；requirements 里的 flash_attn 在 Windows 上需自带预编译轮子或 CUDA 工具链，本机也不具备。",
+  "ceilingZh": "配置写死 44.1 kHz、双声道、sample_size 2097152（约 47.6 秒理论值），T5-base 提示词最长 128 token，seconds_start/seconds_total 上限 512。README 实测 3060 只到 10 秒，再长要更多显存拼接；半精度可选。权重体积 README 未声明，需从 HF gated 仓库手动下 model.safetensors 与 model.config.json 放 models/audio_checkpoints。节点只做采样，不做混音/拼接/升采样，Stereo 与 Tiling 仍在 roadmap。",
+  "capabilities": {
+    "maxDurationZh": "约 47.6 秒",
+    "formatsZh": [
+      "wav",
+      "png"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "四节点链路：四节点顺序连接即可",
+    "半精度开关：fp16 可省显存，代价是轻微降质",
+    "全参数透传：cfg/steps/sigma 可调",
+    "频谱预览：采样同时出实验性频谱 PNG"
+  ],
+  "limits": [
+    "不能独立运行：nodes.py 直接 import folder_paths 与 comfy.utils（nodes.py#L87-L88）",
+    "requirements.txt 依赖 flash_attn，Windows 预编译轮子稀缺（requirements.txt#L7）",
+    "权重需 HF_TOKEN/gated 手动放置，README 自述「coded quickly so we couldn't test it out」（README.md#L22、L27）",
+    "2025-01 后停更，Audio-to-Audio 仍标 working on fix（README.md#L40）",
+    "ComfyUI 升级会改变 custom node 路径，nodes.py 用 ../../custom-extensions 与 ../../../comfy 两级 sys.path（nodes.py#L19、L80）",
+    "权重放错目录只提示 Put models in models/audio_checkpoints（nodes.py#L111-L114）"
+  ],
+  "signatureZh": "ComfyUI 节点：Stable Audio 采样",
+  "chooseWhenZh": "已经在用 ComfyUI、想在工作流里直接加音频采样的创作者。",
+  "avoidWhenZh": "不能独立运行：nodes.py 直接 import folder_paths 与 comfy.utils（nodes.py#L87-L88）",
+  "contrastWith": [
+    "Stability-AI__stable-audio-tools",
+    "Text-to-Audio__AudioLCM"
+  ]
+}

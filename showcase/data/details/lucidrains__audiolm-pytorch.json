@@ -1,0 +1,183 @@
+{
+  "id": "lucidrains__audiolm-pytorch",
+  "taglineZh": "AudioLM 复现：RVQ 编解码 + 三级 AR 模型",
+  "summaryZh": "AudioLM 的 PyTorch 实现，含 SoundStream/Encodec 编解码、HuBERT 语义 token、三级 Transformer 与 Trainer，并用 T5 条件和 CFG 支持文本生音频。仓库只给架构与训练循环，无预训练生成权重；README 提供 24kHz Encodec，但 SoundStream 仍须先训。门槛很重：fairseq、flash-attn、百万步训练、自备 HuBERT 权重，适合研究复现而非出样。",
+  "whatItMakes": [
+    {
+      "type": "神经音频编解码器",
+      "exampleZh": "用 SoundStream/Encodec 把 24kHz 波形压成 8 层 RVQ token 再解码回波形",
+      "strength": "核心能力"
+    },
+    {
+      "type": "三级 Transformer",
+      "exampleZh": "Semantic/Coarse/Fine Transformer 逐级生成 token，由 FineTransformer 还原声学细节",
+      "strength": "核心能力"
+    },
+    {
+      "type": "训练管线",
+      "exampleZh": "SoundStreamTrainer/SemanticTransformerTrainer 直接读文件夹音频，内置 GAN 判别器与 EMA",
+      "strength": "核心能力"
+    },
+    {
+      "type": "文本条件音频",
+      "exampleZh": "SemanticTransformer 打开 has_condition，用 T5 文本前缀生成 chirping of birds 这类音频",
+      "strength": "扩展能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "复现 AudioLM/SoundStorm 的 token 生成路线",
+      "whoZh": "音频生成方向的研究生或算法研究员",
+      "whyZh": "三级 Transformer 与 RVQ 结构都能直接改超参，训练循环完整",
+      "deliverableZh": "自训的 SoundStream 与三级 Transformer checkpoint",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "训练自有语料的音频 tokenizer",
+      "whoZh": "需要私有码本的算法工程师",
+      "whyZh": "SoundStreamTrainer 只要 folder 指向音频目录，损失与判别器已封装",
+      "deliverableZh": "可 tokenize/decode 的 SoundStream .pt",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "验证 VALL-E 式文本条件 TTS",
+      "whoZh": "语音合成研究者",
+      "whyZh": "cond_as_self_attn_prefix=True 复刻 VALL-E 的前缀条件方式",
+      "deliverableZh": "文本到语音 token 的采样脚本与样本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学讲解 RVQ 与 GAN 声码器",
+      "whoZh": "课程教师或学生",
+      "whyZh": "每个类都有独立最小示例，可从 10080 采样点开始跑通",
+      "deliverableZh": "可运行 notebook 与重建波形",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "编解码复用",
+      "descZh": "直接加载预训练 24kHz Encodec"
+    },
+    {
+      "titleZh": "三级分工",
+      "descZh": "语义、粗量化、细量化逐级生成"
+    },
+    {
+      "titleZh": "文本条件",
+      "descZh": "T5 前缀 + CFG 引导生成"
+    },
+    {
+      "titleZh": "多卡训练",
+      "descZh": "accelerate 多卡并行"
+    },
+    {
+      "titleZh": "缓存推理",
+      "descZh": "Transformer 键值缓存加速采样"
+    }
+  ],
+  "ceilingsZh": "可确认的默认参数：EncodecWrapper 使用预训练 24kHz Encodec；SoundStream 默认 codebook_size=4096、rq_num_quantizers=8、rq_groups=2、attn_window_size=128、attn_depth=2；训练示例 batch_size=4、grad_accum_every=8（等效 32）、data_max_length_seconds=2、num_train_steps=1,000,000；采样示例 320*32 点在 24kHz 下约 0.43 秒。生成上限取决于自训数据的 data_max_length。README 未声明模型规模、权重大小与显存占用；没有预训练生成权重，音质完全由自训语料与步数决定。",
+  "workflowZh": "六步：建 3.10 环境 → 装包与 fairseq → 备 HuBERT → 训 SoundStream → 训三级 Transformer → 采样",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "python3.10 -m venv .venv 后 pip install audiolm-pytorch；fairseq 需另找可用轮子或源码编译",
+      "effortZh": "15–40 分钟"
+    },
+    {
+      "stepZh": "备语义模型",
+      "detailZh": "下载 hubert_base_ls960.pt 与 hubert_base_ls960_L9_km500.bin 放到 ./hubert",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "训 SoundStream",
+      "detailZh": "SoundStreamTrainer(soundstream, folder='/path/to/audio/files', batch_size=4, num_train_steps=1_000_000).cuda().train()",
+      "effortZh": "数天到数周"
+    },
+    {
+      "stepZh": "训三级 Transformer",
+      "detailZh": "依次跑 SemanticTransformerTrainer、CoarseTransformerTrainer、FineTransformerTrainer，示例 batch_size=1",
+      "effortZh": "数天"
+    },
+    {
+      "stepZh": "采样",
+      "detailZh": "AudioLM(wav2vec, codec, 三个 transformer)(text=['chirping of birds and the distant echos of bells'])",
+      "effortZh": "分钟级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "lucidrains__soundstorm-pytorch",
+      "whenZh": "要严格复现 AudioLM 的串行三级 AR 选本仓；要并行解码、更快出 token 选 SoundStorm",
+      "adviceZh": "要严格复现 AudioLM 的串行三级 AR 选本仓；要并行解码、更快出 token 选 SoundStorm"
+    },
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "想下载权重直接出音乐选 audiocraft；要做结构研究、愿意自训选 audiolm-pytorch",
+      "adviceZh": "想下载权重直接出音乐选 audiocraft；要做结构研究、愿意自训选 audiolm-pytorch"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L5-L13",
+      "noteZh": "说明这是 AudioLM 的 PyTorch 实现，内置 MIT 版 SoundStream 并兼容 Encodec"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L62-L86",
+      "noteZh": "SoundStream 必须先训，训练示例给出 1,000,000 步与 2 秒片段"
+    },
+    {
+      "field": "workflow",
+      "source": "README.md#L326-L336",
+      "noteZh": "文本条件训练与 generate 的完整调用示例"
+    },
+    {
+      "field": "whatItMakes",
+      "source": "README.md#L254-L277",
+      "noteZh": "AudioLM 类把 wav2vec、codec 与三个 Transformer 组装起来"
+    },
+    {
+      "field": "blockerZh",
+      "source": "setup.py#L21-L40",
+      "noteZh": "install_requires 含 fairseq、flash attention 相关依赖与 encodec"
+    }
+  ],
+  "blockerZh": "只有模型定义与训练代码、无权重、需自训：仓库内没有任何 .pt/.ckpt，README 全部用法都是先训练再加载；三个 Transformer 需要先在本机语料上训练，SoundStream 编码器也要在大量音频上自训（README 明确 “SoundStream 需要在大规模语料上训练”），HuBERT 的 KMeans 码本也必须自己拟合。8GB 显存 + 无训练数据集的情况下，无法在合理时间内产出可听音频，故按 skipped 归档。",
+  "whatItWouldNeed": "数十小时以上的音频语料（含可选转写）、预训练或自训的 SoundStream/EnCodec 编码器、fit 过的 HuBERT KMeans 码本、三个 Transformer 的多轮训练（8GB 只能极小 batch 与短序列），以及数小时到数十小时的 GPU 时间。",
+  "ceilingZh": "可确认的默认参数：EncodecWrapper 使用预训练 24kHz Encodec；SoundStream 默认 codebook_size=4096、rq_num_quantizers=8、rq_groups=2、attn_window_size=128、attn_depth=2；训练示例 batch_size=4、grad_accum_every=8（等效 32）、data_max_length_seconds=2、num_train_steps=1,000,000；采样示例 320*32 点在 24kHz 下约 0.43 秒。生成上限取决于自训数据的 data_max_length。README 未声明模型规模、权重大小与显存占用；没有预训练生成权重，音质完全由自训语料与步数决定。",
+  "capabilities": {
+    "maxDurationZh": "约 0.43 秒",
+    "formatsZh": [
+      "wav",
+      "token"
+    ],
+    "sampleRateZh": "24 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "编解码复用：直接加载预训练 24kHz Encodec",
+    "三级分工：语义、粗量化、细量化逐级生成",
+    "文本条件：T5 前缀 + CFG 引导生成",
+    "多卡训练：accelerate 多卡并行",
+    "缓存推理：Transformer 键值缓存加速采样"
+  ],
+  "limits": [
+    "仓库不含任何预训练生成权重，SoundStream 也要先自训，README 示例直接写 num_train_steps=1_000_000",
+    "setup.py 依赖 fairseq，Windows 与 Python 3.13 都没有可用轮子，需另建 3.10 环境源码编译；flash-attn 同样要自行编译",
+    "CLI 仍是 TODO：README 待办里的 audiolm generate <wav|text> 未实现，出样只能自己写 Python 调用",
+    "README 里 320*32 采样点的生成示例在 24kHz 下只有约 0.43 秒，不是可听成品",
+    "SoundStream 采样前必须 eval()，否则 residual dropout 会让重建音频异常",
+    "训练示例默认只用 2 秒片段，要生成更长音频得改 data_max_length 与位置编码"
+  ],
+  "signatureZh": "AudioLM 复现：RVQ 编解码 + 三级 AR 模型",
+  "chooseWhenZh": "想复现 AudioLM/SoundStorm 的 token 生成研究、并愿意自备语料与多卡训练的人",
+  "avoidWhenZh": "仓库不含任何预训练生成权重，SoundStream 也要先自训，README 示例直接写 num_train_steps=1_000_000",
+  "contrastWith": [
+    "lucidrains__soundstorm-pytorch",
+    "facebookresearch__audiocraft"
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "id": "DBraun__DawDreamer",
+  "taglineZh": "Python 可编程 DAW，VST/Faust 离线渲染",
+  "summaryZh": "DawDreamer 用 C++/JUCE 写引擎、nanobind 暴露给 Python，把多声道 processor 组成有向图后离线渲染：可加载 VST3/VST2、跑 Faust DSP、按绝对时间或 PPQN 播 MIDI、做 audio-rate 自动化，并一次渲染多个处理器、导出 .mid。它没有时间线 GUI，一切靠脚本；代价是插件路线必须自备 .dll，与 JAX/Torch 同进程要先 import 它，且 GPL-3.0 会传染。",
+  "whatItMakes": [
+    {
+      "type": "音频图渲染",
+      "exampleZh": "把多轨 processor 排成图后离线渲染，支持 VST3/VST2、Faust 与 JAX",
+      "strength": "核心能力"
+    },
+    {
+      "type": "MIDI 与自动化",
+      "exampleZh": "MIDI 按绝对时间或 PPQN 播放并可导出 .mid，参数支持 audio-rate 自动化",
+      "strength": "核心能力"
+    },
+    {
+      "type": "批量 one-shot",
+      "exampleZh": "线程池内释放 GIL，可按预设与音高批量生成采样",
+      "strength": "可用"
+    },
+    {
+      "type": "GUI 剪辑",
+      "exampleZh": "没有时间线界面，剪辑与编排全靠脚本",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "VST 批量采样",
+      "whoZh": "做采样的音频工程师",
+      "whyZh": "线程池可并行加载插件并按音高批量出 one-shot",
+      "deliverableZh": "成百上千条 wav one-shot",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "自动化混音",
+      "whoZh": "需要可复现混音的开发者",
+      "whyZh": "参数与音频图全写在脚本里，版本可控",
+      "deliverableZh": "混音 wav 与 .mid",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "Faust 原型",
+      "whoZh": "算法与声音设计人员",
+      "whyZh": "不装插件即可验证 DSP 想法",
+      "deliverableZh": "Faust 渲染的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "手工剪辑",
+      "whoZh": "剪辑师",
+      "whyZh": "没有时间线 GUI，只能写脚本",
+      "deliverableZh": "无法交付剪辑工程",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "Faust 渲染",
+      "descZh": "写 DSP 字符串即可出正弦，无需插件"
+    },
+    {
+      "titleZh": "VST3 宿主",
+      "descZh": "加载乐器与效果器并读写状态"
+    },
+    {
+      "titleZh": "参数自动化",
+      "descZh": "支持 audio-rate 与 PPQN 曲线"
+    },
+    {
+      "titleZh": "并行出样",
+      "descZh": "线程池渲染时释放 GIL"
+    },
+    {
+      "titleZh": "MIDI 导出",
+      "descZh": "绝对时间或 PPQN 定位并写 .mid"
+    }
+  ],
+  "ceilingsZh": "采样率与块大小由构造参数决定，示例写 daw.RenderEngine(44100, 512)；渲染时长可用秒或 beats（engine.render(4., beats=True) 按 BPM 换算）。音频图支持多处理器同时渲染，examples/xml_synth_sound_rendering 默认 workers=os.cpu_count()，线程内释放 GIL。MIDI 支持绝对时间与 PPQN，可导出 .mid；VST 状态可保存与读取，参数能走 audio-rate 与 PPQN 自动化。最大轨道数、并发实例数、显存占用、pip 轮子体积与安装耗时 README 均未声明。",
+  "workflowZh": "四步：装包 → 跑 Faust 最小铃声 → 备 VST3 与预设 → 批量渲染出 wav",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "Python 3.11–3.14 下 pip install dawdreamer，写 wav 另需 scipy",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "最小铃声",
+      "detailZh": "照 README 的 Faust 示例，4 拍 440 Hz/-6 dB 写 wav，确认引擎可用",
+      "effortZh": "10 分钟"
+    },
+    {
+      "stepZh": "插件路线",
+      "detailZh": "备好 VST3 .dll 与预设，用 xml_synth_sound_rendering/main.py 批量出 one-shot",
+      "effortZh": "1–2 小时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "mlm-games__yadaw",
+      "whenZh": "要时间线 GUI 和手工编曲选 yadaw；要脚本化 VST 批量渲染选 DawDreamer",
+      "adviceZh": "要时间线 GUI 和手工编曲选 yadaw；要脚本化 VST 批量渲染选 DawDreamer"
+    },
+    {
+      "vs": "stargatedaw__stargate",
+      "whenZh": "要现成 DAW 宿主与插件链路选 stargate；只要 Python 音频图与离线出样选 DawDreamer",
+      "adviceZh": "要现成 DAW 宿主与插件链路选 stargate；只要 Python 音频图与离线出样选 DawDreamer"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L24-L33",
+      "noteZh": "README 的功能清单说明它是可编程 DAW 而非成品编辑器。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L54-L60",
+      "noteZh": "Windows 段要求 64 位 Python 3.11-3.14，并给出 pip 安装命令。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L66-L68",
+      "noteZh": "不依赖任何 VST 的最小可跑 Faust 示例。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L32-L33",
+      "noteZh": "MIDI 绝对时间/PPQN 播放与 .mid 导出都在功能列表里。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "examples/xml_synth_sound_rendering/README.md#L3-L6",
+      "noteZh": "并行出 one-shot 的实现依据。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L104-L108",
+      "noteZh": "插件示例要求用户自备 dll，仓库不含插件。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L147-L149",
+      "noteZh": "LLVM 初始化冲突会导致段错误。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L177-L177",
+      "noteZh": "同时要求遵守 JUCE、Rubber Band、Steinberg 等许可。"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样率与块大小由构造参数决定，示例写 daw.RenderEngine(44100, 512)；渲染时长可用秒或 beats（engine.render(4., beats=True) 按 BPM 换算）。音频图支持多处理器同时渲染，examples/xml_synth_sound_rendering 默认 workers=os.cpu_count()，线程内释放 GIL。MIDI 支持绝对时间与 PPQN，可导出 .mid；VST 状态可保存与读取，参数能走 audio-rate 与 PPQN 自动化。最大轨道数、并发实例数、显存占用、pip 轮子体积与安装耗时 README 均未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "mid"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "Faust 渲染：写 DSP 字符串即可出正弦，无需插件",
+    "VST3 宿主：加载乐器与效果器并读写状态",
+    "参数自动化：支持 audio-rate 与 PPQN 曲线",
+    "并行出样：线程池渲染时释放 GIL",
+    "MIDI 导出：绝对时间或 PPQN 定位并写 .mid"
+  ],
+  "limits": [
+    "插件路线必须自备 VST3/VST2 的 .dll，README 两个插件示例都写 INSTRUMENT_PATH = \"path/to/instrument.dll\"，仓库不含任何乐器插件（README.md#L102-L108）",
+    "与 JAX/TorchScript/Numba 等 LLVM 库同进程时必须先 import dawdreamer，否则可能段错误（README.md#L143-L161）",
+    "GPL-3.0 传染，并且还要同时遵守 JUCE、Rubber Band、Steinberg VST SDK 等依赖许可（README.md#L175-L179）",
+    "import 顺序：先导入 JAX/TorchScript/Numba 会让 Faust 的 LLVM 后端冲突崩溃，务必把 dawdreamer 放最前",
+    "render 的时长参数有两套：engine.render(4., beats=True) 是按 BPM 换算的节拍，不是 4 秒",
+    "VST 参数索引随插件版本变化，set_parameter(7, ...) 前先打印 get_parameters_description() 核对"
+  ],
+  "signatureZh": "Python 可编程 DAW，VST/Faust 离线渲染",
+  "chooseWhenZh": "要用 Python 脚本搭音频图、加载 VST 做批量离线渲染，且能接受 GPL 与自备插件的开发者",
+  "avoidWhenZh": "插件路线必须自备 VST3/VST2 的 .dll，README 两个插件示例都写 INSTRUMENT_PATH = \"path/to/instrument.dll\"，仓库不含任何乐器插件（README.md#L102-L108）",
+  "contrastWith": [
+    "mlm-games__yadaw",
+    "stargatedaw__stargate"
+  ]
+}

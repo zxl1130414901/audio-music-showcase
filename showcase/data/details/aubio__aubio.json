@@ -1,0 +1,192 @@
+{
+  "id": "aubio__aubio",
+  "taglineZh": "C 内核音频分析，onset/pitch/beat 命令行",
+  "summaryZh": "aubio 是 C 音频分析库（0.5.0-alpha），做 onset、pitch、beat、MFCC 与频谱特征。装好即有 aubioonset/aubiopitch/aubiotrack 等命令，输出时间戳或 MIDI 式音符；Python 侧 42 个 demo，含 wav2midi 与在线变速。默认 window 512、hop 256、采样率跟随输入。代价是 Windows 轮子只到 Python 3.8，本机 3.13 需 conda-forge 或 MSVC 编译；只分析不合成。",
+  "whatItMakes": [
+    {
+      "type": "onset 时间戳",
+      "exampleZh": "aubioonset loop.wav 输出每次敲击的时间（秒）",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音高曲线",
+      "exampleZh": "aubiopitch -m yinfft loop.wav 逐帧输出 Hz 与置信度",
+      "strength": "核心能力"
+    },
+    {
+      "type": "MIDI 音符文件",
+      "exampleZh": "demo_wav2midi.py loop.wav out.mid 用 mido 写出",
+      "strength": "附加能力"
+    },
+    {
+      "type": "按节拍切片 WAV",
+      "exampleZh": "aubiocut -b loop.wav 在 beat 处切成多段音频",
+      "strength": "附加能力"
+    },
+    {
+      "type": "特征图 PNG",
+      "exampleZh": "demo_spectrogram.py 输出频谱图，demo_mfcc.py 输出 MFCC 图",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "批量给曲库打节拍/起始点标签",
+      "whoZh": "MIR 研究者与数据集维护者",
+      "whyZh": "命令行批量跑，输出纯文本时间戳，接 pandas 即可统计",
+      "deliverableZh": "每首一份 onset/beat txt",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "把哼唱或单旋律转 MIDI",
+      "whoZh": "音乐制作人",
+      "whyZh": "demo_wav2midi.py 已串好 notes 检测与 mido 写文件",
+      "deliverableZh": "单声部 MIDI",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "实时节拍同步互动装置",
+      "whoZh": "新媒体艺术家",
+      "whyZh": "C 内核 hop 256、采样率跟随输入，延迟低，可嵌入 C/Python 循环",
+      "deliverableZh": "实时 beat 事件流",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "直接生成配乐成品",
+      "whoZh": "音频创作者",
+      "whyZh": "不合成、不混音，只能分析或切片",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "八个命令行",
+      "descZh": "onset 到 aubiocut 全套工具"
+    },
+    {
+      "titleZh": "低延迟内核",
+      "descZh": "默认 hop 256，单帧 5.8 ms"
+    },
+    {
+      "titleZh": "42 个示例",
+      "descZh": "覆盖绘图、转 MIDI 与在线变速"
+    },
+    {
+      "titleZh": "多平台分发",
+      "descZh": "PyPI、conda-forge 与 vcpkg"
+    },
+    {
+      "titleZh": "可切片可合成",
+      "descZh": "aubiocut 切音频，pvoc 变速"
+    }
+  ],
+  "ceilingsZh": "C 侧默认 window 512 采样、hop 256 采样，采样率设为 0 时跟随源文件（examples/utils.c#L41-L43）；onset 阈值默认 0.0 表示自动，pitch 方法与单位走库内默认（examples/utils.c#L44-L50）。分析维度含 onset、pitch、tempo、MFCC、频谱描述子、滤波与瞬态/稳态分离。Python demo 共 42 个，demo_timestretch_online.py 用 pvoc 在线时间伸缩，demo_wav2midi.py 用 mido 写 MIDI。格式取决于编译时链接的 libavcodec/libsndfile，README 未列清单；最大文件时长、采样率上限、并发数均未声明。",
+  "workflowZh": "三步：装 aubio（conda 或编译）→ 跑 CLI 出时间戳/特征 → demo 转 MIDI 或绘图",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "优先 conda install -c conda-forge aubio；否则装 VS Build Tools 后编译",
+      "effortZh": "3 分钟或 20–40 分钟"
+    },
+    {
+      "stepZh": "验证命令",
+      "detailZh": "aubioonset -h 确认工具在 PATH，aubiopitch -r 0 loop.wav 试跑",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "批量分析",
+      "detailZh": "for f in *.wav; do aubioonset -O txt \"$f\" > \"${f%.wav}.onsets.txt\"; done",
+      "effortZh": "秒级/首"
+    },
+    {
+      "stepZh": "转 MIDI 或绘图",
+      "detailZh": "python demos/demo_wav2midi.py loop.wav out.mid；demo_spectrogram.py 出 PNG",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "MTG__essentia",
+      "whenZh": "只要 onset/pitch/beat 低层特征、极小依赖选 aubio；要风格、情绪、和弦等高阶描述子选 Essentia。",
+      "adviceZh": "只要 onset/pitch/beat 低层特征、极小依赖选 aubio；要风格、情绪、和弦等高阶描述子选 Essentia。"
+    },
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "要 C 级实时流与老项目嵌入选 aubio；要上百种时频特征且以 Python 为主选 audioFlux。",
+      "adviceZh": "要 C 级实时流与老项目嵌入选 aubio；要上百种时频特征且以 Python 为主选 audioFlux。"
+    },
+    {
+      "vs": "tyiannak__pyAudioAnalysis",
+      "whenZh": "要底层 DSP 原语与 C 性能选 aubio；要分类器、分割与完整 MIR 流程选 pyAudioAnalysis。",
+      "adviceZh": "要底层 DSP 原语与 C 性能选 aubio；要分类器、分割与完整 MIR 流程选 pyAudioAnalysis。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L49-L62",
+      "noteZh": "8 个命令行工具及输出"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "examples/utils.c#L41-L50",
+      "noteZh": "默认 buffer 512/hop 256/采样率 0"
+    },
+    {
+      "field": "pros[1]",
+      "source": "python/README.md#L53-L63",
+      "noteZh": "demo_wav2midi 与在线变速 demo"
+    },
+    {
+      "field": "cons[0]",
+      "source": ".appveyor.yml#L8-L35",
+      "noteZh": "Windows CI 只到 Python 3.8"
+    },
+    {
+      "field": "cons[2]",
+      "source": "VERSION#L1-L4",
+      "noteZh": "0.5.0-alpha 版本状态"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "C 侧默认 window 512 采样、hop 256 采样，采样率设为 0 时跟随源文件（examples/utils.c#L41-L43）；onset 阈值默认 0.0 表示自动，pitch 方法与单位走库内默认（examples/utils.c#L44-L50）。分析维度含 onset、pitch、tempo、MFCC、频谱描述子、滤波与瞬态/稳态分离。Python demo 共 42 个，demo_timestretch_online.py 用 pvoc 在线时间伸缩，demo_wav2midi.py 用 mido 写 MIDI。格式取决于编译时链接的 libavcodec/libsndfile，README 未列清单；最大文件时长、采样率上限、并发数均未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "txt",
+      "csv",
+      "png",
+      "mid",
+      "wav"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "八个命令行：onset 到 aubiocut 全套工具",
+    "低延迟内核：默认 hop 256，单帧 5.8 ms",
+    "42 个示例：覆盖绘图、转 MIDI 与在线变速",
+    "多平台分发：PyPI、conda-forge 与 vcpkg",
+    "可切片可合成：aubiocut 切音频，pvoc 变速"
+  ],
+  "limits": [
+    "Windows 侧 CI 只测到 Python 3.8（.appveyor.yml#L8-L35），本机 Python 3.13 没有可用轮子，`pip install aubio` 会去编译 C 扩展（.appveyor.yml#L8-L35）",
+    "setup.py 直接拿 python/ext/*.c 组 Extension 并调用 build_ext，等于必须有 MSVC/编译环境，无法纯 wheels 安装（setup.py#L37-L40）",
+    "版本仍是 0.5.0-alpha，API 与数值结果都可能变，生产环境要锁版本（VERSION#L1-L4）",
+    "只做分析与切片：aubiocut 按 onset/beat 切音频，没有合成、混音或效果器能力（README.md#L51-L52）",
+    "aubio CLI 的 -r 0 表示跟随文件采样率；固定写成 44100 会让 48 kHz 素材时间戳偏移",
+    "hop 256 是 CLI 默认值，改大能降 CPU 但时间分辨率变粗，节拍检测尤其敏感",
+    "Python 3.13 需先 conda install -c conda-forge aubio，或装 VS Build Tools 后源码编译"
+  ],
+  "signatureZh": "C 内核音频分析，onset/pitch/beat 命令行",
+  "chooseWhenZh": "要把一批音频批量出 onset/pitch/tempo/MFCC 数据，或用 C/Python 做实时音频特征的人",
+  "avoidWhenZh": "Windows 侧 CI 只测到 Python 3.8（.appveyor.yml#L8-L35），本机 Python 3.13 没有可用轮子，`pip install aubio` 会去编译 C 扩展（.appveyor.yml#L8-L35）",
+  "contrastWith": [
+    "MTG__essentia",
+    "libAudioFlux__audioFlux"
+  ]
+}

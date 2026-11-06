@@ -1,0 +1,184 @@
+{
+  "id": "thxxx__VTS",
+  "taglineZh": "口技录音 + 文本提示生成短音效的 44.1kHz 推理包",
+  "summaryZh": "VTS 把口技当控制信号：输入几秒拟声录音和一句文本，按 21.5fps 抽 12 通道动态特征，用冻结的 flan-t5-base 编码文本，交给 VTSModule 与 torchode ODE 采样，DAC 还原 44.1kHz wav。仓内只放开推理，训练代码与数据集被剔除。默认 64 步，temperature 0.8 走 variation 分支。代价是只适合短音效，需独立 torch 2.4.1 环境与 5.20GB 公开权重，README 地址与代码 repo_id 不一致。",
+  "whatItMakes": [
+    {
+      "type": "口技+文本音效",
+      "exampleZh": "录 3 秒「噗嗤」声并写 metallic impact，生成同质感的短音效",
+      "strength": "核心能力"
+    },
+    {
+      "type": "短音效批量",
+      "exampleZh": "--num-samples 4 对同一段口技生成 4 个变体",
+      "strength": "核心能力"
+    },
+    {
+      "type": "输入 latent 变体",
+      "exampleZh": "temperature 0.8 走 variation 分支，在输入 latent 上做扰动",
+      "strength": "辅助能力"
+    },
+    {
+      "type": "环境诊断",
+      "exampleZh": "--diagnose 打印 CUDA/依赖状态，--download-only 只下权重",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "游戏 UI/打击音效",
+      "whoZh": "游戏音效设计师",
+      "whyZh": "用嘴做出节奏与质感，比纯文本更贴近脑海里的声音",
+      "deliverableZh": "44.1kHz wav 音效",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "预告片拟音",
+      "whoZh": "影视音效编辑",
+      "whyZh": "可快速生成 1–3 秒的冲击/摩擦/风声草案",
+      "deliverableZh": "短音效素材与 JSON 摘要",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "音效设计快速迭代",
+      "whoZh": "独立开发者",
+      "whyZh": "一条命令出多个 temperature 变体，便于挑选",
+      "deliverableZh": "多个 wav 变体",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "研究 voice conditioning",
+      "whoZh": "音频生成研究员",
+      "whyZh": "12 通道动态特征是显式可解释的控制信号",
+      "deliverableZh": "对比实验音频",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "动态特征",
+      "descZh": "12 通道，21.5fps 抽取"
+    },
+    {
+      "titleZh": "文本编码",
+      "descZh": "冻结 google/flan-t5-base"
+    },
+    {
+      "titleZh": "64 步采样",
+      "descZh": "torchode ODE 默认 64 步"
+    },
+    {
+      "titleZh": "44.1kHz",
+      "descZh": "DAC/vocos 声码器输出"
+    },
+    {
+      "titleZh": "温度三档",
+      "descZh": "按 temperature 切换分支"
+    }
+  ],
+  "ceilingsZh": "采样率 44100Hz（vts/utils/utils.py 的 SAMPLE_RATE=44100，DAC 声码器默认 44100）；动态特征按 21.5fps 抽取、共 12 通道；默认 ODE 64 步、alpha 3.0，--duration 缺省等于输入音频时长；checkpoint 为 dynamic_v3_0415.ckpt，实测 5.20GB、gated=False 可公开下载，README 未声明显存下限（批次评估约 6GB）。文本编码器固定 google/flan-t5-base。模型只适合短音效，不是长音频或音乐生成。",
+  "workflowZh": "五步：Python 3.11 venv → 装 torch 2.4.1 依赖 → HF 下 ckpt → 备口技 wav 与文本 → infer.py 出 wav",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "python3.11 -m venv .venv-vts 后 bash setup_vts_local.sh",
+      "effortZh": "10–25 分钟"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "python -u infer.py --download-only（或 hf download Daniel777/textalignment dynamic_v3_0415.ckpt，5.20GB 公开权重，无需 Token）",
+      "effortZh": "5–20 分钟"
+    },
+    {
+      "stepZh": "准备输入",
+      "detailZh": "录 1–3 秒口技存 wav，写一句英文音效描述",
+      "effortZh": "3–5 分钟"
+    },
+    {
+      "stepZh": "推理",
+      "detailZh": "python infer.py --input-audio voice.wav --text \"...\" --temperature 0.7 --steps 64 --device cuda",
+      "effortZh": "1–3 分钟"
+    },
+    {
+      "stepZh": "取结果",
+      "detailZh": "outputs/sample_00.wav 与同名 JSON 摘要",
+      "effortZh": "即时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "hkchengrex__MMAudio",
+      "whenZh": "要文本或视频直接出音效选 MMAudio；要把嘴上的节奏与质感带进音效选 VTS",
+      "adviceZh": "要文本或视频直接出音效选 MMAudio；要把嘴上的节奏与质感带进音效选 VTS"
+    },
+    {
+      "vs": "SAIL-PRLab__Foley-Omni",
+      "whenZh": "要含对白/音乐的整条视频声轨选 Foley-Omni；只做单条短音效、显存有限选 VTS",
+      "adviceZh": "要含对白/音乐的整条视频声轨选 Foley-Omni；只做单条短音效、显存有限选 VTS"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L9-L33",
+      "noteZh": "口技录音 + 文本提示的推理流程与动态特征说明"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "vts/utils/utils.py#L337-L337",
+      "noteZh": "SAMPLE_RATE=44100 与 21.5fps 特征抽取"
+    },
+    {
+      "field": "cons",
+      "source": "infer.py#L78-L85",
+      "noteZh": "实际 repo_id 是 Daniel777/textalignment，而非 README 的第二人称 VTS"
+    },
+    {
+      "field": "pros",
+      "source": "README.md#L105-L147",
+      "noteZh": "infer.py 参数、--diagnose 与 --download-only 用法"
+    },
+    {
+      "field": "blockerZh",
+      "source": "README.md#L60-L83",
+      "noteZh": "权重 5.20GB 在 Daniel777/textalignment，实测 gated=False、公开可下，无需 HF Token"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样率 44100Hz（vts/utils/utils.py 的 SAMPLE_RATE=44100，DAC 声码器默认 44100）；动态特征按 21.5fps 抽取、共 12 通道；默认 ODE 64 步、alpha 3.0，--duration 缺省等于输入音频时长；checkpoint 为 dynamic_v3_0415.ckpt，实测 5.20GB、gated=False 可公开下载，README 未声明显存下限（批次评估约 6GB）。文本编码器固定 google/flan-t5-base。模型只适合短音效，不是长音频或音乐生成。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "json"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "动态特征：12 通道，21.5fps 抽取",
+    "文本编码：冻结 google/flan-t5-base",
+    "64 步采样：torchode ODE 默认 64 步",
+    "44.1kHz：DAC/vocos 声码器输出",
+    "温度三档：按 temperature 切换分支"
+  ],
+  "limits": [
+    "README 写权重在 Daniel777/VTS，infer.py 实际 repo_id 是 Daniel777/textalignment，按 README 手动下会扑空",
+    "requirements 固定 torch==2.4.1（非 Linux 走 CPU 版），安装脚本是 bash + python3.11，本机 2.6.0 需另起环境",
+    "只做短音效：默认时长跟随输入音频，HF 模型卡也写明 optimized for short sound-effect style clips",
+    "新仓体量小（145 stars、2026-04 创建），训练代码、数据集与评测均未开放",
+    "temperature 默认 0.8 会走 variation 分支复用输入 latent，要纯文本+口技生成应显式传 0.7",
+    "输入音频用 soundfile 以 always_2d=True 读取，单声道会被补成双声道",
+    "README 的 cd vts_inference 目录名与仓库根目录不一致，照抄会找不到脚本"
+  ],
+  "signatureZh": "口技录音 + 文本提示生成短音效的 44.1kHz 推理包",
+  "chooseWhenZh": "想用嘴里的节奏和质感快速试短音效、且愿意单独建 torch 2.4.1 环境并下 5.2GB 公开权重的音效设计者",
+  "avoidWhenZh": "README 写权重在 Daniel777/VTS，infer.py 实际 repo_id 是 Daniel777/textalignment，按 README 手动下会扑空",
+  "contrastWith": [
+    "hkchengrex__MMAudio",
+    "SAIL-PRLab__Foley-Omni"
+  ]
+}

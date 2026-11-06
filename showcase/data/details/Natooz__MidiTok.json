@@ -1,0 +1,185 @@
+{
+  "id": "Natooz__MidiTok",
+  "taglineZh": "11 种 MIDI 分词，BPE 词表直供训练",
+  "summaryZh": "MidiTok 是音乐分词库：用 symusic 读 MIDI/ABC，按 11 种分词法转 token 序列，供 Transformer 训练。TokenizerConfig 配 num_velocities=16 即可开跑，BPE 后端是 HF tokenizers，train(vocab_size=30000) 可训练词表并 push_to_hub。代价是只分词不产音频，没有配套生成模型；symusic 与 tokenizers 是二进制依赖，Python 需 3.10+。",
+  "whatItMakes": [
+    {
+      "type": "token 序列",
+      "exampleZh": "4/4 流行曲转成 REMI 的 Bar/Position/Pitch/Velocity",
+      "strength": "核心能力"
+    },
+    {
+      "type": "BPE 词表",
+      "exampleZh": "train(vocab_size=30000) 产出 tokenizer.json 并 push_to_hub",
+      "strength": "核心能力"
+    },
+    {
+      "type": "训练用 Dataset",
+      "exampleZh": "DatasetMIDI + DataCollator + DataLoader 直接喂模型",
+      "strength": "附加能力"
+    },
+    {
+      "type": "往返的 MIDI",
+      "exampleZh": "tokenizer(tokens) 解码回 .mid，验证不丢事件",
+      "strength": "核心能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "训练符号音乐生成模型",
+      "whoZh": "音乐 AI 研究者",
+      "whyZh": "11 种分词法 + BPE + Dataset 工具链，省掉自己写 MIDI 解析与词表",
+      "deliverableZh": "token 数据集与 tokenizer.json",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "复现 REMI/Octuple 论文基线",
+      "whoZh": "论文复现者",
+      "whyZh": "每种分词法都链到原论文，配置项能对齐实验设定",
+      "deliverableZh": "可对比 token 与指标",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做 MIDI 清洗与结构分析",
+      "whoZh": "数据工程",
+      "whyZh": "symusic 读 MIDI 后可裁剪、split、统计，token 化顺带做长度控制",
+      "deliverableZh": "清洗后 MIDI/token 统计",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "直接生成可试听音乐",
+      "whoZh": "音乐创作者",
+      "whyZh": "只到 token 层，没有声码器或生成模型，需自接 LM 与 AudioCraft",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "11 种分词",
+      "descZh": "REMI 到 PerTok"
+    },
+    {
+      "titleZh": "BPE 词表",
+      "descZh": "可训练 30k 词表"
+    },
+    {
+      "titleZh": "数据工具",
+      "descZh": "Dataset 与 Collator"
+    },
+    {
+      "titleZh": "Hub 集成",
+      "descZh": "push_to_hub 直接上传"
+    },
+    {
+      "titleZh": "公开基准",
+      "descZh": "Maestro 分词 39 ms/首"
+    }
+  ],
+  "ceilingsZh": "Python 要求 >=3.10，支持到 3.14（pyproject.toml#L11-L36）。分词法 11 种：REMI、REMI+、MIDI-Like、TSD、BEAT、Octuple、MuMIDI、PerTok 等（README.md#L99-L110）。TokenizerConfig 示例 num_velocities=16，BPE 示例 vocab_size=30000。性能基准在 M1 Pro：Maestro 的 REMI 38.97±32.92 ms/文件、TSD 52.62±41.59 ms，MMD 与 POP909 更快（benchmarks/miditok_tokenize/README.md#L7-L23）。事件上限、序列长度上限、最大数据集规模未声明。",
+  "workflowZh": "四步：pip 装 → 配分词法 → 批量转 token/训练 BPE → 接 Dataset 训练",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "pip install miditok（Python 3.10+），确认 symusic 与 tokenizers 轮子装上",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "配分词法",
+      "detailZh": "config = TokenizerConfig(num_velocities=16, use_chords=True, use_programs=True); REMI(config)",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "转 token",
+      "detailZh": "tokenizer(files_paths) 批量转，或 split_files_for_training(max_seq_len=1024) 切块",
+      "effortZh": "分钟级"
+    },
+    {
+      "stepZh": "训练词表",
+      "detailZh": "tokenizer.train(vocab_size=30000, files_paths=files_paths)，再 push_to_hub 存档",
+      "effortZh": "10 分钟起"
+    },
+    {
+      "stepZh": "接模型",
+      "detailZh": "DatasetMIDI + DataCollator 组 DataLoader，喂自己的 Transformer",
+      "effortZh": "取决于模型"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "lucidrains__audiolm-pytorch",
+      "whenZh": "要把 MIDI 转 token 并训练符号模型选 MidiTok；要音频 token 的 LM（EnCodec 路线）选 audiolm-pytorch，可上下串联。",
+      "adviceZh": "要把 MIDI 转 token 并训练符号模型选 MidiTok；要音频 token 的 LM（EnCodec 路线）选 audiolm-pytorch，可上下串联。"
+    },
+    {
+      "vs": "steffest__BassoonTracker",
+      "whenZh": "要模型训练用的 token 数据选 MidiTok；要人手编辑 MIDI/模组并马上试听选 BassoonTracker。",
+      "adviceZh": "要模型训练用的 token 数据选 MidiTok；要人手编辑 MIDI/模组并马上试听选 BassoonTracker。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L16-L28",
+      "noteZh": "MIDI/ABC 分词与 symusic/tokenizers 后端"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L39-L70",
+      "noteZh": "num_velocities=16、vocab_size=30000"
+    },
+    {
+      "field": "pros[4]",
+      "source": "benchmarks/miditok_tokenize/README.md#L19-L23",
+      "noteZh": "三个数据集分词耗时"
+    },
+    {
+      "field": "cons[1]",
+      "source": "pyproject.toml#L39-L45",
+      "noteZh": "symusic 与 tokenizers 二进制依赖"
+    },
+    {
+      "field": "cons[2]",
+      "source": "pyproject.toml#L11",
+      "noteZh": "requires-python >=3.10"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "Python 要求 >=3.10，支持到 3.14（pyproject.toml#L11-L36）。分词法 11 种：REMI、REMI+、MIDI-Like、TSD、BEAT、Octuple、MuMIDI、PerTok 等（README.md#L99-L110）。TokenizerConfig 示例 num_velocities=16，BPE 示例 vocab_size=30000。性能基准在 M1 Pro：Maestro 的 REMI 38.97±32.92 ms/文件、TSD 52.62±41.59 ms，MMD 与 POP909 更快（benchmarks/miditok_tokenize/README.md#L7-L23）。事件上限、序列长度上限、最大数据集规模未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "token",
+      "json",
+      "mid",
+      "txt"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "11 种分词：REMI 到 PerTok",
+    "BPE 词表：可训练 30k 词表",
+    "数据工具：Dataset 与 Collator",
+    "Hub 集成：push_to_hub 直接上传",
+    "公开基准：Maestro 分词 39 ms/首"
+  ],
+  "limits": [
+    "只做符号分词，不产音频也没有声码器，做不出来能试听的片段，只能给生成模型当中游（README.md#L16）",
+    "symusic>=0.5.0 与 tokenizers>=0.13.0 都是二进制轮子，平台/Python 版本不匹配时装不上，还得自己编译 Rust（pyproject.toml#L39-L45）",
+    "要求 Python >=3.10，本机 3.13 可用，但 3.8/3.9 的老训练环境直接被排除（pyproject.toml#L11）",
+    "tokenizer.save 存的是 tokenizer.json 词表与配置，不是模型权重；from_pretrained 需要联网 HF 或本地目录",
+    "split_files_for_training 的 max_seq_len 要小于模型上下文，否则训练时截断丢小节",
+    "自定义乐器/和弦词表要在 TokenizerConfig 阶段定，训练完再改词表 token 编号全失效"
+  ],
+  "signatureZh": "11 种 MIDI 分词，BPE 词表直供训练",
+  "chooseWhenZh": "要训练符号音乐 Transformer、需要把 MIDI 批量转成可控词表 token 的研究者",
+  "avoidWhenZh": "只做符号分词，不产音频也没有声码器，做不出来能试听的片段，只能给生成模型当中游（README.md#L16）",
+  "contrastWith": [
+    "lucidrains__audiolm-pytorch",
+    "steffest__BassoonTracker"
+  ]
+}

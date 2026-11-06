@@ -1,0 +1,186 @@
+{
+  "id": "kvoltmer__Audionaut",
+  "taglineZh": "JUCE 多轨编辑器，CLI 与 MCP 代理剪辑导出",
+  "summaryZh": "Audionaut 是 C++ + JUCE 的多轨编辑器，工程 .audium 为文件夹加 JSON。剪辑、分轨、导出都是可脚本动词，GUI 外有 audionaut-cli 与 22 工具 MCP，Claude 可改已打开工程并单步撤销。导出离线渲染，WAV 16/24/32 bit、FLAC/AIFF 16/24 bit，FLAC 单文件最多 8 通道；分轨用 demucs.cpp，权重约 80 MB。代价是 7 个子模块本机全空且无 CMake/MSVC，插件/MIDI 未做。",
+  "whatItMakes": [
+    {
+      "type": ".audium 多轨工程",
+      "exampleZh": "60 秒播客工程，3 条音轨各带独立 playlist 与 region",
+      "strength": "核心能力"
+    },
+    {
+      "type": "混音成品",
+      "exampleZh": "audionaut-cli export mix.wav --sample-rate 48000 --bit-depth 24",
+      "strength": "核心能力"
+    },
+    {
+      "type": "四轨分轨结果",
+      "exampleZh": "Drums/Bass/Other/Vocals 四条音轨，本地 demucs.cpp 推理",
+      "strength": "附加能力"
+    },
+    {
+      "type": "分析标注",
+      "exampleZh": "段边界、beat 与 onset 时间戳，缓存进工程并显示",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "把访谈剪成 60 秒短视频素材",
+      "whoZh": "播客/视频剪辑师",
+      "whyZh": "分析段边界后 Auto Edit 按小节切，剪完一条命令导出",
+      "deliverableZh": "48 kHz/24 bit WAV 或 MP3",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "让 Claude 批量改工程片头",
+      "whoZh": "自动化开发者",
+      "whyZh": "MCP 22 工具落在已打开工程，每次改动单步撤销",
+      "deliverableZh": ".audium 工程 + JSON 回执",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "拆人声做二次创作",
+      "whoZh": "音乐二创作者",
+      "whyZh": "内置 Demucs 本地跑，不上传音频，拆完直接替换",
+      "deliverableZh": "vocals 单轨或多轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做带插件的专业混音",
+      "whoZh": "混音工程师",
+      "whyZh": "不支持 VST3/AU/LV2 与自动化包络",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "CLI 全动词",
+      "descZh": "16 个命令从建工程到导出"
+    },
+    {
+      "titleZh": "AI 代理剪辑",
+      "descZh": "MCP 22 工具落到打开工程"
+    },
+    {
+      "titleZh": "本地分轨",
+      "descZh": "Demucs 分四轨，权重 80MB"
+    },
+    {
+      "titleZh": "格式细分",
+      "descZh": "5 种格式按位深或码率配置"
+    },
+    {
+      "titleZh": "非破坏剪辑",
+      "descZh": "region 复用多次不复制音频"
+    }
+  ],
+  "ceilingsZh": "WAV 支持 16/24/32 bit，FLAC 与 AIFF 16/24 bit，Ogg 64–500 kbps（默认 192），MP3 96–320 kbps 且最高 48 kHz；FLAC/Ogg 单文件最多 8 通道，超宽多通道会拆成每通道一个文件（docs/manual/09-export.md#L16-L29）。变速 ×0.25–×4，可选变调或 Rubber Band R3 保调。分轨模型 htdemucs，权重约 80 MB 首次下载。MCP 22 工具，CLI 16 个动词。工程时长上限、并发数与渲染速度 README 未声明。",
+  "workflowZh": "五步：装包 → 建工程导素材 → 分析自动剪辑 → 分轨 → CLI 导出",
+  "workflow": [
+    {
+      "stepZh": "装应用",
+      "detailZh": "Windows 从 Releases 下安装包，未签名需过一次 SmartScreen",
+      "effortZh": "约 3 分钟"
+    },
+    {
+      "stepZh": "建工程导素材",
+      "detailZh": "audionaut-cli create song.audium --channels 2，再 import take1.wav take2.wav",
+      "effortZh": "约 2 分钟"
+    },
+    {
+      "stepZh": "分析并剪辑",
+      "detailZh": "analyze --types segments,beats 后 auto-edit --track 0 --measures 4",
+      "effortZh": "分钟级"
+    },
+    {
+      "stepZh": "分轨",
+      "detailZh": "audionaut-cli separate song.audium --track 1，首次下 80 MB 权重",
+      "effortZh": "3–10 分钟/首"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "export song.audium -o mix.wav --sample-rate 48000 --bit-depth 24",
+      "effortZh": "<1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "naudio__NAudio",
+      "whenZh": "要现成编辑器与 CLI/MCP 批量出片选 Audionaut；要从零写 Windows 音频应用、控制 WASAPI/ASIO 选 NAudio。",
+      "adviceZh": "要现成编辑器与 CLI/MCP 批量出片选 Audionaut；要从零写 Windows 音频应用、控制 WASAPI/ASIO 选 NAudio。"
+    },
+    {
+      "vs": "milkytracker__MilkyTracker",
+      "whenZh": "做歌曲/播客多轨与分轨选 Audionaut；编 XM/MOD chiptune 走 tracker 工作流选 MilkyTracker。",
+      "adviceZh": "做歌曲/播客多轨与分轨选 Audionaut；编 XM/MOD chiptune 走 tracker 工作流选 MilkyTracker。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L104-L119",
+      "noteZh": "CLI 动词与 export 采样率/位深参数"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "docs/manual/09-export.md#L16-L22",
+      "noteZh": "位深、码率与通道上限"
+    },
+    {
+      "field": "pros[2]",
+      "source": "docs/features.md#L45-L50",
+      "noteZh": "Demucs 四轨与约 80 MB 权重"
+    },
+    {
+      "field": "pros[3]",
+      "source": "docs/features.md#L86-L96",
+      "noteZh": "MCP 22 工具与单步撤销"
+    },
+    {
+      "field": "cons[0]",
+      "source": ".gitmodules#L1-L21",
+      "noteZh": "7 个子模块，本机目录全空"
+    }
+  ],
+  "blockerZh": "桌面应用而非可脚本化渲染器：C++ + JUCE 工程（Audionaut/Builds/VisualStudio2026/Audionaut.sln + vcxproj），本机无 MSVC/CMake，仓库也不含任何预编译二进制，无法构建。唯一自动化入口是 npx audionaut-mcp，但 MCP 只是把编辑指令投给「已经打开工程」的桌面 App，前提是先安装官方 Windows 安装包（默认写入 C:\\Program Files，违反「不装需写 C 盘的软件」），且没有可用的命令行「离线导出」命令。",
+  "whatItWouldNeed": "Visual Studio 2022/2026 + CMake 编译 JUCE 工程（或直接装官方安装包常驻运行），再配 Node 18+ 跑 audionaut-mcp，并把工程文件与音频素材预先摆好；这套 GUI 依赖与「一个进程离线出 wav」的目标不兼容。",
+  "ceilingZh": "WAV 支持 16/24/32 bit，FLAC 与 AIFF 16/24 bit，Ogg 64–500 kbps（默认 192），MP3 96–320 kbps 且最高 48 kHz；FLAC/Ogg 单文件最多 8 通道，超宽多通道会拆成每通道一个文件（docs/manual/09-export.md#L16-L29）。变速 ×0.25–×4，可选变调或 Rubber Band R3 保调。分轨模型 htdemucs，权重约 80 MB 首次下载。MCP 22 工具，CLI 16 个动词。工程时长上限、并发数与渲染速度 README 未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "flac",
+      "mp3",
+      "ogg"
+    ],
+    "sampleRateZh": "48 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "CLI 全动词：16 个命令从建工程到导出",
+    "AI 代理剪辑：MCP 22 工具落到打开工程",
+    "本地分轨：Demucs 分四轨，权重 80MB",
+    "格式细分：5 种格式按位深或码率配置",
+    "非破坏剪辑：region 复用多次不复制音频"
+  ],
+  "limits": [
+    "源码构建要拉 7 个子模块（JUCE/Catch2/json/link/farbot/demucs.cpp/rubberband），本机 clone 里这 7 个目录全是空的，CMake 直接找不到依赖（.gitmodules#L1-L21）",
+    "Windows 安装包未代码签名，SmartScreen 会拦一次；README 明确把它列在待办里（docs/features.md#L104-L122）",
+    "定位是「轻量编辑器」，VST3/AU/LV2 插件、效果器、自动化包络和 MIDI 都还没做（docs/features.md#L116-L117）",
+    "Windows 下内置 CLI 会与 GUI 的 stdout 争用，官方建议脚本场景改用独立 audionaut-cli（README.md#L143-L147）",
+    "源码 clone 必须带 --recursive，否则 Submodules/JUCE 为空，CMake 配置阶段就失败",
+    "MCP 依赖 Node.js 18+ 与 npx 拉包；工程没在 App 里打开时命令不会作用到当前会话",
+    "导出参数名是 --bit-depth 与 --bitrate 二选一，Ogg/MP3 写 --bit-depth 会被忽略"
+  ],
+  "signatureZh": "JUCE 多轨编辑器，CLI 与 MCP 代理剪辑导出",
+  "chooseWhenZh": "需要在 Windows 上做多轨剪辑与 Demucs 分轨、又想让 shell 或 Claude 批量导出 WAV/FLAC 的人",
+  "avoidWhenZh": "源码构建要拉 7 个子模块（JUCE/Catch2/json/link/farbot/demucs.cpp/rubberband），本机 clone 里这 7 个目录全是空的，CMake 直接找不到依赖（.gitmodules#L1-L21）",
+  "contrastWith": [
+    "naudio__NAudio",
+    "milkytracker__MilkyTracker"
+  ]
+}

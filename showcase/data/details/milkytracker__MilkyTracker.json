@@ -1,0 +1,178 @@
+{
+  "id": "milkytracker__MilkyTracker",
+  "taglineZh": "FT2 风格 tracker，XM 编辑与 WAV 渲染",
+  "summaryZh": "MilkyTracker 复刻 Fasttracker II 操作，用 C++ + CMake 构建，Windows/macOS 走 RtAudio、Linux 走 SDL2。既是 GUI 模组编辑器，也带 milkycli：读 .xm 后按采样率等参数离线混音，-multi-track 可按轨拆成多个 WAV。限制：源码要初始化 RtAudio 等子模块，本机无 CMake/MSVC 编不出；导出只有 WAV，转 MP3/FLAC 要 ffmpeg；Windows 的 SDL 构建官方不支持。",
+  "whatItMakes": [
+    {
+      "type": "XM/MOD 模组",
+      "exampleZh": "16 轨 chiptune，带样本、乐器与包络",
+      "strength": "核心能力"
+    },
+    {
+      "type": "WAV 渲染成品",
+      "exampleZh": "milkycli song.xm -output out.wav -sample-rate 44100",
+      "strength": "核心能力"
+    },
+    {
+      "type": "分轨 WAV 集合",
+      "exampleZh": "-multi-track 导出 output_01.wav 等按轨文件",
+      "strength": "附加能力"
+    },
+    {
+      "type": "示例曲素材",
+      "exampleZh": "resources/music/ 内 6 个可直接加载的模组",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "做 chiptune/8-bit 配乐",
+      "whoZh": "独立游戏音乐作者",
+      "whyZh": "完整 tracker 编辑，样本、乐器、包络在一个界面，输出通用 XM",
+      "deliverableZh": ".xm 模组 + WAV 预览",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量把老模组转 WAV",
+      "whoZh": "档案整理人员",
+      "whyZh": "milkycli 可脚本跑目录，-sample-rate 固定输出规格",
+      "deliverableZh": "每首一个 WAV",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "要 MP3/FLAC 成品",
+      "whoZh": "播客/视频制作者",
+      "whyZh": "只写 WAV，没有有损编码与元数据，需另接 ffmpeg",
+      "deliverableZh": "需二次转码",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "在 CI 里无头合成",
+      "whoZh": "自动化工程师",
+      "whyZh": "milkycli 可无 GUI 跑，但仍需先编二进制，仓库无 pip/npm 分发",
+      "deliverableZh": "WAV 文件",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "FT2 兼容操作",
+      "descZh": "键位与回放复刻 Fasttracker II"
+    },
+    {
+      "titleZh": "CLI 渲染",
+      "descZh": "milkycli 支持按轨拆分"
+    },
+    {
+      "titleZh": "双音频后端",
+      "descZh": "原生 RtAudio 与 SDL2 后端"
+    },
+    {
+      "titleZh": "自带示例模组",
+      "descZh": "resources/music 内 6 首"
+    },
+    {
+      "titleZh": "CMake 构建",
+      "descZh": "一份配置生成三平台工程"
+    }
+  ],
+  "ceilingsZh": "渲染采样率默认取 settingsDB 的 HDRECORDER_MIXFREQ，缺省 44100 Hz，可由 -sample-rate 覆盖；-volume 默认 256、-shift 默认 1、-resampler 默认 4（WAVExportArgs.cpp#L91-L97, L114-L118）。输出仅 WAV 与模组格式，位深未声明，按模组样本 8/16 bit 类型写出（WAVUtils.cpp#L34-L36）。-multi-track 生成 output_01.wav 起的按轨文件。模组时长、最大轨数、采样率上限 README 均未声明。",
+  "workflowZh": "四步：初始化子模块 → CMake 编译 → 加载 XM 编辑 → milkycli 导出 WAV",
+  "workflow": [
+    {
+      "stepZh": "拉子模块",
+      "detailZh": "仓库根执行 git submodule update --init，补齐 RtAudio/lhasa/zlib/zziplib",
+      "effortZh": "约 1 分钟"
+    },
+    {
+      "stepZh": "CMake 构建",
+      "detailZh": "cmake -B build 后编译 milkytracker 与 milkycli，Linux 可加 -DFORCESDL",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "编辑模组",
+      "detailZh": "GUI 打开 .xm，编辑 pattern 与乐器，或直接用示例模组",
+      "effortZh": "随曲目"
+    },
+    {
+      "stepZh": "导出 WAV",
+      "detailZh": "milkycli song.xm -output out.wav -sample-rate 44100 -multi-track",
+      "effortZh": "数十秒/首"
+    },
+    {
+      "stepZh": "转码（可选）",
+      "detailZh": "ffmpeg -i out.wav -b:a 192k out.mp3，仓库不做有损编码",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "steffest__BassoonTracker",
+      "whenZh": "要本地 C++ 性能与 milkycli 批量渲染选 MilkyTracker；要浏览器零安装打开模组选 BassoonTracker。",
+      "adviceZh": "要本地 C++ 性能与 milkycli 批量渲染选 MilkyTracker；要浏览器零安装打开模组选 BassoonTracker。"
+    },
+    {
+      "vs": "BambooTracker__BambooTracker",
+      "whenZh": "以 XM/MOD 与 FT2 习惯为主选 MilkyTracker；要做 OPN/OPM 多芯片 FM 选 BambooTracker。",
+      "adviceZh": "以 XM/MOD 与 FT2 习惯为主选 MilkyTracker；要做 OPN/OPM 多芯片 FM 选 BambooTracker。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L10-L12",
+      "noteZh": "Fasttracker II 体验与 ProTracker 模式"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "src/tracker/wav/WAVExportArgs.cpp#L91-L97",
+      "noteZh": "CLI 参数与 44100/256/1/4 默认值"
+    },
+    {
+      "field": "workflowZh",
+      "source": "INSTALL.md#L67-L80",
+      "noteZh": "需初始化 4 个子模块"
+    },
+    {
+      "field": "cons[0]",
+      "source": ".gitmodules#L1-L3",
+      "noteZh": "rtaudio 子模块路径已声明，但本机目录为空"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "渲染采样率默认取 settingsDB 的 HDRECORDER_MIXFREQ，缺省 44100 Hz，可由 -sample-rate 覆盖；-volume 默认 256、-shift 默认 1、-resampler 默认 4（WAVExportArgs.cpp#L91-L97, L114-L118）。输出仅 WAV 与模组格式，位深未声明，按模组样本 8/16 bit 类型写出（WAVUtils.cpp#L34-L36）。-multi-track 生成 output_01.wav 起的按轨文件。模组时长、最大轨数、采样率上限 README 均未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "FT2 兼容操作：键位与回放复刻 Fasttracker II",
+    "CLI 渲染：milkycli 支持按轨拆分",
+    "双音频后端：原生 RtAudio 与 SDL2 后端",
+    "自带示例模组：resources/music 内 6 首",
+    "CMake 构建：一份配置生成三平台工程"
+  ],
+  "limits": [
+    "Windows 构建依赖 RtAudio/lhasa/zlib/zziplib 子模块，本机 src/submodules/rtaudio 是空目录，未初始化就链不上音频后端（INSTALL.md#L67-L80）",
+    "本机没有 cmake（`cmake --version` 不存在），要先装 CMake 3.2+ 与 MSVC 才能构建，纯 pip 路线走不通（INSTALL.md#L28-L31）",
+    "导出只支持 WAV 与模组文件本身，milkycli 参数里没有 MP3/FLAC/Ogg 选项，要转码得外挂 ffmpeg（src/tracker/wav/WAVExportArgs.cpp#L91-L98）",
+    "SDL 构建官方只面向 Linux，Windows 上用 FORCESDL 属于开发者自担风险（INSTALL.md#L37-L38）",
+    "milkycli 第一个位置参数必须是 .xm 模组文件，-output 必填，否则抛 runtime_error",
+    "-sample-rate 只改渲染采样率，不改模组内音符频率；默认取 settingsDB 的 HDRECORDER_MIXFREQ，缺省 44100",
+    "GUI 版没有 macOS 之外的无头模式，批处理请直接用 milkycli 而不是主程序"
+  ],
+  "signatureZh": "FT2 风格 tracker，XM 编辑与 WAV 渲染",
+  "chooseWhenZh": "要做 chiptune/老模组编辑与批量渲染 WAV，且愿意装一次 CMake+MSVC 的人",
+  "avoidWhenZh": "Windows 构建依赖 RtAudio/lhasa/zlib/zziplib 子模块，本机 src/submodules/rtaudio 是空目录，未初始化就链不上音频后端（INSTALL.md#L67-L80）",
+  "contrastWith": [
+    "steffest__BassoonTracker",
+    "BambooTracker__BambooTracker"
+  ]
+}

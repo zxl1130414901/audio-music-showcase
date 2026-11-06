@@ -1,0 +1,171 @@
+{
+  "id": "SamiPerttu__fundsp",
+  "taglineZh": "Rust 图式 DSP 库，运算符拼出离线渲染网络",
+  "summaryZh": "FunDSP 是 Rust DSP 库，把合成与处理写成 >>、|、&、^ 连接的图，编译期即校验通道数与连接；prelude32 用 f32 求速度，prelude64 用 64 位内部状态求音质，默认 44.1 kHz。离线出样靠 Wave::render 加 save_wav16/32，examples/file.rs 是最小入口。代价是纯库无 CLI，实时示例需声卡与 MIDI，edition 2024 也要新工具链。",
+  "whatItMakes": [
+    {
+      "type": "合成音色 WAV",
+      "exampleZh": "cargo run --example file 生成 10 秒粉噪声 test.wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "滤波与动态处理链",
+      "exampleZh": "lowpass_hz 与 compressor 串成图后整段离线渲染",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱响应分析",
+      "exampleZh": "线性网络求解析频率响应与因果延迟",
+      "strength": "特色能力"
+    },
+    {
+      "type": "程序化噪声/纹理",
+      "exampleZh": "pink/white/spline_noise 生成素材底噪",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "游戏程序化音频",
+      "whoZh": "Rust 游戏开发者",
+      "whyZh": "bevy_fundsp 可直接接 Bevy，图在编译期优化，无运行时解释",
+      "deliverableZh": "程序化音效 WAV",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "DSP 教学实验",
+      "whoZh": "音频课程学生",
+      "whyZh": "图表达式短，接线错误就是编译错误，便于讲清信号流",
+      "deliverableZh": "可听示例与分析图",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "算法作曲原型",
+      "whoZh": "电子音乐 prototyping 作者",
+      "whyZh": "sequencer 与 Net 支持事件调度，能快速拼 loop",
+      "deliverableZh": "音色与 loop 片段",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量素材生成",
+      "whoZh": "音效库维护者",
+      "whyZh": "Wave::render 可循环批量导出 16/32-bit WAV",
+      "deliverableZh": "一批 WAV 母版",
+      "fit": "适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "编译期接线",
+      "descZh": "通道数不匹配在编译期报错，不会留到运行时"
+    },
+    {
+      "titleZh": "双精度预置",
+      "descZh": "prelude64 用 64 位内部状态换更低噪声"
+    },
+    {
+      "titleZh": "离线渲染",
+      "descZh": "渲染后直接保存 WAV"
+    },
+    {
+      "titleZh": "无 std 模式",
+      "descZh": "关闭 std 可跑嵌入式，代价是没有文件 IO"
+    }
+  ],
+  "ceilingsZh": "采样与精度：所有节点用 f32 样本，prelude64 只是内部状态 64 位；默认采样率 44.1 kHz，可用 set_sample_rate 改，处理缓冲固定 64 样本并走 f32x8 SIMD。离线渲染时长无上限（示例为 44100 Hz × 10 s），落盘支持 16-bit PCM 与 32-bit float WAV；重采样只接受 16/22.05/32/44.1/48/88.2/96/176.4/192/384 kHz 这些固定档位。GPU、并发、音色数、位深上限均未声明，也没有内置音色库，音色数量取决于你写的图。",
+  "workflowZh": "四步：装 Rust → 加 fundsp 依赖 → 写音频图 → 渲染 WAV",
+  "workflow": [
+    {
+      "stepZh": "装 Rust",
+      "detailZh": "rustup 安装 stable，edition 2024 需 1.85+",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "建工程",
+      "detailZh": "cargo new demo && cargo add fundsp@0.23.0",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "写音频图",
+      "detailZh": "let wave = Wave::render(44100.0, 10.0, &mut pink());",
+      "effortZh": "5–20 分钟"
+    },
+    {
+      "stepZh": "渲染落盘",
+      "detailZh": "wave.save_wav16(\"test.wav\")；或直接 cargo run --example file",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "转码分发",
+      "detailZh": "ffmpeg -i test.wav -b:a 192k test.mp3",
+      "effortZh": "10 秒"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Signalsmith-Audio__dsp",
+      "whenZh": "要 Rust 零成本抽象与现成 Wave 离线渲染选 fundsp；只要 C++ 头文件、自己在宿主接图选 Signalsmith。",
+      "adviceZh": "要 Rust 零成本抽象与现成 Wave 离线渲染选 fundsp；只要 C++ 头文件、自己在宿主接图选 Signalsmith。"
+    },
+    {
+      "vs": "cycfi__q",
+      "whenZh": "q 的示例偏实时声卡且构建更重；fundsp 的 examples/file.rs 直接写 test.wav，出样路径更短。",
+      "adviceZh": "q 的示例偏实时声卡且构建更重；fundsp 的 examples/file.rs 直接写 test.wav，出样路径更短。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L76-L86",
+      "noteZh": "默认特性 std/files/fft 与关闭 std 的 no_std 用法"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L691-L716",
+      "noteZh": "16/32-bit WAV 保存与重采样支持的采样率列表"
+    },
+    {
+      "field": "workflow[3].detailZh",
+      "source": "examples/file.rs#L6-L10",
+      "noteZh": "Wave::render 44100 Hz 10 秒并用 save_wav32 落盘的最小示例"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L102-L107",
+      "noteZh": "图运算符连接与编译期检查的说明"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样与精度：所有节点用 f32 样本，prelude64 只是内部状态 64 位；默认采样率 44.1 kHz，可用 set_sample_rate 改，处理缓冲固定 64 样本并走 f32x8 SIMD。离线渲染时长无上限（示例为 44100 Hz × 10 s），落盘支持 16-bit PCM 与 32-bit float WAV；重采样只接受 16/22.05/32/44.1/48/88.2/96/176.4/192/384 kHz 这些固定档位。GPU、并发、音色数、位深上限均未声明，也没有内置音色库，音色数量取决于你写的图。",
+  "capabilities": {
+    "maxDurationZh": "10 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "44.1 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "编译期接线：通道数不匹配在编译期报错，不会留到运行时",
+    "双精度预置：prelude64 用 64 位内部状态换更低噪声",
+    "离线渲染：渲染后直接保存 WAV",
+    "无 std 模式：关闭 std 可跑嵌入式，代价是没有文件 IO"
+  ],
+  "limits": [
+    "只是库不是应用：README 只给 Wave::render/save_wav32 代码片段，没有 CLI 参数或成品程序（examples/file.rs 即全部入口）",
+    "实时示例依赖 cpal、midir 与真实声卡/MIDI 设备，无声卡环境跑 keys/live_adsr 会失败（Cargo.toml#L33-L38）",
+    "Cargo.toml 声明 edition 2024 与 0.23.0，需要 Rust 1.85+ 新工具链，老项目升级成本高（Cargo.toml#L7-L12）",
+    "cargo run --example file 会在仓库根直接写 test.wav，覆盖同名文件前先备份",
+    "默认 44.1 kHz；要 48 kHz 得自己 set_sample_rate 或 Wave::resample_fir，后者只接受固定采样率列表（README.md#L714-L716）"
+  ],
+  "signatureZh": "Rust 图式 DSP 库，运算符拼出离线渲染网络",
+  "chooseWhenZh": "需要把 DSP 图嵌进 Rust 程序、并批量离线渲染 WAV 的开发者。",
+  "avoidWhenZh": "只是库不是应用：README 只给 Wave::render/save_wav32 代码片段，没有 CLI 参数或成品程序（examples/file.rs 即全部入口）",
+  "contrastWith": [
+    "Signalsmith-Audio__dsp",
+    "cycfi__q"
+  ]
+}

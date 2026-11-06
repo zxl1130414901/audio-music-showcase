@@ -1,0 +1,178 @@
+{
+  "id": "JorenSix__TarsosDSP",
+  "taglineZh": "纯 Java 实时音频处理，基频与节拍检测",
+  "summaryZh": "TarsosDSP 是 2011 年起维护的纯 Java 音频处理库，core 给出 YIN、McLeod Pitch Method、Dynamic Wavelet 等基频算法，以及 onset、DTMF、WSOLA 变速、重采样、滤波与音效；jvm 补上麦克风/文件 I/O；examples-all.jar 把功能做成 GUI 或 CLI。它以 Java 11 为基线、Maven 2.5 发布，适合 Java/Android 工程调用，离线产出分析文本与图。",
+  "whatItMakes": [
+    {
+      "type": "基频曲线文本",
+      "exampleZh": "feature_extractor pitch 按 2048 样本块输出三列",
+      "strength": "核心能力"
+    },
+    {
+      "type": "实时处理链",
+      "exampleZh": "AudioDispatcher 串接 onset、滤波与 WSOLA",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱/特征数据",
+      "exampleZh": "FFT/CQT/MFCC 生成谱图与特征序列",
+      "strength": "附加能力"
+    },
+    {
+      "type": "DTMF/节拍事件",
+      "exampleZh": "Goertzel 解码电话按键，onset 驱动节拍",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "在 Java 服务端批量提取 wav 基频曲线",
+      "whoZh": "做音乐检索或语音前端的数据工程师",
+      "whyZh": "Maven 一条 implementation 即可，CLI 示例无需写代码",
+      "deliverableZh": "每首歌的基频 CSV/文本",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "Android App 里做实时音高或节拍显示",
+      "whoZh": "Android 音频应用开发者",
+      "whyZh": "纯 Java、无 JNI，core 可直接进 Android 工程",
+      "deliverableZh": "实时音高/节拍界面",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "给教学项目演示 DSP 算法",
+      "whoZh": "音频课程教师或学生",
+      "whyZh": "README 定位为 compact enough to serve as a demonstration",
+      "deliverableZh": "可运行的算法演示 GUI/CLI",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做语音/音乐分类前的特征提取",
+      "whoZh": "机器学习工程师",
+      "whyZh": "内置 MFCC、CQT、谱特征与 onset",
+      "deliverableZh": "训练用特征文件",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "多种基频算法",
+      "descZh": "YIN/MPM/小波三种可切换"
+    },
+    {
+      "titleZh": "实时块处理",
+      "descZh": "Dispatcher 切块并串接处理器"
+    },
+    {
+      "titleZh": "零外部依赖",
+      "descZh": "纯 Java，FFT 用内置实现"
+    },
+    {
+      "titleZh": "Maven 坐标",
+      "descZh": "core/jvm 已发布到 Maven"
+    }
+  ],
+  "ceilingsZh": "采样率未声明固定值：fromFile 用音频流自身格式，fromDefaultMicrophone 固定 44100 Hz、16-bit、mono（AudioDispatcherFactory.java 第 56-67 行）。pitch 示例按 2048 样本块计算，输出时间戳、频率 Hz 与音高概率三列文本（PitchExtractor.java 第 23-24 行），不生成音频。无 GPU/权重概念；FastYIN 用 FFT 把差值函数提速至多 3 倍（README 第 97 行）。源码兼容 Java 11，examples 模块 toolchain 是 Java 17（examples/build.gradle 第 10-14 行）。",
+  "workflowZh": "三步：./gradlew build 拉 JDK 与依赖 → shadowJar 打 examples-all.jar → 跑 feature_extractor pitch",
+  "workflow": [
+    {
+      "stepZh": "准备 JDK 与 Gradle",
+      "detailZh": "执行 ./gradlew build，Gradle 自动下载 JDK 11 编 core/jvm、JDK 17 编 examples",
+      "effortZh": "10-25 分钟"
+    },
+    {
+      "stepZh": "打包示例",
+      "detailZh": "运行 gradle shadowJar，产物在 examples/build/libs/examples-all.jar",
+      "effortZh": "2-5 分钟"
+    },
+    {
+      "stepZh": "跑分析",
+      "detailZh": "java -jar examples-all.jar feature_extractor pitch --detector FFT_YIN input.wav",
+      "effortZh": "5-15 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "tyiannak__pyAudioAnalysis",
+      "whenZh": "Java/Android 内嵌与实时流处理选 TarsosDSP；Python 分类器训练、分段与回归选 pyAudioAnalysis。",
+      "adviceZh": "Java/Android 内嵌与实时流处理选 TarsosDSP；Python 分类器训练、分段与回归选 pyAudioAnalysis。"
+    },
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "只要基频与 onset、想零依赖部署 JVM 服务选 TarsosDSP；要 C 级吞吐与数十种时频变换选 audioFlux。",
+      "adviceZh": "只要基频与 onset、想零依赖部署 JVM 服务选 TarsosDSP；要 C 级吞吐与数十种时频变换选 audioFlux。"
+    },
+    {
+      "vs": "aubio__aubio",
+      "whenZh": "要 Java 生态与 Maven 依赖选 TarsosDSP；要 C/Python 成熟 onset/音高命令行工具链选 aubio。",
+      "adviceZh": "要 Java 生态与 Maven 依赖选 TarsosDSP；要 C/Python 成熟 onset/音高命令行工具链选 aubio。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "README.md#L5",
+      "noteZh": "纯 Java 且无外部依赖"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L7",
+      "noteZh": "YIN/MPM/Dynamic Wavelet 多算法"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L86",
+      "noteZh": "examples-all.jar 提供 pitch CLI"
+    },
+    {
+      "field": "cons[0]",
+      "source": "core/build.gradle#L73",
+      "noteZh": "GPL-3.0 许可证"
+    },
+    {
+      "field": "cons[2]",
+      "source": "examples/build.gradle#L13",
+      "noteZh": "examples 模块要求 Java 17"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "examples/src/main/java/be/tarsos/dsp/example/cli/feature_extractor/PitchExtractor.java#L23",
+      "noteZh": "按 2048 样本块输出基频三列文本"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样率未声明固定值：fromFile 用音频流自身格式，fromDefaultMicrophone 固定 44100 Hz、16-bit、mono（AudioDispatcherFactory.java 第 56-67 行）。pitch 示例按 2048 样本块计算，输出时间戳、频率 Hz 与音高概率三列文本（PitchExtractor.java 第 23-24 行），不生成音频。无 GPU/权重概念；FastYIN 用 FFT 把差值函数提速至多 3 倍（README 第 97 行）。源码兼容 Java 11，examples 模块 toolchain 是 Java 17（examples/build.gradle 第 10-14 行）。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "txt",
+      "png"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "多种基频算法：YIN/MPM/小波三种可切换",
+    "实时块处理：Dispatcher 切块并串接处理器",
+    "零外部依赖：纯 Java，FFT 用内置实现",
+    "Maven 坐标：core/jvm 已发布到 Maven"
+  ],
+  "limits": [
+    "许可证为 GPL-3.0（core/build.gradle 第 73 行），闭源产品集成前必须评估 copyleft 传染性。",
+    "Gradle 构建依赖 foojay 在线自动下载 JDK（settings.gradle 第 2-5 行注释明确 auto-provision），首次构建需联网且可能拉 JDK 11 与 17 两套工具链。",
+    "examples 模块 toolchain 是 Java 17（examples/build.gradle 第 10-14 行），与 core 的 Java 11 基线不同；产物是分析文本/图，不是音频渲染器。",
+    "首次 ./gradlew build 会下载 Gradle 发行版、依赖与 JDK；离线机器会直接失败。",
+    "examples 需要 Java 17，只装 JDK 11 时 examples 模块无法编译。",
+    "jvm 模块解码 mp3 需要 ffmpeg 或内置解码器，README 第 160 行附近说明会尝试下载静态 ffmpeg 二进制。"
+  ],
+  "signatureZh": "纯 Java 实时音频处理，基频与节拍检测",
+  "chooseWhenZh": "Java/Android 项目里做基频、节拍、特征提取等实时或离线音频分析。",
+  "avoidWhenZh": "许可证为 GPL-3.0（core/build.gradle 第 73 行），闭源产品集成前必须评估 copyleft 传染性。",
+  "contrastWith": [
+    "tyiannak__pyAudioAnalysis",
+    "libAudioFlux__audioFlux"
+  ]
+}

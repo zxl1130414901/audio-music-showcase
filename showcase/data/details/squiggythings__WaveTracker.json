@@ -1,0 +1,187 @@
+{
+  "id": "squiggythings__WaveTracker",
+  "taglineZh": "Windows 波表 tracker，手绘波形出 wav",
+  "summaryZh": "WaveTracker 是 Windows 上的波表/采样 tracker，C# 写、.NET 8 与 MonoGame 渲染，最多 100 条波形、100 个 instrument macro，可导入 wav 采样再编辑。它带实时回放、示波器、钢琴卷帘与 MIDI 输入，成品由内置写出器落成 PCM16 双声道，采样率五选一。限制：只支持 Windows，README 没写构建步骤只给 itch.io 下载，入口是 GUI，批量出样必须人工编曲，导出只有 wav。",
+  "whatItMakes": [
+    {
+      "type": "波表 chiptune 曲子",
+      "exampleZh": "4 轨用不同波形叠出带 macro 调制的旋律",
+      "strength": "核心能力"
+    },
+    {
+      "type": "wav 音频成品",
+      "exampleZh": "Export 后得到 PCM16 双声道 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "自绘波形音色",
+      "exampleZh": "在波形编辑器画 32 步锯齿并存成乐器",
+      "strength": "核心能力"
+    },
+    {
+      "type": "采样乐器",
+      "exampleZh": "导入一段 wav 鼓 loop，切片后当采样源",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "做带手工波形的 chiptune",
+      "whoZh": "独立游戏音乐作者",
+      "whyZh": "波形可逐点画，macro 能细致调音色，MIDI 输入方便接键盘试听",
+      "deliverableZh": "wav + 工程文件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "教学演示波表合成原理",
+      "whoZh": "音频课程教师",
+      "whyZh": "界面里有波形编辑器与示波器，能直接看到采样点与调制结果",
+      "deliverableZh": "截图与示例曲",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "在 macOS/Linux 上工作",
+      "whoZh": "跨平台用户",
+      "whyZh": "README 明说软件面向 Windows，没有其他平台版本",
+      "deliverableZh": "不适用",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "CI 里批量渲染曲目",
+      "whoZh": "自动化工程师",
+      "whyZh": "只有 GUI 入口，没有命令行导出参数",
+      "deliverableZh": "无法自动化",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "手绘波形",
+      "descZh": "最多 100 条，逐点编辑后即时试听"
+    },
+    {
+      "titleZh": "百条手绘波形",
+      "descZh": "每个乐器可绑多条调制维度"
+    },
+    {
+      "titleZh": "PCM16 导出",
+      "descZh": "固定双声道 16-bit wav"
+    },
+    {
+      "titleZh": "五档采样率",
+      "descZh": "11.025k 到 96k 可选"
+    },
+    {
+      "titleZh": "内部过采样",
+      "descZh": "内部倍率提升，降低混叠"
+    }
+  ],
+  "ceilingsZh": "导出走 FloatToPCM16，固定 2 声道、16-bit（AudioEngine.cs#L225）；采样率五选一 11025/22050/44100/48000/96000，默认 44100（ConfigurationDialog.cs#L87、SettingsProfile.cs#L98），音频设备默认 48000（AudioContextWindows.cs#L30）。oversampling 把 TrueSampleRate 设为采样率 × 倍率（AudioEngine.cs#L97-L99），用于抗混叠。容量侧：波形上限 100、macro 上限 100 来自 README；曲目时长与最大轨数 README 未声明。导出只有 wav，没有 mp3/ogg 编码路径。",
+  "workflowZh": "五步：装 .NET 8 → restore/build → 新建 song → 画波形编曲 → Export wav",
+  "workflow": [
+    {
+      "stepZh": "装工具链",
+      "detailZh": "winget 装 .NET 8 SDK，仓库里没有构建文档，按 csproj 的 net8.0 推",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "编译",
+      "detailZh": "dotnet build WaveTracker/WaveTracker.csproj，会拉 MonoGame 与 FFmpeg.Native",
+      "effortZh": "5–15 分钟"
+    },
+    {
+      "stepZh": "建曲",
+      "detailZh": "新建 song，在 pattern 网格里铺轨与设 tempo",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "做音色",
+      "detailZh": "Instrument 里画波形、加 macro，或导入 wav 采样",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "File → Export wav，采样率在 Settings 的 Audio 页先选好",
+      "effortZh": "数十秒"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "BambooTracker__BambooTracker",
+      "whenZh": "要手绘波表与采样混合选 WaveTracker；要 YM2608 FM 芯片与 vgm/s98 交付选 BambooTracker。",
+      "adviceZh": "要手绘波表与采样混合选 WaveTracker；要 YM2608 FM 芯片与 vgm/s98 交付选 BambooTracker。"
+    },
+    {
+      "vs": "milkytracker__MilkyTracker",
+      "whenZh": "要现代波表编辑与 MIDI 输入选 WaveTracker；要 XM 生态与 milkycli 批处理选 MilkyTracker。",
+      "adviceZh": "要现代波表编辑与 MIDI 输入选 WaveTracker；要 XM 生态与 milkycli 批处理选 MilkyTracker。"
+    },
+    {
+      "vs": "steffest__BassoonTracker",
+      "whenZh": "要原生 Windows 桌面工具选 WaveTracker；要浏览器里打开老模组、零安装选 BassoonTracker。",
+      "adviceZh": "要原生 Windows 桌面工具选 WaveTracker；要浏览器里打开老模组、零安装选 BassoonTracker。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L6-L18",
+      "noteZh": "Windows 波表/采样 tracker 与功能列表"
+    },
+    {
+      "field": "pros[1]",
+      "source": "WaveTracker/Source/Audio/AudioEngine.cs#L225",
+      "noteZh": "FloatToPCM16、2 声道、当前采样率"
+    },
+    {
+      "field": "pros[2]",
+      "source": "WaveTracker/Source/UI/ConfigurationDialog.cs#L87",
+      "noteZh": "五档采样率选项"
+    },
+    {
+      "field": "pros[3]",
+      "source": "WaveTracker/Source/Audio/AudioEngine.cs#L97-L99",
+      "noteZh": "TrueSampleRate = 采样率 × oversampling"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L8-L9",
+      "noteZh": "只给 itch.io 下载，无构建说明"
+    }
+  ],
+  "blockerZh": "C# / .NET 工程（WaveTracker.sln + WaveTracker.csproj），本机 `dotnet` 不可用（.NET SDK 未安装），装 SDK 属 >200MB 工具链；且它是 GUI 追踪器，无命令行导出 WAV 入口。",
+  "whatItWouldNeed": ".NET 8 SDK（含 dotnet tool）、NuGet 还原 MonoGame 3.8.2 与 FFmpeg.Native 4.4、Windows 桌面环境；或直接从 itch.io 拿现成安装包，再人工操作导出。",
+  "ceilingZh": "导出走 FloatToPCM16，固定 2 声道、16-bit（AudioEngine.cs#L225）；采样率五选一 11025/22050/44100/48000/96000，默认 44100（ConfigurationDialog.cs#L87、SettingsProfile.cs#L98），音频设备默认 48000（AudioContextWindows.cs#L30）。oversampling 把 TrueSampleRate 设为采样率 × 倍率（AudioEngine.cs#L97-L99），用于抗混叠。容量侧：波形上限 100、macro 上限 100 来自 README；曲目时长与最大轨数 README 未声明。导出只有 wav，没有 mp3/ogg 编码路径。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "11025 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "手绘波形：最多 100 条，逐点编辑后即时试听",
+    "百条手绘波形：每个乐器可绑多条调制维度",
+    "PCM16 导出：固定双声道 16-bit wav",
+    "五档采样率：11.025k 到 96k 可选",
+    "内部过采样：内部倍率提升，降低混叠"
+  ],
+  "limits": [
+    "README 定位就是 Windows 软件，没有 macOS/Linux 版本",
+    "README 完全没有构建说明，只给 itch.io 下载，从源码要自己摸 .NET 8 + MonoGame 工程",
+    "纯 GUI 编辑，无命令行渲染，批量出样必须人工编曲",
+    "导出只写 wav，没有 mp3/ogg 直出",
+    "本机未装 .NET 8 SDK，dotnet build 会直接失败",
+    "FFmpeg.Native 4.4 包体大，首次 nuget restore 在 USB HDD 上很慢"
+  ],
+  "signatureZh": "Windows 波表 tracker，手绘波形出 wav",
+  "chooseWhenZh": "在 Windows 上做波表 chiptune、喜欢手绘波形而不是采样拼接的曲子作者",
+  "avoidWhenZh": "README 定位就是 Windows 软件，没有 macOS/Linux 版本",
+  "contrastWith": [
+    "BambooTracker__BambooTracker",
+    "milkytracker__MilkyTracker"
+  ]
+}

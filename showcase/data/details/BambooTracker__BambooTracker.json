@@ -1,0 +1,187 @@
+{
+  "id": "BambooTracker__BambooTracker",
+  "taglineZh": "YM2608 tracker，导出 wav/vgm",
+  "summaryZh": "BambooTracker 是面向 YM2608（OPNA）的 tracker，C++/Qt 写，音频走 RtAudio。它按 module/order/pattern/instrument 组织乐曲，覆盖 FM/SSG/ADPCM，乐器兼容 DefleMask、TFM、WOPN、PMD，可导出 wav、vgm、s98。入口只有 Qt 窗口，没有命令行渲染；源码要 Qt 5.5+、qmake、make；ADPCM 采样导入必须 16-bit mono 2k–55.5kHz。",
+  "whatItMakes": [
+    {
+      "type": "chiptune 曲目",
+      "exampleZh": "用 4 条 pattern 循环拼一段 PC-98 风格 FM 曲",
+      "strength": "核心能力"
+    },
+    {
+      "type": "wav 音频成品",
+      "exampleZh": "Export 选 44100 Hz，直接得到整曲 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "芯片寄存器日志",
+      "exampleZh": "导出 vgm/s98，交给播放器或硬件复刻验证",
+      "strength": "附加能力"
+    },
+    {
+      "type": "乐器与音库文件",
+      "exampleZh": "读 .dmp/.tfi 乐器，另存 .bti 复用",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "做 PC-98/FM 芯片风配乐",
+      "whoZh": "chiptune 作者",
+      "whyZh": "专为 YM2608 设计，pattern 与音源控制直接对应芯片能力",
+      "deliverableZh": ".btm 模组 + wav/vgm",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "给模拟器或复刻硬件做验证素材",
+      "whoZh": "硬件/模拟器开发者",
+      "whyZh": "vgm/s98 是寄存器级日志，可直接喂给复刻播放器比对",
+      "deliverableZh": "vgm/s98 文件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "把老 DefleMask/TFM 乐器搬进新工程",
+      "whoZh": "模组创作者",
+      "whyZh": "乐器与音库导入格式覆盖广，能省掉手工重制音色",
+      "deliverableZh": ".bti/.btb 音库",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "服务器或 CI 里无头渲染",
+      "whoZh": "自动化工程师",
+      "whyZh": "只有 GUI 入口，没有 CLI 参数可批处理",
+      "deliverableZh": "无法自动化",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "OPNA 音源",
+      "descZh": "FM/SSG/ADPCM 三类，贴近 YM2608"
+    },
+    {
+      "titleZh": "三格式导出",
+      "descZh": "wav、vgm、s98 各面向不同下游"
+    },
+    {
+      "titleZh": "老乐器兼容",
+      "descZh": "dmp/tfi/vgi/opni 等可直接读"
+    },
+    {
+      "titleZh": "五语言界面",
+      "descZh": "英日法波西，可切 UI 语言"
+    },
+    {
+      "titleZh": "真芯片编译",
+      "descZh": "接 SCCI/C86CTL 硬件发声"
+    }
+  ],
+  "ceilingsZh": "wav 采样率可选 8000/16000/22050/32000/44100/48000/55466/96000/192000/249600 Hz，默认 44100（wave_export_settings_dialog.cpp#L41）；导出格式固定 wav/vgm/s98（FILEIO.md#L44-L49），wav 位深 README 未声明默认值。ADPCM 只吃 16-bit mono、2k–55.5kHz（FILEIO.md#L21）。乐曲 .btm、乐器 .bti、音库 .btb；FM 合成频率在 v0.1.4 从 110933Hz 改为 55466Hz。单曲只驱动一块 YM2608；最大 pattern 数与渲染时长 README 未声明。",
+  "workflowZh": "五步：装官方包或构建 → 新建 module → 建乐器与音库 → 编 pattern/order → Export 出 wav",
+  "workflow": [
+    {
+      "stepZh": "准备程序",
+      "detailZh": "下官方 Windows 安装包，或 qmake/CMake 编译源码（需 Qt 5.5+ 与 3 个子模块）",
+      "effortZh": "5 分钟或 20–40 分钟"
+    },
+    {
+      "stepZh": "建工程",
+      "detailZh": "New module 选 Standard 类型，设 pattern 行数与初始 tempo",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "建乐器",
+      "detailZh": "Instrument Editor 画 FM envelope，或导入 .dmp/.tfi 现成乐器",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "编曲",
+      "detailZh": "在 pattern 网格写音符与效果列，用 order 列表排曲目结构",
+      "effortZh": "随曲目"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "File → Export，选 wav 采样率 44100，或选 vgm/s98 给模拟器",
+      "effortZh": "数十秒"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "milkytracker__MilkyTracker",
+      "whenZh": "要 YM2608 芯片寄存器级输出选 BambooTracker；要 XM/MOD 样本模组与 milkycli 批量渲染选 MilkyTracker。",
+      "adviceZh": "要 YM2608 芯片寄存器级输出选 BambooTracker；要 XM/MOD 样本模组与 milkycli 批量渲染选 MilkyTracker。"
+    },
+    {
+      "vs": "steffest__BassoonTracker",
+      "whenZh": "要桌面 Qt 工具与 vgm/s98 导出选 BambooTracker；要浏览器里直接打开老模组选 BassoonTracker。",
+      "adviceZh": "要桌面 Qt 工具与 vgm/s98 导出选 BambooTracker；要浏览器里直接打开老模组选 BassoonTracker。"
+    },
+    {
+      "vs": "squiggythings__WaveTracker",
+      "whenZh": "要 FM 芯片音源选 BambooTracker；要手绘波表与 96kHz 高采样导出选 WaveTracker。",
+      "adviceZh": "要 FM 芯片音源选 BambooTracker；要手绘波表与 96kHz 高采样导出选 WaveTracker。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L33-L35",
+      "noteZh": "面向 YM2608(OPNA) 的 NEC PC-8801/9801 tracker"
+    },
+    {
+      "field": "pros[1]",
+      "source": "FILEIO.md#L44-L49; BambooTracker/gui/wave_export_settings_dialog.cpp#L41",
+      "noteZh": "导出三格式与 10 档采样率"
+    },
+    {
+      "field": "cons[0]",
+      "source": "BambooTracker/main.cpp#L61-L69",
+      "noteZh": "入口为 QApplication + MainWindow，无 CLI 渲染"
+    },
+    {
+      "field": "cons[2]",
+      "source": "FILEIO.md#L21",
+      "noteZh": "ADPCM 只支持 16-bit mono 2k-55.5kHz"
+    },
+    {
+      "field": "cons[3]",
+      "source": "README.md#L33",
+      "noteZh": "单芯片 YM2608 定位"
+    }
+  ],
+  "blockerZh": "Qt6 + CMake 构建链需要 >200MB 工具链（本机无 Qt、无 cmake），且官方 Windows 发行版只提供 GUI 主程序，没有命令行导出 WAV 的入口；3 个子模块（RtAudio/RtMidi/emu2149）虽小，但主程序仍需 Qt Widgets。",
+  "whatItWouldNeed": "Qt 5.5+ 与 qmake（或 CMake）、MinGW/MSVC 编译器、git submodule update --init 拉 3 个子模块；或直接下载官方 Windows release，再人工编曲导出。",
+  "ceilingZh": "wav 采样率可选 8000/16000/22050/32000/44100/48000/55466/96000/192000/249600 Hz，默认 44100（wave_export_settings_dialog.cpp#L41）；导出格式固定 wav/vgm/s98（FILEIO.md#L44-L49），wav 位深 README 未声明默认值。ADPCM 只吃 16-bit mono、2k–55.5kHz（FILEIO.md#L21）。乐曲 .btm、乐器 .bti、音库 .btb；FM 合成频率在 v0.1.4 从 110933Hz 改为 55466Hz。单曲只驱动一块 YM2608；最大 pattern 数与渲染时长 README 未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "8000 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "OPNA 音源：FM/SSG/ADPCM 三类，贴近 YM2608",
+    "三格式导出：wav、vgm、s98 各面向不同下游",
+    "老乐器兼容：dmp/tfi/vgi/opni 等可直接读",
+    "五语言界面：英日法波西，可切 UI 语言",
+    "真芯片编译：接 SCCI/C86CTL 硬件发声"
+  ],
+  "limits": [
+    "入口是 Qt MainWindow，只能 GUI 编曲，没有命令行批量渲染模式",
+    "源码构建要 Qt 5.5+、qmake、make 与 3 个 git 子模块，Windows 还要 MinGW 或 MSVC",
+    "ADPCM 波形导入限制为 16-bit mono、2k–55.5kHz，采样素材要先转码",
+    "只模拟一块 YM2608，做不出多芯片混编或现代采样合成",
+    "Qt5 与 Qt6 两套构建路径，装错版本会卡在 qmake 找不到模块",
+    "子模块必须 --recurse-submodules 拉全，否则 emu2149/RtAudio 编译失败"
+  ],
+  "signatureZh": "YM2608 tracker，导出 wav/vgm",
+  "chooseWhenZh": "做 PC-98/FM 芯片风 chiptune、需要同时交付 wav 与 vgm/s98 的 tracker 作者",
+  "avoidWhenZh": "入口是 Qt MainWindow，只能 GUI 编曲，没有命令行批量渲染模式",
+  "contrastWith": [
+    "milkytracker__MilkyTracker",
+    "steffest__BassoonTracker"
+  ]
+}

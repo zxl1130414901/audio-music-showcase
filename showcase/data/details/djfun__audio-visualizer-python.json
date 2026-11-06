@@ -1,0 +1,178 @@
+{
+  "id": "djfun__audio-visualizer-python",
+  "taglineZh": "Qt 组件叠加可视化，命令行批量出 MP4",
+  "summaryZh": "avp 是 PyQt6 GUI 工具，用波形、频谱、图片、视频、文字、粒子等 9 类可叠组件把音频做成视频。工程存成 .avp 后可用 avp -c 0 image ... -c 1 classic ... 在命令行复现，适合批量出片。渲染是 Pillow 逐帧合成再交 ffmpeg 编码，容器有 mp4/mov/mkv/avi/webm/flv，默认 1280×720、30 fps。代价是 CLI 也建 QApplication 不算真无头；逐帧渲染慢；ffmpeg 必须自装。",
+  "whatItMakes": [
+    {
+      "type": "可视化 MP4",
+      "exampleZh": "波形 + 封面 + 标题，1280×720@30fps 播客片段",
+      "strength": "核心能力"
+    },
+    {
+      "type": "频谱动画视频",
+      "exampleZh": "spectrum 组件按 fft 数据驱动条形，叠在 image 上",
+      "strength": "核心能力"
+    },
+    {
+      "type": "可复用 .avp 工程",
+      "exampleZh": "GUI 存工程后命令行加载，批量换输入输出",
+      "strength": "附加能力"
+    },
+    {
+      "type": "带音轨的视频",
+      "exampleZh": "音频直通，视频 H264/MPEG4，音频 AAC/AC3/MP3",
+      "strength": "核心能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "播客做成可视化视频",
+      "whoZh": "播客主播",
+      "whyZh": "波形 + 封面 + 文字三层即可出片，GUI 调版式最快",
+      "deliverableZh": "mp4（H264+AAC）",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "每期固定模板批量套片头",
+      "whoZh": "内容运营",
+      "whyZh": "工程存 .avp 后命令行换 -i/-o 批量渲染，不必每期重排",
+      "deliverableZh": "一批 mp4",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做 4K 高帧率 MV",
+      "whoZh": "专业 MV 制作",
+      "whyZh": "最高 1920×1080、默认 30 fps，逐帧 Pillow 合成做不了重特效",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "服务器/CI 定时出片",
+      "whoZh": "自动化运维",
+      "whyZh": "CLI 仍建 QApplication，需桌面会话，无头容器要 Xvfb",
+      "deliverableZh": "需 Xvfb 兜底",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "9 类组件",
+      "descZh": "波形频谱图片文字任意叠"
+    },
+    {
+      "titleZh": "工程复用",
+      "descZh": "GUI 存 .avp，命令行复现"
+    },
+    {
+      "titleZh": "六种容器",
+      "descZh": "六种容器可选多编码器"
+    },
+    {
+      "titleZh": "依赖极薄",
+      "descZh": "numpy、Pillow、PyQt6 三件"
+    },
+    {
+      "titleZh": "跨三平台",
+      "descZh": "三平台均有安装说明"
+    }
+  ],
+  "ceilingsZh": "默认输出 1280×720、30 fps，分辨率下拉可选 1920×1080、1280×720、854×480，宽高与帧率存在 QSettings 的 outputWidth/outputHeight/outputFrameRate（src/avp/core.py#L457-L523）。容器覆盖 mp4/mov/mkv/avi/webm/flv，mp4 默认 H264+AAC，另有 H264(nvenc)、MPEG4、XVID 与 AC3/MP3/PCM 编码（src/avp/encoder-options.json#L2-L35）。组件共 9 类，层数未设上限。导出时长、超过 1080p 的分辨率、音频码率上限 README 均未声明；渲染速度取决于 Pillow 逐帧合成。",
+  "workflowZh": "四步：装 pip 包与 ffmpeg → GUI 排组件存 .avp → 命令行换输入输出 → 编码出 mp4",
+  "workflow": [
+    {
+      "stepZh": "装环境",
+      "detailZh": "pip install audio-visualizer-python，另装 GPL static ffmpeg 并加进 PATH",
+      "effortZh": "约 5 分钟"
+    },
+    {
+      "stepZh": "GUI 排组件",
+      "detailZh": "avp 打开，加波形/封面/文字层，Ctrl+S 存 .avp",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "命令行渲染",
+      "detailZh": "avp -c 0 image path=cover.jpg -c 1 classic color=180,180,180 -c 2 text \"title=Ep 371\" -i test.ogg -o output.mp4",
+      "effortZh": "视频时长 1–3 倍"
+    },
+    {
+      "stepZh": "检查与转码",
+      "detailZh": "ffprobe 看流参数，需要更小体积再用 ffmpeg 重压",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "luisbocanegra__plasma-audio-visualizer",
+      "whenZh": "要独立视频文件、可加封面文字选 avp；要 KDE Plasma 桌面音频反应壁纸选 plasma-audio-visualizer。",
+      "adviceZh": "要独立视频文件、可加封面文字选 avp；要 KDE Plasma 桌面音频反应壁纸选 plasma-audio-visualizer。"
+    },
+    {
+      "vs": "kosua20__MIDIVisualizer",
+      "whenZh": "输入是音频/播客、要波形频谱选 avp；输入是 MIDI、要钢琴卷帘选 MIDIVisualizer。",
+      "adviceZh": "输入是音频/播客、要波形频谱选 avp；输入是 MIDI、要钢琴卷帘选 MIDIVisualizer。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L5-L7",
+      "noteZh": "GUI 工具、组件可叠、容器可选、三平台"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "src/avp/core.py#L521-L523",
+      "noteZh": "默认 1280×720、30 fps"
+    },
+    {
+      "field": "pros[2]",
+      "source": "src/avp/encoder-options.json#L2-L17",
+      "noteZh": "MP4 默认 H264/AAC 与可选编码"
+    },
+    {
+      "field": "cons[0]",
+      "source": "src/avp/cli.py#L36-L37",
+      "noteZh": "命令行分支也建 QApplication"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L52-L58",
+      "noteZh": "Windows 需 Store Python 与 GPL static ffmpeg"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "默认输出 1280×720、30 fps，分辨率下拉可选 1920×1080、1280×720、854×480，宽高与帧率存在 QSettings 的 outputWidth/outputHeight/outputFrameRate（src/avp/core.py#L457-L523）。容器覆盖 mp4/mov/mkv/avi/webm/flv，mp4 默认 H264+AAC，另有 H264(nvenc)、MPEG4、XVID 与 AC3/MP3/PCM 编码（src/avp/encoder-options.json#L2-L35）。组件共 9 类，层数未设上限。导出时长、超过 1080p 的分辨率、音频码率上限 README 均未声明；渲染速度取决于 Pillow 逐帧合成。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "mp4"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "9 类组件：波形频谱图片文字任意叠",
+    "工程复用：GUI 存 .avp，命令行复现",
+    "六种容器：六种容器可选多编码器",
+    "依赖极薄：numpy、Pillow、PyQt6 三件",
+    "跨三平台：三平台均有安装说明"
+  ],
+  "limits": [
+    "命令行模式同样先建 QApplication（cli.py 第 37 行），没有显示器/桌面会话时不能真正无头跑（src/avp/cli.py#L36-L37）",
+    "逐帧用 Pillow 合成，长视频导出慢；官方只建议把 Pillow 换成需自行编译的 Pillow-SIMD（README.md#L161）",
+    "系统必须预装 ffmpeg 并进 PATH，仓库不带二进制；Windows 还要用 GPL static build（README.md#L52-L58）",
+    "Windows 安装说明推荐用 Microsoft Store 版 Python，Store 版对文件系统与打包有限制，换路径容易踩坑（README.md#L50-L53）",
+    "ffmpeg 不在 PATH 时 GUI 能开但导出必失败，先用 `ffmpeg -version` 验证",
+    "命令行 -c 的层号从 0 开始，层顺序决定遮挡关系，写反了文字会被背景盖住",
+    "长音频导出前先在 GUI 里关掉实时预览（--no-preview），否则渲染更慢"
+  ],
+  "signatureZh": "Qt 组件叠加可视化，命令行批量出 MP4",
+  "chooseWhenZh": "要快速把播客/音乐做成带波形、频谱、封面和字幕的 MP4，且愿意用 GUI 调版式的人",
+  "avoidWhenZh": "命令行模式同样先建 QApplication（cli.py 第 37 行），没有显示器/桌面会话时不能真正无头跑（src/avp/cli.py#L36-L37）",
+  "contrastWith": [
+    "luisbocanegra__plasma-audio-visualizer",
+    "kosua20__MIDIVisualizer"
+  ]
+}

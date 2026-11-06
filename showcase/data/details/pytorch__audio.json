@@ -1,0 +1,189 @@
+{
+  "id": "pytorch__audio",
+  "taglineZh": "PyTorch 音频库，频谱变换与 Kaldi 兼容接口",
+  "summaryZh": "TorchAudio 是 PyTorch 官方音频库，定位是给机器学习做音频处理：频谱、Mel、MFCC、Resample 等变换，forced_align 对齐、MuLaw 编解码，以及数据集 DataLoader 与 Kaldi 兼容的 fbank/mfcc 接口。README 写明它主要服务 ML、不是通用信号处理库。2.9 起进入维护期，把 I/O 交给 TorchCodec，load 的 normalize/buffer_size/backend 参数成了兼容占位。示例脚本不再维护。",
+  "whatItMakes": [
+    {
+      "type": "频谱图张量",
+      "exampleZh": "把 16kHz 波形变成梅尔频谱张量",
+      "strength": "核心能力"
+    },
+    {
+      "type": "Kaldi 语音特征",
+      "exampleZh": "出 80 维 fbank 特征喂给 ASR",
+      "strength": "核心能力"
+    },
+    {
+      "type": "强制对齐结果",
+      "exampleZh": "把音素与发射矩阵对齐成帧级标签",
+      "strength": "附加能力"
+    },
+    {
+      "type": "重采样与格式转换",
+      "exampleZh": "把 48k 音频降到 16k 再进模型",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给 ASR/音频分类模型做特征前端",
+      "whoZh": "语音算法工程师",
+      "whyZh": "fbank/mfcc 与 Kaldi 对齐，特征层可复用现有训练脚本",
+      "deliverableZh": "特征张量与模型",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "在 GPU 上批量做频谱增广",
+      "whoZh": "音频 ML 研究者",
+      "whyZh": "变换全在 torch 算子上，能进 autograd 与 DataLoader 并行",
+      "deliverableZh": "训练用特征批次",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "要通用 DSP 滤波器设计",
+      "whoZh": "音频工程师",
+      "whyZh": "README 明说主要面向 ML，不是通用信号处理库",
+      "deliverableZh": "不适用",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "锁定旧版 torch 的推理服务",
+      "whoZh": "部署工程师",
+      "whyZh": "本仓库要求 torch>=2.11，旧 torch 环境需换兼容版本",
+      "deliverableZh": "需升级 torch",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "变换全家桶",
+      "descZh": "谱图/梅尔/MFCC/重采样"
+    },
+    {
+      "titleZh": "Kaldi 兼容",
+      "descZh": "fbank/mfcc 与 Kaldi 对齐"
+    },
+    {
+      "titleZh": "强制对齐",
+      "descZh": "音素级强制对齐接口"
+    },
+    {
+      "titleZh": "数据集加载",
+      "descZh": "常见音频数据集 DataLoader"
+    },
+    {
+      "titleZh": "不钉 torch",
+      "descZh": "2.11 起未来版本都能用"
+    }
+  ],
+  "ceilingsZh": "它没有固定采样率：Resample 与 MelSpectrogram 的采样率、n_fft、hop_length、n_mels 全由调用方传参，README 只列能力不给默认值（README#L40-L43）。硬边界是版本：本仓库 setup.py 要求 torch>=2.11（#L133）、Python>=3.10（#L126），Windows 在 classifier 里（#L111）。I/O 不再是自研后端，load 走 TorchCodec 的 AudioDecoder（__init__.py#L28-L39），能解什么格式取决于 torchcodec 编进去的 FFmpeg。位深与声道由 torchcodec 决定，README 未声明；仓库本身不产出成品音频。",
+  "workflowZh": "五步：装 torch 2.11 → 装 torchaudio 与 torchcodec → 加载音频 → 变换 → 存特征或 wav",
+  "workflow": [
+    {
+      "stepZh": "装 torch",
+      "detailZh": "pip install torch>=2.11 的 Windows 轮子（cu121 或 cpu）",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "装本库",
+      "detailZh": "pip install torchaudio，另按 torchcodec 文档装二进制与 FFmpeg",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "读音频",
+      "detailZh": "torchaudio.load('a.wav') 返回波形与 sr，实际由 TorchCodec 解码",
+      "effortZh": "秒级"
+    },
+    {
+      "stepZh": "做变换",
+      "detailZh": "MelSpectrogram(sample_rate=16000, n_mels=80) 前向得频谱张量",
+      "effortZh": "秒级"
+    },
+    {
+      "stepZh": "存结果",
+      "detailZh": "torch.save 存 .pt，或 torchaudio.save 写回 wav",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "KinWaiCheuk__nnAudio",
+      "whenZh": "要官方维护与 Kaldi 兼容接口选 torchaudio；要纯 torch 实现的 CQT/mel 且不依赖 torchcodec 选 nnAudio。",
+      "adviceZh": "要官方维护与 Kaldi 兼容接口选 torchaudio；要纯 torch 实现的 CQT/mel 且不依赖 torchcodec 选 nnAudio。"
+    },
+    {
+      "vs": "libAudioFlux__audioFlux",
+      "whenZh": "要在训练图里做可微变换选 torchaudio；要 CPU 上批量提几百种特征数组选 audioFlux。",
+      "adviceZh": "要在训练图里做可微变换选 torchaudio；要 CPU 上批量提几百种特征数组选 audioFlux。"
+    },
+    {
+      "vs": "JorenSix__TarsosDSP",
+      "whenZh": "要 GPU 张量与深度学习管线选 torchaudio；要 Java 实时处理与轻量部署选 TarsosDSP。",
+      "adviceZh": "要 GPU 张量与深度学习管线选 torchaudio；要 Java 实时处理与轻量部署选 TarsosDSP。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L28-L35",
+      "noteZh": "面向 ML 而非通用 DSP 的定位"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L40-L43",
+      "noteZh": "常用变换与 Kaldi 兼容接口列表"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L17-L20",
+      "noteZh": "维护期，2.8 弃用 2.9 移除"
+    },
+    {
+      "field": "cons[1]",
+      "source": "setup.py#L133",
+      "noteZh": "install_requires torch>=2.11"
+    },
+    {
+      "field": "cons[2]",
+      "source": "src/torchaudio/__init__.py#L28-L39",
+      "noteZh": "load 依赖 TorchCodec，旧参数被忽略"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "它没有固定采样率：Resample 与 MelSpectrogram 的采样率、n_fft、hop_length、n_mels 全由调用方传参，README 只列能力不给默认值（README#L40-L43）。硬边界是版本：本仓库 setup.py 要求 torch>=2.11（#L133）、Python>=3.10（#L126），Windows 在 classifier 里（#L111）。I/O 不再是自研后端，load 走 TorchCodec 的 AudioDecoder（__init__.py#L28-L39），能解什么格式取决于 torchcodec 编进去的 FFmpeg。位深与声道由 torchcodec 决定，README 未声明；仓库本身不产出成品音频。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "png",
+      "npy"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "变换全家桶：谱图/梅尔/MFCC/重采样",
+    "Kaldi 兼容：fbank/mfcc 与 Kaldi 对齐",
+    "强制对齐：音素级强制对齐接口",
+    "数据集加载：常见音频数据集 DataLoader",
+    "不钉 torch：2.11 起未来版本都能用"
+  ],
+  "limits": [
+    "已进入维护期，2.8 弃用、2.9 移除了一批用户功能，能力边界在被主动收窄",
+    "本仓库 setup.py 要求 torch>=2.11，本机 torch 2.6.0 不满足，得先换一大轮 torch",
+    "2.9 起 torchaudio.load 依赖 TorchCodec 与 FFmpeg 动态库，缺了直接 ImportError",
+    "examples/ 明确不再维护，脚本可能跑不动，只剩 tutorials 可参考",
+    "pip install torchaudio 会按最新版拉 torch>=2.11，动辄替换本机 3.5GB 的 torch",
+    "Windows 上 torchcodec 需要额外 FFmpeg DLL，PATH 没配好会解码失败"
+  ],
+  "signatureZh": "PyTorch 音频库，频谱变换与 Kaldi 兼容接口",
+  "chooseWhenZh": "已经在 PyTorch 训练管线里、只需要稳定频谱变换与批处理 I/O 的语音/音频算法工程师",
+  "avoidWhenZh": "已进入维护期，2.8 弃用、2.9 移除了一批用户功能，能力边界在被主动收窄",
+  "contrastWith": [
+    "KinWaiCheuk__nnAudio",
+    "libAudioFlux__audioFlux"
+  ]
+}

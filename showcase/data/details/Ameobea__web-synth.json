@@ -1,0 +1,188 @@
+{
+  "id": "Ameobea__web-synth",
+  "taglineZh": "浏览器模块化合成器，WASM 跑音频线程",
+  "summaryZh": "Web Synth 是浏览器里的模块化合成与制作平台：WebAudio 图做骨架，每个合成器、效果器、可视化节点都是 Rust 编译出的 WebAssembly，跑在 AudioWorklet 音频线程。它提供 8 算子 FM、wavetable、MIDI 编辑器与导入导出、两个 looper、Faust/Soul 动态编译。代价是本地构建链极长（Rust nightly、wasm 工具链、just、Yarn，Faust 还要 Go），且只有浏览器 GUI，没有 CLI 批量出样。",
+  "whatItMakes": [
+    {
+      "type": "模块化 patch",
+      "exampleZh": "把合成器、效果、调制与可视化节点连成音频图",
+      "strength": "核心能力"
+    },
+    {
+      "type": "FM 合成",
+      "exampleZh": "8 算子多音 FM 加 wavetable 与调制矩阵",
+      "strength": "核心能力"
+    },
+    {
+      "type": "MIDI 编辑",
+      "exampleZh": "导入导出 MIDI、实时键盘录制与多选编辑",
+      "strength": "核心能力"
+    },
+    {
+      "type": "离线出样",
+      "exampleZh": "只有浏览器 GUI，无 CLI 批量渲染路径",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "模块化实验",
+      "whoZh": "声音设计爱好者",
+      "whyZh": "在浏览器里连 LFO、滤波器与 granular 节点做声音设计",
+      "deliverableZh": "可保存的 patch 与导出音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "FM 音色",
+      "whoZh": "合成器玩家",
+      "whyZh": "用 8 算子与 wavetable 捏音色并导出 MIDI",
+      "deliverableZh": "音色 patch 与 .mid",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "现场循环",
+      "whoZh": "实验音乐人",
+      "whyZh": "音频与 MIDI looper 组合做实时循环",
+      "deliverableZh": "现场 loop 会话",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量离线",
+      "whoZh": "自动化工程师",
+      "whyZh": "没有 CLI，批量渲染与定时任务不适用",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "WASM 音频",
+      "descZh": "Rust 节点跑在 AudioWorklet 线程"
+    },
+    {
+      "titleZh": "8 算子 FM",
+      "descZh": "多音 FM 加 wavetable 与调制矩阵"
+    },
+    {
+      "titleZh": "MIDI 编辑",
+      "descZh": "导入导出与实时键盘录制"
+    },
+    {
+      "titleZh": "Faust 编译",
+      "descZh": "浏览器内编译 DSP 并接进模块图"
+    },
+    {
+      "titleZh": "双循环器",
+      "descZh": "音频与 MIDI 循环各一"
+    }
+  ],
+  "ceilingsZh": "采样率跟随 WebAudio AudioContext，音频线程由 AudioWorklet + SharedArrayBuffer 承载；Justfile 列了 26 个直接拷进 public 的 wasm 模块（wavetable、granular、vocoder、compressor、equalizer、lfo 等）与 5 个走 wasm-bindgen 的模块（engine、midi、spectrum_viz、waveform_renderer、wav_decoder）。FM 合成器为 8 算子多音，wavetable 可导入 WaveEdit 表，另有两个 looper（音频与 MIDI）。最大轨数、同时发声数、导出位深与文件大小上限 README 未声明。",
+  "workflowZh": "四步：装工具链 → 编 wasm → 起前端 → 搭 patch 导出",
+  "workflow": [
+    {
+      "stepZh": "装工具链",
+      "detailZh": "装 Rust nightly、wasm32 target、wasm-bindgen-cli、wasm-opt、Node/Yarn 与 just",
+      "effortZh": "30–60 分钟"
+    },
+    {
+      "stepZh": "编译 wasm",
+      "detailZh": "just build-wasm 编 engine 与 26 个模块，产物拷进 src 与 public",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "起前端",
+      "detailZh": "just run 在 9000 端口起开发服务器，浏览器搭 patch 并导出 MIDI/WAV",
+      "effortZh": "20 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "chaosprint__glicol",
+      "whenZh": "想用一行行代码写声音图选 glicol；想拖模块搭 patch 并接 MIDI 编辑器选 web-synth",
+      "adviceZh": "想用一行行代码写声音图选 glicol；想拖模块搭 patch 并接 MIDI 编辑器选 web-synth"
+    },
+    {
+      "vs": "steffest__BassoonTracker",
+      "whenZh": "要做 tracker 风格的逐 tick 编排选 BassoonTracker；要模块化合成与 FM 选 web-synth",
+      "adviceZh": "要做 tracker 风格的逐 tick 编排选 BassoonTracker；要模块化合成与 FM 选 web-synth"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L5-L5",
+      "noteZh": "定位是浏览器内的合成与制作平台。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L19-L21",
+      "noteZh": "WASM 跑专门音频线程是低延迟的来源。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L27-L30",
+      "noteZh": "功能清单里的 8 算子 FM 合成器。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L31-L35",
+      "noteZh": "MIDI 导入导出在功能列表内。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "README.md#L37-L37",
+      "noteZh": "Faust 与 Soul 的浏览器内动态编译。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L59-L68",
+      "noteZh": "构建依赖清单很长，含 nightly Rust 与 wasm 工具链。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L51-L51",
+      "noteZh": "状态只存 localStorage，说明是纯浏览器应用。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L55-L55",
+      "noteZh": "README 自承文档可能过时，要对照 Justfile/CI。"
+    }
+  ],
+  "blockerZh": "构建工具链缺失：headless 包需要 Rust wasm32-unknown-unknown target、wasm-bindgen-cli、binaryen(wasm-opt)、just 与 yarn；本机 rustup 只装 x86_64-pc-windows-msvc（无 wasm32 target），wasm-bindgen/wasm-opt/just 全部缺失，rustc 还依赖 MSVC 链接器（本机无 MSVC）；仓库也没有提交预编译的 dist/wasm 产物。",
+  "whatItWouldNeed": "rustup target add wasm32-unknown-unknown；安装 wasm-bindgen-cli 与 binaryen；just + yarn；MSVC 链接器；或直接使用线上已部署的 headless bundle。",
+  "ceilingZh": "采样率跟随 WebAudio AudioContext，音频线程由 AudioWorklet + SharedArrayBuffer 承载；Justfile 列了 26 个直接拷进 public 的 wasm 模块（wavetable、granular、vocoder、compressor、equalizer、lfo 等）与 5 个走 wasm-bindgen 的模块（engine、midi、spectrum_viz、waveform_renderer、wav_decoder）。FM 合成器为 8 算子多音，wavetable 可导入 WaveEdit 表，另有两个 looper（音频与 MIDI）。最大轨数、同时发声数、导出位深与文件大小上限 README 未声明。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "mid"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "WASM 音频：Rust 节点跑在 AudioWorklet 线程",
+    "8 算子 FM：多音 FM 加 wavetable 与调制矩阵",
+    "MIDI 编辑：导入导出与实时键盘录制",
+    "Faust 编译：浏览器内编译 DSP 并接进模块图",
+    "双循环器：音频与 MIDI 循环各一"
+  ],
+  "limits": [
+    "本地构建要 Rust nightly + wasm32 target + wasm-bindgen-cli + wasm-opt + Node/Yarn + just，Faust 支持还要 Go，分享后端还要 MySQL 与 diesel-cli（README.md#L59-L68）",
+    "纯浏览器 GUI，没有 CLI 出样路径；整页状态只在关标签页时序列化进 localStorage（README.md#L23、#L51）",
+    "README 自承构建文档可能过时，实际要对照 Justfile 与 CI 才能装对依赖（README.md#L55）",
+    "不要用 npm install 直接起：wasm 产物要靠 just build-wasm 生成，否则页面缺引擎胶水",
+    "AudioWorklet + SharedArrayBuffer 需要跨域隔离头，静态服务器没配 COOP/COEP 时音频线程起不来",
+    "移动端 UI 未优化，触屏基本无法操作"
+  ],
+  "signatureZh": "浏览器模块化合成器，WASM 跑音频线程",
+  "chooseWhenZh": "想在浏览器里搭模块化合成 patch、用 Faust/Soul 写 DSP，并直接导出 MIDI/WAV 的实验者",
+  "avoidWhenZh": "本地构建要 Rust nightly + wasm32 target + wasm-bindgen-cli + wasm-opt + Node/Yarn + just，Faust 支持还要 Go，分享后端还要 MySQL 与 diesel-cli（README.md#L59-L68）",
+  "contrastWith": [
+    "chaosprint__glicol",
+    "steffest__BassoonTracker"
+  ]
+}

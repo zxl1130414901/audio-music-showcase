@@ -1,0 +1,189 @@
+{
+  "id": "mlm-games__yadaw",
+  "taglineZh": "Rust 写的轻量音效 DAW，录音后导出 wav",
+  "summaryZh": "Yadaw 是 Rust 写的极简 DAW，界面用 egui，把录音轨、MIDI 轨、钢琴卷、自动化曲线、按轨插件链与混音器塞进不到 20MB 的应用，Ctrl+E 可导出 loop 区间或整工程。默认 44.1kHz、录音缓冲固定 5 分钟、音频块上限 8192。代价是插件只支持 CLAP/LV2/VST3 且 VST3 仍实验性，没有 Windows release 只能自己编译，也没有命令行渲染，批量出样只能手点。",
+  "whatItMakes": [
+    {
+      "type": "音效剪辑成品",
+      "exampleZh": "三段音效拼在一条音频轨，Ctrl+E 导出 8 秒 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "多轨录音工程",
+      "exampleZh": "两条录音轨加一条 MIDI 轨，挂混音器导出",
+      "strength": "核心能力"
+    },
+    {
+      "type": "MIDI 编曲片段",
+      "exampleZh": "钢琴卷画音符，挂 CLAP 乐器后渲染",
+      "strength": "核心能力"
+    },
+    {
+      "type": "插件处理链输出",
+      "exampleZh": "轨上串 LV2 EQ 与 VST3 压缩器再导出",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给游戏做短音效并快速试听",
+      "whoZh": "独立游戏开发者",
+      "whyZh": "录音、剪辑、混音、导出在同一窗口，体积小启动快",
+      "deliverableZh": "wav 音效片段",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "播客或视频粗剪配乐",
+      "whoZh": "内容创作者",
+      "whyZh": "时间线与自动化够用，但导出后还要自己转码",
+      "deliverableZh": "wav 片段，需外部转码",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "做 MIDI demo 验证乐器插件",
+      "whoZh": "插件开发者",
+      "whyZh": "CLAP/LV2/VST3 都能挂，钢琴卷可直接画音符",
+      "deliverableZh": "插件渲染的 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "全自动批量出音效",
+      "whoZh": "CI 维护者",
+      "whyZh": "无 CLI 渲染入口，菜单导出必须人工点",
+      "deliverableZh": "无法自动化",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "5 分钟录音缓冲",
+      "descZh": "44.1kHz 下预分配，长录音有硬上限"
+    },
+    {
+      "titleZh": "三格式导出",
+      "descZh": "wav/flac/ogg，位深 16/24/32"
+    },
+    {
+      "titleZh": "插件三协议",
+      "descZh": "CLAP/LV2/VST3 按轨挂载"
+    },
+    {
+      "titleZh": "自动化曲线",
+      "descZh": "轨道展开后画点控制参数"
+    },
+    {
+      "titleZh": "单二进制体积",
+      "descZh": "README 称整体小于 20MB"
+    }
+  ],
+  "ceilingsZh": "参数可查：默认采样率 44100，MAX_BUFFER_SIZE 8192，录音缓冲固定 5 分钟（constants.rs#L4-L6）；导出默认 wav，另有 flac/ogg，位深 16/24/32，wav 的 32 位走 F32，flac 拒绝 32 位 float，ogg 一律 F32（audio_export.rs#L50-L58）。工程格式 .yadaw 与 DAWproject 1.0，可导入 wav/mp3/flac/ogg/m4a/aac 与 mid/midi。插件只挂 CLAP/LV2/VST3，VST3 不支持 timer-based UI（README#L19）。最大轨数、采样率上限、渲染时长 README 未声明。",
+  "workflowZh": "五步：cargo 编译 → 建轨录音或导入素材 → MIDI/插件加音 → 自动化调参 → Ctrl+E 导出",
+  "workflow": [
+    {
+      "stepZh": "编译",
+      "detailZh": "rustup 装 1.98 后 cargo run，缺 pkgconfig/lv2 头文件需先补",
+      "effortZh": "20–40 分钟（fat LTO）"
+    },
+    {
+      "stepZh": "建轨",
+      "detailZh": "Add Audio Track，点红圈 arm 轨道，空格开始录音",
+      "effortZh": "1–2 分钟"
+    },
+    {
+      "stepZh": "编曲",
+      "detailZh": "Add MIDI Track，+ Plugins 挂乐器，钢琴卷画音符",
+      "effortZh": "随片段"
+    },
+    {
+      "stepZh": "调参",
+      "detailZh": "展开轨道加自动化点，或拖插件链顺序",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "Ctrl+E，选 loop 区间或整工程，再选输出路径",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "stargatedaw__stargate",
+      "whenZh": "要极简音效剪辑与 CLAP/LV2 插件选 yadaw；要更完整的桌面 DAW 功能与成熟构建选 Stargate。",
+      "adviceZh": "要极简音效剪辑与 CLAP/LV2 插件选 yadaw；要更完整的桌面 DAW 功能与成熟构建选 Stargate。"
+    },
+    {
+      "vs": "DBraun__DawDreamer",
+      "whenZh": "要人工 GUI 剪素材选 yadaw；要在 Python 里脚本化建图、批量渲染选 DawDreamer。",
+      "adviceZh": "要人工 GUI 剪素材选 yadaw；要在 Python 里脚本化建图、批量渲染选 DawDreamer。"
+    },
+    {
+      "vs": "pkalogiros__AudioMass",
+      "whenZh": "要桌面本地文件与插件选 yadaw；要浏览器里零安装剪一段音选 AudioMass。",
+      "adviceZh": "要桌面本地文件与插件选 yadaw；要浏览器里零安装剪一段音选 AudioMass。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L3-L5",
+      "noteZh": "定位为轻量音效 DAW，体积小于 20MB"
+    },
+    {
+      "field": "pros[2]",
+      "source": "src/audio_export.rs#L50-L58",
+      "noteZh": "wav/flac/ogg 与 16/24/32 位深映射"
+    },
+    {
+      "field": "pros[3]",
+      "source": "src/constants.rs#L4-L6",
+      "noteZh": "缓冲 8192、录音 5 分钟、默认 44100"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L11; Cargo.toml#L7-L11",
+      "noteZh": "无 Windows release，要求 rust 1.98/edition 2024"
+    },
+    {
+      "field": "cons[2]",
+      "source": "quick_start.md#L43-L50",
+      "noteZh": "导出只能走 File 菜单，且写只导出 WAV"
+    }
+  ],
+  "blockerZh": "Rust workspace（edition 2024，rust-version 1.98）是 egui/Trunk 的 GUI DAW，无 headless 渲染或导出 CLI；cargo 构建需拉取 cpal/midir/symphonia/egui 全量依赖，产物只能开窗口手动操作。",
+  "whatItWouldNeed": "Rust 1.98（edition 2024）、MSVC Build Tools 或 MinGW、pkgconfig 与 LV2 头文件；再需要声卡与人工建轨、导出。",
+  "ceilingZh": "参数可查：默认采样率 44100，MAX_BUFFER_SIZE 8192，录音缓冲固定 5 分钟（constants.rs#L4-L6）；导出默认 wav，另有 flac/ogg，位深 16/24/32，wav 的 32 位走 F32，flac 拒绝 32 位 float，ogg 一律 F32（audio_export.rs#L50-L58）。工程格式 .yadaw 与 DAWproject 1.0，可导入 wav/mp3/flac/ogg/m4a/aac 与 mid/midi。插件只挂 CLAP/LV2/VST3，VST3 不支持 timer-based UI（README#L19）。最大轨数、采样率上限、渲染时长 README 未声明。",
+  "capabilities": {
+    "maxDurationZh": "5 分钟",
+    "formatsZh": [
+      "wav",
+      "flac",
+      "ogg"
+    ],
+    "sampleRateZh": "44100 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "5 分钟录音缓冲：44.1kHz 下预分配，长录音有硬上限",
+    "三格式导出：wav/flac/ogg，位深 16/24/32",
+    "插件三协议：CLAP/LV2/VST3 按轨挂载",
+    "自动化曲线：轨道展开后画点控制参数",
+    "单二进制体积：README 称整体小于 20MB"
+  ],
+  "limits": [
+    "README 明说 Windows 没有 release 构建，只能自己编译，且要求 rust 1.98 + edition 2024",
+    "插件只支持 CLAP/LV2/VST3，VST3 标注为实验性且不支持 timer-based UI",
+    "纯 GUI 无命令行渲染入口，批量出样只能人工点菜单导出",
+    "quick_start 写“Exports to WAV only”，与源码里 wav/flac/ogg 三种格式不一致",
+    "无 Windows 安装包，缺 pkgconfig、lv2 头文件或链接器会直接编译失败",
+    "release 用 lto=fat + codegen-units=1，USB HDD 上编译可能拖到半小时以上"
+  ],
+  "signatureZh": "Rust 写的轻量音效 DAW，录音后导出 wav",
+  "chooseWhenZh": "需要轻量 DAW 快速剪短音效、且手上有 Rust 1.98 工具链愿意自己编译的人",
+  "avoidWhenZh": "README 明说 Windows 没有 release 构建，只能自己编译，且要求 rust 1.98 + edition 2024",
+  "contrastWith": [
+    "stargatedaw__stargate",
+    "DBraun__DawDreamer"
+  ]
+}

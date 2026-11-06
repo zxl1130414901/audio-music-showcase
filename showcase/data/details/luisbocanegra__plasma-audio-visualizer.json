@@ -1,0 +1,187 @@
+{
+  "id": "luisbocanegra__plasma-audio-visualizer",
+  "taglineZh": "KDE Plasma 6 的 CAVA 频谱小组件",
+  "summaryZh": "plasma-audio-visualizer 是 KDE Plasma 6 的桌面小组件，频谱数据交给 CAVA 采集（C++ 插件直连或 Qt/Python 回退），QML 画成柱状、波形或圆形频谱挂在面板或桌面上。默认 60 fps、25 根柱、44.1 kHz/16 bit 输入，可调灵敏度、噪声抑制与 5 段 EQ。分发有 AUR、OBS 与 KDE Store，安装要补 cava 与 python-websockets。它只在 Plasma 6/Linux 跑，也没有导出接口。",
+  "whatItMakes": [
+    {
+      "type": "桌面频谱",
+      "exampleZh": "CAVA 采样后画成柱状/波形/圆形频谱挂在面板",
+      "strength": "核心能力"
+    },
+    {
+      "type": "外观调节",
+      "exampleZh": "柱数、帧率、颜色、圆环与 idle 隐藏均可配",
+      "strength": "核心能力"
+    },
+    {
+      "type": "输入源选择",
+      "exampleZh": "可选 CAVA 输入设备与声道/单声道混合方式",
+      "strength": "可用"
+    },
+    {
+      "type": "导出与跨平台",
+      "exampleZh": "只有实时渲染，无导出项，且仅 Plasma 6/Linux",
+      "strength": "有限"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "桌面装饰",
+      "whoZh": "KDE Plasma 6 用户",
+      "whyZh": "在面板挂一条跟音乐跳动的频谱",
+      "deliverableZh": "桌面频谱小组件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "音频调试",
+      "whoZh": "Linux 桌面调音用户",
+      "whyZh": "用柱状图粗看系统输出的频段能量",
+      "deliverableZh": "实时频谱视图",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "主题定制",
+      "whoZh": "桌面主题作者",
+      "whyZh": "改颜色、圆环与填充，配合桌面主题",
+      "deliverableZh": "定制配色配置",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "出视频素材",
+      "whoZh": "视频创作者",
+      "whyZh": "没有导出接口，做可视化视频不合适",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "CAVA 驱动",
+      "descZh": "频谱由 CAVA 采集，低开销"
+    },
+    {
+      "titleZh": "双通信模式",
+      "descZh": "C++ 插件或 Qt/Python 回退"
+    },
+    {
+      "titleZh": "柱状/波形",
+      "descZh": "visualizerStyle 可切换显示形态"
+    },
+    {
+      "titleZh": "圆环模式",
+      "descZh": "circleMode 可调半径与填充"
+    },
+    {
+      "titleZh": "idle 隐藏",
+      "descZh": "静音 5 s 后自动隐藏"
+    }
+  ],
+  "ceilingsZh": "配置默认 framerate 60 fps、barCount 25 根柱、sampleRate 44100、sampleBits 16、inputChannels 2、lowerCutoffFreq 50 Hz、higherCutoffFreq 10000 Hz、noiseReduction 77、outputChannels mono、autoconnect 2；视觉上 barWidth 2、blockHeight 2、blockSpacing 2、barGap 5、circleModeSize 0.5，idleTimer 5 s。最大声道数、采样率上限与尺寸上限 README 未声明；README 与 config 都没有导出图片/视频的参数，只能桌面实时显示。",
+  "workflowZh": "三步：装依赖 → 装小组件 → 配置面板",
+  "workflow": [
+    {
+      "stepZh": "装依赖",
+      "detailZh": "按发行版装 cava、qt6-websockets 与 python-websockets",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "装小组件",
+      "detailZh": "KDE Store 或 kpackagetool6 -t Plasma/Applet -i 本地 .plasmoid",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "配置",
+      "detailZh": "添到面板，选输入源与样式，必要时编 C++ 插件降开销",
+      "effortZh": "10–30 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "djfun__audio-visualizer-python",
+      "whenZh": "要在 Windows/macOS 出可视化视频选 djfun；要在 KDE 桌面常驻频谱选本项目",
+      "adviceZh": "要在 Windows/macOS 出可视化视频选 djfun；要在 KDE 桌面常驻频谱选本项目"
+    },
+    {
+      "vs": "kosua20__MIDIVisualizer",
+      "whenZh": "要 MIDI 钢琴卷帘视频选 MIDIVisualizer；要实时音频频谱小组件选本项目",
+      "adviceZh": "要 MIDI 钢琴卷帘视频选 MIDIVisualizer；要实时音频频谱小组件选本项目"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L12-L12",
+      "noteZh": "README 一句话说明它是 Plasma 桌面上的 CAVA 频谱小组件。"
+    },
+    {
+      "field": "pros[0]",
+      "source": "README.md#L12-L12",
+      "noteZh": "频谱采集依赖 CAVA。"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L25-L25",
+      "noteZh": "AUR 安装命令；README 另有 OBS 与 KDE Store 渠道。"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L49-L49",
+      "noteZh": "C++ 插件不可用时退回 Qt/Python websockets。"
+    },
+    {
+      "field": "pros[3]",
+      "source": "package/contents/config/main.xml#L10-L14",
+      "noteZh": "帧率默认 60、柱数默认 25 的配置项。"
+    },
+    {
+      "field": "cons[0]",
+      "source": "package/metadata.json#L26-L26",
+      "noteZh": "只面向 Plasma 6 API。"
+    },
+    {
+      "field": "cons[1]",
+      "source": "README.md#L40-L40",
+      "noteZh": "运行时必须有 cava 与两套 websockets。"
+    },
+    {
+      "field": "cons[2]",
+      "source": "CMakeLists.txt#L6-L7",
+      "noteZh": "编 C++ 插件要求 Qt 6.6 与 KF6 6.0。"
+    }
+  ],
+  "blockerZh": "平台与产物双重不符：它是 KDE Plasma 6 的 C++/Qt6 QML 插件（CMake 构建，仅 Linux），Windows 上没有 Plasma 桌面，无法加载；本机也没有 cmake/MSVC。且产物是桌面频谱动画，不产生音频文件。",
+  "whatItWouldNeed": "Linux + KDE Plasma 6 + Qt6 + CAVA + cmake；或在 OBS 中用 cava 采集可视化。",
+  "ceilingZh": "配置默认 framerate 60 fps、barCount 25 根柱、sampleRate 44100、sampleBits 16、inputChannels 2、lowerCutoffFreq 50 Hz、higherCutoffFreq 10000 Hz、noiseReduction 77、outputChannels mono、autoconnect 2；视觉上 barWidth 2、blockHeight 2、blockSpacing 2、barGap 5、circleModeSize 0.5，idleTimer 5 s。最大声道数、采样率上限与尺寸上限 README 未声明；README 与 config 都没有导出图片/视频的参数，只能桌面实时显示。",
+  "capabilities": {
+    "maxDurationZh": "5 秒",
+    "formatsZh": [
+      "无音频输出"
+    ],
+    "sampleRateZh": "10000 Hz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "CAVA 驱动：频谱由 CAVA 采集，低开销",
+    "双通信模式：C++ 插件或 Qt/Python 回退",
+    "柱状/波形：visualizerStyle 可切换显示形态",
+    "圆环模式：circleMode 可调半径与填充",
+    "idle 隐藏：静音 5 s 后自动隐藏"
+  ],
+  "limits": [
+    "只支持 KDE Plasma 6，metadata 的 X-Plasma-API-Minimum-Version 为 6.0，Windows 没有 plasmoid 宿主（package/metadata.json#L26）",
+    "运行时要 cava + qt6-websockets + python-websockets（README.md#L36-L40）",
+    "可选 C++ 插件要额外装 extra-cmake-modules、libplasma 并满足 Qt 6.6/KF6 6.0，CMake 门槛比纯 QML 高（README.md#L74-L81、CMakeLists.txt#L6-L16）",
+    "从 KDE Store 装完必须补 cava 与 python-websockets，否则小组件起不来",
+    "C++ 插件要写对 QML_IMPORT_PATH 并重启 Plasma 会话才生效",
+    "输入源选错（默认 autoconnect=2）会一直显示静音"
+  ],
+  "signatureZh": "KDE Plasma 6 的 CAVA 频谱小组件",
+  "chooseWhenZh": "用 KDE Plasma 6 桌面、想在面板上挂一条随播放跳动的频谱条的人",
+  "avoidWhenZh": "只支持 KDE Plasma 6，metadata 的 X-Plasma-API-Minimum-Version 为 6.0，Windows 没有 plasmoid 宿主（package/metadata.json#L26）",
+  "contrastWith": [
+    "djfun__audio-visualizer-python",
+    "kosua20__MIDIVisualizer"
+  ]
+}

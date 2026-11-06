@@ -1,0 +1,183 @@
+{
+  "id": "libAudioFlux__audioFlux",
+  "taglineZh": "C 内核时频变换库，高效批量音频特征流水线",
+  "summaryZh": "audioFlux 是 C 内核加 Python 绑定的音频分析库：时频侧提供 BFT/CWT/CQT/VQT 等十余种变换，BFT 支持 linear 到 log 七种频率刻度；特征侧有 spectral、xxcc、deconv、chroma，MIR 侧有 pitch、onset、hpss。README 声明跨 Linux/macOS/Windows/iOS/Android，pip 装轮子，适合批量特征流水线；但 Windows 只能装预编译轮子，源码构建会被 setup.py 直接拒绝。",
+  "whatItMakes": [
+    {
+      "type": "谱特征矩阵",
+      "exampleZh": "STFT/Mel/MFCC 批量输出 NumPy 数组",
+      "strength": "核心能力"
+    },
+    {
+      "type": "MIR 序列",
+      "exampleZh": "pitch/onset/hpss 的逐帧结果",
+      "strength": "核心能力"
+    },
+    {
+      "type": "检索特征",
+      "exampleZh": "chroma 与多种刻度用于翻唱识别",
+      "strength": "附加能力"
+    },
+    {
+      "type": "谱图 png",
+      "exampleZh": "display 模块画波形与谱图",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "为训练集批量抽 Mel/MFCC/CQT 特征",
+      "whoZh": "音频机器学习工程师",
+      "whyZh": "C 内核吞吐高，benchmark 有与 librosa 的对比",
+      "deliverableZh": "npy/csv 特征矩阵",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做乐器调音或音高跟踪原型",
+      "whoZh": "音乐应用开发者",
+      "whyZh": "pitch 提供 YIN/STFT 等算法，TuneTrack 面向乐器",
+      "deliverableZh": "音高序列与调音数据",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做分类前的谱特征对比实验",
+      "whoZh": "算法研究员",
+      "whyZh": "同一份数据可切七种频率刻度与多种变换",
+      "deliverableZh": "对比图表与特征文件",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "在移动端/边缘设备做实时特征",
+      "whoZh": "端侧音频开发者",
+      "whyZh": "README 声明支持 iOS/Android，底层 C 便于移植",
+      "deliverableZh": "端侧特征计算模块",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "十余种变换",
+      "descZh": "BFT/CWT/CQT/VQT 等"
+    },
+    {
+      "titleZh": "七种刻度",
+      "descZh": "linear 到 log 的心理声学刻度"
+    },
+    {
+      "titleZh": "MIR 三件套",
+      "descZh": "pitch/onset/hpss 直接调用"
+    },
+    {
+      "titleZh": "预编译轮子",
+      "descZh": "pip 装 Linux/Windows 轮子"
+    }
+  ],
+  "ceilingsZh": "采样率未声明固定值：示例从 af.read 拿到 sr 后传给 STFT，display 的 y_coords 默认 samplate=32000（python/audioflux/stft.py 第 363 行）。STFT 默认 radix2_exp=12（窗长 4096）、slide_length=1024（stft.py 第 69 行），窗口类型默认 RECT；Mel/MFCC 示例常用 128 mel 与 13 维系数。计算在 C 侧完成，无 GPU/权重/显存概念。仓库版本文件为 0.1.9（__version__.py 第 3 行），README 的 New Features 已写到 v0.1.10（第 37 行），版本说明不同步。",
+  "workflowZh": "四步：pip 安装 → af.read 读音频 → 构造 STFT/Mel 算谱 → 接特征与 MIR 存盘",
+  "workflow": [
+    {
+      "stepZh": "安装自检",
+      "detailZh": "pip install audioflux，import 后跑 af.utils.sample_path('220') 的示例",
+      "effortZh": "5-10 分钟"
+    },
+    {
+      "stepZh": "读音频算谱",
+      "detailZh": "af.read 得到 sr 与波形，按 sr 构造 STFT/MelBanks",
+      "effortZh": "15-30 分钟"
+    },
+    {
+      "stepZh": "接特征",
+      "detailZh": "用 spectral/xxcc/chroma 与 pitch/onset/hpss 组合特征",
+      "effortZh": "30 分钟起"
+    },
+    {
+      "stepZh": "存盘",
+      "detailZh": "numpy 存 npy/csv，或用 display 输出 png",
+      "effortZh": "10 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "tyiannak__pyAudioAnalysis",
+      "whenZh": "要更多时频变换与 C 级吞吐选 audioFlux；要成品分类/分段/回归流程选 pyAudioAnalysis。",
+      "adviceZh": "要更多时频变换与 C 级吞吐选 audioFlux；要成品分类/分段/回归流程选 pyAudioAnalysis。"
+    },
+    {
+      "vs": "JorenSix__TarsosDSP",
+      "whenZh": "Python 批量流水线选 audioFlux；Java/Android 实时块处理选 TarsosDSP。",
+      "adviceZh": "Python 批量流水线选 audioFlux；Java/Android 实时块处理选 TarsosDSP。"
+    },
+    {
+      "vs": "MTG__essentia",
+      "whenZh": "要大量即用型音乐描述子选 Essentia；要自己切变换与刻度做实验选 audioFlux。",
+      "adviceZh": "要大量即用型音乐描述子选 Essentia；要自己切变换与刻度做实验选 audioFlux。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "README.md#L74-L89",
+      "noteZh": "多种变换与七种频率刻度"
+    },
+    {
+      "field": "pros[1]",
+      "source": "README.md#L125-L127",
+      "noteZh": "pitch/onset/hpss 接口"
+    },
+    {
+      "field": "pros[2]",
+      "source": "README.md#L133",
+      "noteZh": "跨 Linux/macOS/Windows/iOS/Android"
+    },
+    {
+      "field": "cons[0]",
+      "source": "setup.py#L13-L15",
+      "noteZh": "Windows 源码构建直接报错"
+    },
+    {
+      "field": "cons[1]",
+      "source": "python/audioflux/stft.py#L69",
+      "noteZh": "radix2_exp 与 slide_length 默认值"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "python/audioflux/stft.py#L363",
+      "noteZh": "y_coords 默认 samplate=32000"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "采样率未声明固定值：示例从 af.read 拿到 sr 后传给 STFT，display 的 y_coords 默认 samplate=32000（python/audioflux/stft.py 第 363 行）。STFT 默认 radix2_exp=12（窗长 4096）、slide_length=1024（stft.py 第 69 行），窗口类型默认 RECT；Mel/MFCC 示例常用 128 mel 与 13 维系数。计算在 C 侧完成，无 GPU/权重/显存概念。仓库版本文件为 0.1.9（__version__.py 第 3 行），README 的 New Features 已写到 v0.1.10（第 37 行），版本说明不同步。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "csv",
+      "png"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "十余种变换：BFT/CWT/CQT/VQT 等",
+    "七种刻度：linear 到 log 的心理声学刻度",
+    "MIR 三件套：pitch/onset/hpss 直接调用",
+    "预编译轮子：pip 装 Linux/Windows 轮子"
+  ],
+  "limits": [
+    "Windows 不支持源码构建：setup.py 第 13-15 行检测到 win 直接 raise ValueError，只能装 PyPI 轮子，官方源码构建文档也只有 Linux/macOS。",
+    "API 参数名反直觉：samplate 而非 sample_rate，窗长用 radix2_exp 的 2 的幂表示；STFT 默认 radix2_exp=12、slide_length=1024（stft.py 第 69 行）。",
+    "Python 3.13 若没有对应轮子，pip 会回退源码构建并因平台检查失败，需要另建 3.10/3.11 环境或 conda 绕过。",
+    "samplate 拼写就是官方参数名，写成 sample_rate 会直接 TypeError。",
+    "STFT 的 y_coords 默认 samplate=32000（stft.py 第 363 行），画图坐标与真实采样率不一致时需显式传参。",
+    "conda 走 tanky25 频道，公司内网未放行时会装不上。"
+  ],
+  "signatureZh": "C 内核时频变换库，高效批量音频特征流水线",
+  "chooseWhenZh": "需要批量、高性能时频特征与 MIR 指标，且用 Python 做流水线的音频算法工程师。",
+  "avoidWhenZh": "Windows 不支持源码构建：setup.py 第 13-15 行检测到 win 直接 raise ValueError，只能装 PyPI 轮子，官方源码构建文档也只有 Linux/macOS。",
+  "contrastWith": [
+    "tyiannak__pyAudioAnalysis",
+    "aubio__aubio"
+  ]
+}

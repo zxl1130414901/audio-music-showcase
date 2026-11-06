@@ -1,0 +1,185 @@
+{
+  "id": "Anjok07__ultimatevocalremovergui",
+  "taglineZh": "UVR：MDX/Demucs/VR 人声分离 GUI",
+  "summaryZh": "UVR 是 GUI 人声/伴奏分离器，内置自训 VR、MDX-Net 与 Demucs v3/v4 四轨模型，支持 ensemble、分段调优，可导出 WAV/FLAC/MP3。官方 Windows 安装包自带 Python/PyTorch。代价很硬：README 要求装在 C:\\ 主分区否则不稳定；只有 Tkinter GUI，separate.py 没有 CLI 入口；模型由应用内 Download Center 从 GitHub Releases 拉，无法直接走 HF 镜像。",
+  "whatItMakes": [
+    {
+      "type": "人声/伴奏两轨",
+      "exampleZh": "一首歌拆成 vocals 与 instrumental 两个 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "四轨分离",
+      "exampleZh": "Demucs v4 拆出 vocals/drums/bass/other 四轨",
+      "strength": "核心能力"
+    },
+    {
+      "type": "ensemble 结果",
+      "exampleZh": "多个 MDX/VR 模型叠加平均，减少单模型残留",
+      "strength": "核心能力"
+    },
+    {
+      "type": "时间拉伸/变调",
+      "exampleZh": "用 Rubber Band 对输出做 Time-Stretch 与 Pitch-Shift",
+      "strength": "辅助能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "翻唱/卡拉 OK 伴奏提取",
+      "whoZh": "翻唱爱好者与剪辑师",
+      "whyZh": "GUI 点选模型即可出干净伴奏，无需写代码",
+      "deliverableZh": "instrumental 与 vocals 音频",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "采样清洗",
+      "whoZh": "音乐制作人",
+      "whyZh": "可只取鼓或贝斯轨，再做时间拉伸/变调",
+      "deliverableZh": "单轨采样素材",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "播客/访谈分轨",
+      "whoZh": "播客后期",
+      "whyZh": "把人声与环境声分开后再降噪与混音",
+      "deliverableZh": "人声轨与背景轨",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "批量分轨",
+      "whoZh": "音频处理工程师",
+      "whyZh": "GUI 支持多文件排队，但无法脚本化，需人工守候",
+      "deliverableZh": "整批输出目录",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "多架构模型",
+      "descZh": "MDX/Demucs/VR 全覆盖"
+    },
+    {
+      "titleZh": "ensemble",
+      "descZh": "多模型输出叠加平均"
+    },
+    {
+      "titleZh": "分段显存控制",
+      "descZh": "segment_size 与 window 可调"
+    },
+    {
+      "titleZh": "应用内下载器",
+      "descZh": "Download Center 拉模型"
+    },
+    {
+      "titleZh": "多格式导出",
+      "descZh": "WAV/FLAC/MP3，位深可选"
+    }
+  ],
+  "ceilingsZh": "README 明写 GPU 转换最低 GTX 1060 6GB、推荐 ≥8GB VRAM，仅 64-bit；依赖 FFmpeg 处理非 WAV、Rubber Band 做 Time-Stretch/Pitch-Shift。界面 margin 选项为 44100/22050/11025，MDX segment_size 默认 256，Demucs segment 取 DEMUCS_SEGMENTS[0]，各模型采样率由自带 yaml 决定。导出支持 WAV/FLAC/MP3，WAV 位深 PCM_U8/16/24/32 与 32/64-bit Float，MP3 96–320kbps。未声明单个模型权重大小与最长音频时长。",
+  "workflowZh": "五步：安装包或手动 pip → 补 ffmpeg/rubberband → Download Center 拉模型 → GUI 选模型分离 → 导出音频",
+  "workflow": [
+    {
+      "stepZh": "安装",
+      "detailZh": "运行 UVR_v5.6.0_setup.exe（README 要求装 C:\\）或 python -m pip install -r requirements.txt",
+      "effortZh": "10–30 分钟"
+    },
+    {
+      "stepZh": "补依赖",
+      "detailZh": "把 ffmpeg.exe 与 rubberband.exe/sndfile.dll 放进应用目录",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "拉模型",
+      "detailZh": "Settings→Download Center 选 MDX/Demucs/VR 模型下载",
+      "effortZh": "10–40 分钟"
+    },
+    {
+      "stepZh": "分离",
+      "detailZh": "选输入/输出、模型、segment 与 window，点 Start Processing",
+      "effortZh": "1–10 分钟/曲"
+    },
+    {
+      "stepZh": "导出",
+      "detailZh": "在输出目录取 vocals/instrumental，按需选 WAV/FLAC/MP3",
+      "effortZh": "即时"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "ZFTurbo__Music-Source-Separation-Training",
+      "whenZh": "要 GUI 点选与 ensemble 选 UVR；要命令行批量、训练/评估分离模型选 ZFTurbo",
+      "adviceZh": "要 GUI 点选与 ensemble 选 UVR；要命令行批量、训练/评估分离模型选 ZFTurbo"
+    },
+    {
+      "vs": "sergree__matchering",
+      "whenZh": "UVR 负责分轨，matchering 负责母带匹配，二者是串联关系；只做母带不要拿 UVR 替代",
+      "adviceZh": "UVR 负责分轨，matchering 负责母带匹配，二者是串联关系；只做母带不要拿 UVR 替代"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L11-L13",
+      "noteZh": "定位为人声/伴奏分离应用，支持批量处理"
+    },
+    {
+      "field": "pros",
+      "source": "README.md#L23-L35",
+      "noteZh": "官方安装包自带 Python/PyTorch，并给出模型与架构列表"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "gui_data/constants.py#L503-L508",
+      "noteZh": "WAV/FLAC/MP3 导出、MP3 码率与 WAV 位深选项"
+    },
+    {
+      "field": "blockerZh",
+      "source": "README.md#L27-L31",
+      "noteZh": "必须安装到 C:\\\\ 主分区，副盘会不稳定"
+    },
+    {
+      "field": "cons",
+      "source": "gui_data/constants.py#L90-L104",
+      "noteZh": "模型与校验文件全部走 raw.githubusercontent 与 GitHub Releases"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "README 明写 GPU 转换最低 GTX 1060 6GB、推荐 ≥8GB VRAM，仅 64-bit；依赖 FFmpeg 处理非 WAV、Rubber Band 做 Time-Stretch/Pitch-Shift。界面 margin 选项为 44100/22050/11025，MDX segment_size 默认 256，Demucs segment 取 DEMUCS_SEGMENTS[0]，各模型采样率由自带 yaml 决定。导出支持 WAV/FLAC/MP3，WAV 位深 PCM_U8/16/24/32 与 32/64-bit Float，MP3 96–320kbps。未声明单个模型权重大小与最长音频时长。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "flac",
+      "mp3"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "需手动操作",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "多架构模型：MDX/Demucs/VR 全覆盖",
+    "ensemble：多模型输出叠加平均",
+    "分段显存控制：segment_size 与 window 可调",
+    "应用内下载器：Download Center 拉模型",
+    "多格式导出：WAV/FLAC/MP3，位深可选"
+  ],
+  "limits": [
+    "README 明确要求必须安装到 C:\\ 主分区，装到副盘会导致不稳定",
+    "只有 Tkinter GUI，separate.py 里没有 argparse 或 __main__，无法命令行批量处理",
+    "模型由应用内 Download Center 从 GitHub Releases（TRvlvr/model_repo）拉取，无法直接用 HF 镜像",
+    "GPU 转换最低 GTX 1060 6GB、推荐 8GB VRAM；requirements 锁 numpy 1.23.5 等旧版本",
+    "requirements 的 librosa 0.9.2 + numpy 1.23.5 与本机 Python 3.13/numpy 2.5 不兼容，必须另建 3.9 环境",
+    "非 WAV 输入必须有 ffmpeg.exe，否则 README 说会直接报错",
+    "模型只在应用内下载器里选，离线环境要手动把模型放进 gui_data 对应目录"
+  ],
+  "signatureZh": "UVR：MDX/Demucs/VR 人声分离 GUI",
+  "chooseWhenZh": "想用现成 GUI 一键把人声/伴奏拆开、不写代码的翻唱与剪辑用户",
+  "avoidWhenZh": "README 明确要求必须安装到 C:\\ 主分区，装到副盘会导致不稳定",
+  "contrastWith": [
+    "ZFTurbo__Music-Source-Separation-Training",
+    "sergree__matchering"
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "id": "ivcylc__OpenMusic",
+  "taglineZh": "QA-MDT 文本生音乐，16 kHz 高质量扩散模型",
+  "summaryZh": "OpenMusic 是 QA-MDT（质量感知掩码扩散 Transformer）的官方 PyTorch 实现，论文被 IJCAI-25 接收，并扩展到 inf-long 长音乐零样本生成（ICCV-25）。它以 flan-t5 为文本条件，配合 MDT 主干与声码器生成 16 kHz、10.24 秒的音乐片段；仓库含训练、推理、Gradio 与 diffusers 版本。复现门槛高：Linux conda 环境、多个外部 ckpt 与 CUDA 都是硬依赖。",
+  "whatItMakes": [
+    {
+      "type": "文本生音乐 wav",
+      "exampleZh": "infer_mos5.py 生成 16 kHz/10.24 s 片段",
+      "strength": "核心能力"
+    },
+    {
+      "type": "Web 试听页",
+      "exampleZh": "gradio_app.py 调提示与质量等级",
+      "strength": "附加能力"
+    },
+    {
+      "type": "微调 ckpt",
+      "exampleZh": "LMDB 数据集上训练 QA-MDT",
+      "strength": "附加能力"
+    },
+    {
+      "type": "diffusers 管线",
+      "exampleZh": "Hugging Face 版接进生成服务",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "复现文本生音乐 SOTA 基线并对比",
+      "whoZh": "音乐生成方向的研究员",
+      "whyZh": "论文代码、权重与 16 kHz/10.24 s 配置齐全",
+      "deliverableZh": "生成样本与 FAD/CLAP 指标",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做长音乐零样本生成实验",
+      "whoZh": "研究长音频生成的研究者",
+      "whyZh": "README 称已扩展到 inf-long 零样本生成",
+      "deliverableZh": "长于 10 秒的音乐片段",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "在自建数据集上微调模型",
+      "whoZh": "有标注音乐数据的团队",
+      "whyZh": "训练脚本与 LMDB dataloader 都在仓库内",
+      "deliverableZh": "微调后的 ckpt 与生成结果",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "搭文本生音乐 Demo 试听",
+      "whoZh": "做 Music AI 产品的团队",
+      "whyZh": "gradio_app.py 可直接起 UI",
+      "deliverableZh": "本地 Gradio 页面与 wav",
+      "fit": "勉强"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "质量感知 MDT",
+      "descZh": "质量 token 提升主观音质"
+    },
+    {
+      "titleZh": "长音频零样本",
+      "descZh": "inf-long 生成不需重训"
+    },
+    {
+      "titleZh": "双推理入口",
+      "descZh": "CLI 与 Gradio 共用配置"
+    },
+    {
+      "titleZh": "扩散框架",
+      "descZh": "可接 Hugging Face 管线"
+    }
+  ],
+  "ceilingsZh": "官方配置固定 16 kHz 采样率（audioldm_train/config/mos_as_token/qa_mdt.yaml 第 30 行）、10.24 s 时长（第 59 行）、mel_fmax=8000（第 67 行）、MDT hidden_size=1152、depth=28（第 143-144 行）；推理用 200 步 DDIM、guidance 3.5、每条 3 候选（第 166-169 行）。权重体积 README 未写，只给 Hugging Face 与网盘链接，属于未声明。infer_mos5.py 第 117 行 assert CUDA，无 CPU 回退；16 kHz/10.24 s 下 8 GB 显存是否够用需实机验证。",
+  "workflowZh": "四步：建 conda 环境 → 下载权重 → 改配置 → infer.sh 或 Gradio",
+  "workflow": [
+    {
+      "stepZh": "建 Linux 环境",
+      "detailZh": "按 qamdt.yml 建 Python 3.10 环境，装 torch 2.3.0+cu121 与 fairseq",
+      "effortZh": "30-60 分钟（含下载）"
+    },
+    {
+      "stepZh": "下载权重",
+      "detailZh": "主 ckpt 从 lichang0928/QA-MDT 下载，另备 flan-t5-large/clap_music/roberta-base",
+      "effortZh": "30 分钟起（视网速）"
+    },
+    {
+      "stepZh": "改配置",
+      "detailZh": "改 qa_mdt.yaml 的 pretrained 路径、infer.sh 参数与 offset_pretrained_checkpoints.json",
+      "effortZh": "15-30 分钟"
+    },
+    {
+      "stepZh": "推理/起 UI",
+      "detailZh": "sh infer/infer.sh 生成 wav；或 python gradio/gradio_app.py",
+      "effortZh": "5-20 分钟/批"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "要开箱即用 MusicGen 与旋律条件选 AudioCraft；要复现质量感知 MDT 与长音频零样本扩展选 OpenMusic。",
+      "adviceZh": "要开箱即用 MusicGen 与旋律条件选 AudioCraft；要复现质量感知 MDT 与长音频零样本扩展选 OpenMusic。"
+    },
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "要成熟 AudioLDM 训练/推理全家桶选 AudioLDM；要论文级 16 kHz 音乐基线选 OpenMusic。",
+      "adviceZh": "要成熟 AudioLDM 训练/推理全家桶选 AudioLDM；要论文级 16 kHz 音乐基线选 OpenMusic。"
+    },
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要 Stable Audio 工程化训练与 44.1 kHz 生成选 stable-audio-tools；要 16 kHz 学术复现选 OpenMusic。",
+      "adviceZh": "要 Stable Audio 工程化训练与 44.1 kHz 生成选 stable-audio-tools；要 16 kHz 学术复现选 OpenMusic。"
+    },
+    {
+      "vs": "Text-to-Audio__AudioLCM",
+      "whenZh": "要少步数 latent consistency 生成选 AudioLCM；要质量 token 与 MDT 主干选 OpenMusic。",
+      "adviceZh": "要少步数 latent consistency 生成选 AudioLCM；要质量 token 与 MDT 主干选 OpenMusic。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "pros[0]",
+      "source": "readme.md#L3",
+      "noteZh": "论文被 IJCAI-25 接收"
+    },
+    {
+      "field": "pros[1]",
+      "source": "readme.md#L20",
+      "noteZh": "扩展到 inf-long 零样本生成"
+    },
+    {
+      "field": "pros[2]",
+      "source": "audioldm_train/config/mos_as_token/qa_mdt.yaml#L30",
+      "noteZh": "配置固定 16 kHz 采样率"
+    },
+    {
+      "field": "cons[0]",
+      "source": "qamdt.yml#L10",
+      "noteZh": "conda 环境锁 linux-64"
+    },
+    {
+      "field": "cons[1]",
+      "source": "requirements.txt#L207",
+      "noteZh": "torch 固定 2.3.0 旧栈"
+    },
+    {
+      "field": "cons[3]",
+      "source": "infer/infer_mos5.py#L117",
+      "noteZh": "推理强制 CUDA"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "audioldm_train/config/mos_as_token/qa_mdt.yaml#L59",
+      "noteZh": "训练/推理片段时长 10.24 s"
+    }
+  ],
+  "blockerZh": "QA-MDT 文本生音乐：需要 audioldm_train 全量依赖（torch/lightning/funasr 等）与多份预训练权重（offset_pretrained_checkpoints.json 指向的数 GB checkpoint），本机 HF 直连与镜像均不可用，只能用 ModelScope 逐文件手工搬运，超出本批 20GB 额度与 35 分钟单仓库预算。",
+  "whatItWouldNeed": "在 WSL2 或 Linux 机器上按 qamdt.yml 建 Python 3.10 环境；下载 QA-MDT 主 ckpt 与 README 列出的全部预训练权重；改好 qa_mdt.yaml/offset_pretrained_checkpoints.json；需要 CUDA GPU（8 GB 显存需实测，建议更大）。",
+  "ceilingZh": "官方配置固定 16 kHz 采样率（audioldm_train/config/mos_as_token/qa_mdt.yaml 第 30 行）、10.24 s 时长（第 59 行）、mel_fmax=8000（第 67 行）、MDT hidden_size=1152、depth=28（第 143-144 行）；推理用 200 步 DDIM、guidance 3.5、每条 3 候选（第 166-169 行）。权重体积 README 未写，只给 Hugging Face 与网盘链接，属于未声明。infer_mos5.py 第 117 行 assert CUDA，无 CPU 回退；16 kHz/10.24 s 下 8 GB 显存是否够用需实机验证。",
+  "capabilities": {
+    "maxDurationZh": "10.24 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "16 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "仅 Apple/Linux 或无 Windows 路径"
+  },
+  "differentiators": [
+    "质量感知 MDT：质量 token 提升主观音质",
+    "长音频零样本：inf-long 生成不需重训",
+    "双推理入口：CLI 与 Gradio 共用配置",
+    "扩散框架：可接 Hugging Face 管线"
+  ],
+  "limits": [
+    "Python 3.10 + conda 环境锁定 linux-64（qamdt.yml 第 10-18 行全是 linux 包），Windows 原生跑不起来，只能 WSL 或容器。",
+    "依赖旧栈：torch==2.3.0、fairseq==0.12.2、diffusers==0.27.0（requirements.txt 第 37/47/207 行），Python 3.13 完全不兼容，装环境耗时长。",
+    "推理需手工指定主 ckpt 与 flan-t5-large/clap/roberta 等预训练目录，并改 qa_mdt.yaml 与 offset_pretrained_checkpoints.json（readme 第 68-78 行），缺一步就报路径错误。",
+    "infer_mos5.py 第 117 行 assert torch.cuda.is_available() 强制 CUDA，无 CPU 回退；8 GB 显存要在 16 kHz/10.24 s 下跑 MDT+vocoder，余量很小。",
+    "infer/infer.sh 里的 ckpt 路径是占位，必须先改 qa_mdt.yaml 的 pretrained 路径与 offset_pretrained_checkpoints.json。",
+    "gradio_app.py 会自行从 Hugging Face 克隆仓库并 pip 安装依赖，离线环境会失败。",
+    "训练数据要用 protoc 3.4 生成 datum_all_pb2.py（readme 第 120 行），版本不对会与仓库自带文件不兼容。"
+  ],
+  "signatureZh": "QA-MDT 文本生音乐，16 kHz 高质量扩散模型",
+  "chooseWhenZh": "研究文本生音乐、想复现 QA-MDT 并做长音频生成的算法团队（需 Linux+CUDA）。",
+  "avoidWhenZh": "Python 3.10 + conda 环境锁定 linux-64（qamdt.yml 第 10-18 行全是 linux 包），Windows 原生跑不起来，只能 WSL 或容器。",
+  "contrastWith": [
+    "facebookresearch__audiocraft",
+    "haoheliu__AudioLDM"
+  ]
+}

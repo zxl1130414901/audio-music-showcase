@@ -1,0 +1,188 @@
+{
+  "id": "torchsynth__torchsynth",
+  "taglineZh": "可微 PyTorch 模块化合成器，批量合成 4 秒音色",
+  "summaryZh": "torchsynth 是用 PyTorch 重写的模块化合成器，GPU 可选、可微：README 说单 GPU 合成是实时的 16200 倍（714MHz）。每次 Voice() 返回三元组——音频张量、72 个 latent 参数、train/test 掩码。默认 batch 128、每条 4 秒、44.1kHz，即 [128, 176400]，官方称典型 GPU 上约占 2.3GB 显存。它不提供采样、MIDI 或效果器，也不写 wav，可复现模式还要求 batch 是 32 的倍数。",
+  "whatItMakes": [
+    {
+      "type": "音频批次张量",
+      "exampleZh": "voice(312) 得 [128, 176400] 单声道波形",
+      "strength": "核心能力"
+    },
+    {
+      "type": "参数标注对",
+      "exampleZh": "同批 [128, 72] 的 latent 参数直接当条件",
+      "strength": "核心能力"
+    },
+    {
+      "type": "train/test 掩码",
+      "exampleZh": "[128] 布尔张量标明哪些样本进测试集",
+      "strength": "附加能力"
+    },
+    {
+      "type": "自定义合成链路",
+      "exampleZh": "继承 AbstractSynth，用 VCO/ADSR 拼新 Voice",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "造音频 ML 训练集",
+      "whoZh": "音频研究者",
+      "whyZh": "一次调用出 128 条带参数的音色，吞吐远高于实时渲染",
+      "deliverableZh": "npz/pt 音频与参数集",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做音色参数反演实验",
+      "whoZh": "生成模型研究者",
+      "whyZh": "音频与 72 维 latent 一一对应，天然有监督",
+      "deliverableZh": "可微合成器实验",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "复现 synth1K1 数据集",
+      "whoZh": "数据集构建者",
+      "whyZh": "README 指向 1024 条 4 秒样本，配置可复现",
+      "deliverableZh": "同规格数据集",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做实时演奏或采样器",
+      "whoZh": "音乐制作人",
+      "whyZh": "没有 MIDI、采样与效果器，时长固定 4 秒",
+      "deliverableZh": "不适用",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "1.6 万倍实时",
+      "descZh": "单 GPU 吞吐，面向批量而非低延迟"
+    },
+    {
+      "titleZh": "72 维隐向量",
+      "descZh": "音频与参数同时返回，便于监督"
+    },
+    {
+      "titleZh": "4 秒固定缓冲",
+      "descZh": "44.1kHz 下 176400 点"
+    },
+    {
+      "titleZh": "可复现约束",
+      "descZh": "batch 必须是 32 的倍数"
+    },
+    {
+      "titleZh": "基准性能入口",
+      "descZh": "torchsynth.profile 跑基准"
+    }
+  ],
+  "ceilingsZh": "参数都在 SynthConfig：默认 44100 采样率、4.0 秒缓冲、batch 128、控制率 441（config.py#L53-L56），默认输出 [128, 176400]，控制缓冲约 1764 点，比音频率低 100 倍。注释称默认 Voice 在典型 GPU 上约占 2.3GB 显存（#L11-L14）。可复现模式下 batch 必须是 32 的倍数，否则抛 ValueError（#L81-L87）。README 给的吞吐是单 GPU 16200 倍（714MHz），synth1K1 是 1024 条 4 秒音频。时长固定 4 秒，不支持变长，也没有内置 wav 写出。",
+  "workflowZh": "五步：pip 装 torchsynth → 建 Voice → 调 SynthConfig → voice(idx) 出批次 → torchaudio 存 wav",
+  "workflow": [
+    {
+      "stepZh": "装库",
+      "detailZh": "pip install torchsynth，依赖 torch>=1.8、numpy、scipy、lightning",
+      "effortZh": "2–5 分钟"
+    },
+    {
+      "stepZh": "建 Voice",
+      "detailZh": "from torchsynth.synth import Voice，按需 .to('cuda')",
+      "effortZh": "1 分钟"
+    },
+    {
+      "stepZh": "调配置",
+      "detailZh": "SynthConfig(batch_size=32, sample_rate=44100, buffer_size_seconds=4.0)",
+      "effortZh": "2–5 分钟"
+    },
+    {
+      "stepZh": "生成",
+      "detailZh": "audio, params, is_train = voice(312)，取 audio[6].unsqueeze(0)",
+      "effortZh": "批量秒级"
+    },
+    {
+      "stepZh": "落盘",
+      "detailZh": "torchaudio.save('out.wav', wav.cpu(), voice.sample_rate)，需另装 torchaudio",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "DISTRHO__Cardinal",
+      "whenZh": "要批量造带参数标注的数据集选 torchsynth；要实时演奏与插件交付选 Cardinal。",
+      "adviceZh": "要批量造带参数标注的数据集选 torchsynth；要实时演奏与插件交付选 Cardinal。"
+    },
+    {
+      "vs": "surge-synthesizer__surge",
+      "whenZh": "要在 GPU 上千万级批量合成选 torchsynth；要真实乐器音色与 DAW 集成选 Surge。",
+      "adviceZh": "要在 GPU 上千万级批量合成选 torchsynth；要真实乐器音色与 DAW 集成选 Surge。"
+    },
+    {
+      "vs": "SamiPerttu__fundsp",
+      "whenZh": "要 PyTorch 生态与 Dataset 式批量选 torchsynth；要在 Rust 里做低延迟 DSP 节点选 fundsp。",
+      "adviceZh": "要 PyTorch 生态与 Dataset 式批量选 torchsynth；要在 Rust 里做低延迟 DSP 节点选 fundsp。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L13-L23",
+      "noteZh": "PyTorch 模块化合成、16200× 实时、返回 latent"
+    },
+    {
+      "field": "pros[1]",
+      "source": "docs/source/getting-started/quickstart.md#L30-L36",
+      "noteZh": "[128,176400] 音频与 [128,72] 参数与 train 掩码"
+    },
+    {
+      "field": "pros[2]",
+      "source": "torchsynth/config.py#L11-L14",
+      "noteZh": "默认 batch 128 约 2.3GB 显存"
+    },
+    {
+      "field": "cons[0]",
+      "source": "docs/source/getting-started/quickstart.md#L15-L17",
+      "noteZh": "需另装 torchaudio 或 SoundFile 才能存 WAV"
+    },
+    {
+      "field": "cons[2]",
+      "source": "torchsynth/config.py#L81-L87",
+      "noteZh": "batch 必须 32 倍数，否则 ValueError"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "参数都在 SynthConfig：默认 44100 采样率、4.0 秒缓冲、batch 128、控制率 441（config.py#L53-L56），默认输出 [128, 176400]，控制缓冲约 1764 点，比音频率低 100 倍。注释称默认 Voice 在典型 GPU 上约占 2.3GB 显存（#L11-L14）。可复现模式下 batch 必须是 32 的倍数，否则抛 ValueError（#L81-L87）。README 给的吞吐是单 GPU 16200 倍（714MHz），synth1K1 是 1024 条 4 秒音频。时长固定 4 秒，不支持变长，也没有内置 wav 写出。",
+  "capabilities": {
+    "maxDurationZh": "默认 4.0 秒",
+    "formatsZh": [
+      "wav",
+      "npy"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "可实时（依赖声卡或宿主）",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 原生可用"
+  },
+  "differentiators": [
+    "1.6 万倍实时：单 GPU 吞吐，面向批量而非低延迟",
+    "72 维隐向量：音频与参数同时返回，便于监督",
+    "4 秒固定缓冲：44.1kHz 下 176400 点",
+    "可复现约束：batch 必须是 32 的倍数",
+    "基准性能入口：torchsynth.profile 跑基准"
+  ],
+  "limits": [
+    "不写 wav，quickstart 要求自己 pip install torchaudio 或 SoundFile 才能落盘",
+    "只做参数化合成，没有采样、MIDI 与效果器生态，音色是简单模块堆叠",
+    "可复现模式要求 batch_size 必须是 32 的倍数，否则直接抛 ValueError",
+    "仓库最后推送在 2026-02，setup.py 仍只声明 torch>=1.8，没有 py3.13 测试声明",
+    "Voice() 默认就是 batch 128，CPU 上跑会很慢，显存不足时先改 batch_size=32",
+    "不装 torchaudio/soundfile 就没有任何导出路径，示例只在 notebook 里播"
+  ],
+  "signatureZh": "可微 PyTorch 模块化合成器，批量合成 4 秒音色",
+  "chooseWhenZh": "要批量生成几万条带参数标注音色、用于音频 ML 训练或评测的研究者",
+  "avoidWhenZh": "不写 wav，quickstart 要求自己 pip install torchaudio 或 SoundFile 才能落盘",
+  "contrastWith": [
+    "DISTRHO__Cardinal",
+    "surge-synthesizer__surge"
+  ]
+}

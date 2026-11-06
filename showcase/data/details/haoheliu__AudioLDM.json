@@ -1,0 +1,193 @@
+{
+  "id": "haoheliu__AudioLDM",
+  "taglineZh": "潜扩散加 CLAP 文本对齐，16 kHz 出短音效与音乐",
+  "summaryZh": "AudioLDM 是 2023 年 ICML 的潜扩散文生音频模型：VAE 压 mel 到潜空间，UNet 去噪，文本侧用 CLAP 对齐，最后由 HiFi-GAN 还原波形。支持 text-to-audio、audio-to-audio 与文本引导风格迁移，有 CLI 与 Gradio 界面，并已并入 diffusers。产出上限明确：16 kHz 单声道、默认 10 秒，适合音效与环境声，不适合长音乐。它比 EzAudio 老，但生态最成熟；代价是依赖 Python 3.8，缓存落 C 盘。",
+  "whatItMakes": [
+    {
+      "type": "文本生成音效",
+      "exampleZh": "audioldm -t \"rain on a tin roof\" -dur 10 输出 16 kHz 单声道 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音频变体",
+      "exampleZh": "-tae 传入参考音频，生成同风格的多个变体",
+      "strength": "核心能力"
+    },
+    {
+      "type": "文本引导风格迁移",
+      "exampleZh": "-m transfer 用文本把一段现成音频改造成另一种音色/氛围",
+      "strength": "进阶能力"
+    },
+    {
+      "type": "超分与修补",
+      "exampleZh": "scripts 里的 pipeline 支持 audio super-resolution 与 inpainting",
+      "strength": "进阶能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "短视频音效",
+      "whoZh": "剪辑/自媒体作者",
+      "whyZh": "10 秒以内的环境声、动作音正好匹配镜头长度，CLI 可批量跑文本列表",
+      "deliverableZh": "wav → mp3 音效",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "模型对比研究",
+      "whoZh": "音频生成方向学生",
+      "whyZh": "有 CLAP 分与主观分可引用，且 diffusers 里有官方 pipeline 便于换调度器做消融",
+      "deliverableZh": "对比样本与指标",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "游戏环境音素材",
+      "whoZh": "独立游戏开发者",
+      "whyZh": "可批量生成同主题变体，但 16 kHz 单声道对需要空间感的场景偏弱",
+      "deliverableZh": "音效包",
+      "fit": "勉强"
+    },
+    {
+      "scenarioZh": "歌曲/配乐生成",
+      "whoZh": "音乐制作人",
+      "whyZh": "16 kHz 上限、10 秒默认时长、无节拍/结构控制，做完整音乐不现实",
+      "deliverableZh": "无",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "潜空间扩散",
+      "descZh": "VAE 压 mel 到潜空间，UNet 去噪"
+    },
+    {
+      "titleZh": "CLAP 对齐",
+      "descZh": "文本用 CLAP 编码，匹配更准"
+    },
+    {
+      "titleZh": "CLI 参数",
+      "descZh": "-t/-dur/-gs 等参数可改"
+    },
+    {
+      "titleZh": "三种模式",
+      "descZh": "生成、转换、超分三种任务"
+    },
+    {
+      "titleZh": "HF 生态",
+      "descZh": "diffusers 0.15 起可调用"
+    }
+  ],
+  "ceilingsZh": "硬上限写在代码里：audioldm/utils.py 的 save_wave 与 metadata 都按 samplerate=16000 写，输出是 16 kHz 单声道；README 的 -dur 默认 10 秒、--ddim_steps 默认 200、-gs 默认 2.5、-b 默认 1。模型侧有 6 个 checkpoint（s/m/l 各 full 与 text-ft），主观分最高 6.85/10，仍是 2023 年那一档质量。显存门槛 README 写 8GB VRAM、16GB 内存，本机 8188 MiB 刚好够但 batchsize 只能 1；权重体积 README 未声明（批次表记约 2GB）。没有时长外推或立体声选项，超过 10 秒只能拼接，接缝无交叉淡化。",
+  "workflowZh": "五步：建 Python 3.8 环境 → pip 装 audioldm → 改缓存到 F 盘 → 下权重 → audioldm -t 出 wav 再转 mp3",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "conda create -n audioldm python=3.8（本机需另建 3.11 venv 或 conda 环境）",
+      "effortZh": "20–30 分钟"
+    },
+    {
+      "stepZh": "装包",
+      "detailZh": "pip install git+https://github.com/haoheliu/AudioLDM.git，PyPI 走清华源",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "重定向缓存",
+      "detailZh": "改 bin/audioldm 里 os.path.join(os.path.expanduser('~'), '.cache/audioldm')，或设 HOME 到 F 盘",
+      "effortZh": "5 分钟"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "设 HF_ENDPOINT=https://hf-mirror.com 与 HF_HOME，首次运行自动拉约 2GB checkpoint",
+      "effortZh": "10–20 分钟"
+    },
+    {
+      "stepZh": "生成",
+      "detailZh": "audioldm -t \"thunderstorm\" -dur 10 -gs 2.5 -ddn 200，再用 ffmpeg 转 192 kbps mp3",
+      "effortZh": "GPU 2–5 分钟/条"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要 44.1 kHz 立体声、更长片段选 stable-audio-tools；只要短音效、想用最成熟的 HF 生态与 CLI 选 AudioLDM",
+      "adviceZh": "要 44.1 kHz 立体声、更长片段选 stable-audio-tools；只要短音效、想用最成熟的 HF 生态与 CLI 选 AudioLDM"
+    },
+    {
+      "vs": "haidog-yaqub__EzAudio",
+      "whenZh": "要 24 kHz 且需要局部重绘/编辑选 EzAudio；要现成文档、diffusers 集成与多 checkpoint 对比选 AudioLDM",
+      "adviceZh": "要 24 kHz 且需要局部重绘/编辑选 EzAudio；要现成文档、diffusers 集成与多 checkpoint 对比选 AudioLDM"
+    },
+    {
+      "vs": "facebookresearch__audiocraft",
+      "whenZh": "要生成 30 秒级音乐并带旋律条件选 MusicGen；只要环境声/音效且显存紧张选 AudioLDM",
+      "adviceZh": "要生成 30 秒级音乐并带旋律条件选 MusicGen；只要环境声/音效且显存紧张选 AudioLDM"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "ceilingsZh",
+      "source": "audioldm/utils.py#L62",
+      "noteZh": "save_wave 固定 samplerate=16000，输出只能是 16 kHz"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L124-L129",
+      "noteZh": "DDIM 默认 200 步、guidance 2.5、时长默认 10 秒"
+    },
+    {
+      "field": "workflow[0]",
+      "source": "README.md#L38",
+      "noteZh": "安装命令写死 conda create -n audioldm python=3.8"
+    },
+    {
+      "field": "workflow[2]",
+      "source": "bin/audioldm#L8",
+      "noteZh": "缓存目录是 os.path.expanduser('~')/.cache/audioldm，Windows 默认落 C 盘"
+    },
+    {
+      "field": "workflow[4]",
+      "source": "README.md#L59-L62",
+      "noteZh": "官方 CLI 示例：audioldm -t 文本 --duration 10 直接出 wav"
+    },
+    {
+      "field": "summaryZh",
+      "source": "README.md#L139",
+      "noteZh": "diffusers 0.15 起提供 AudioLDMPipeline 官方集成"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "硬上限写在代码里：audioldm/utils.py 的 save_wave 与 metadata 都按 samplerate=16000 写，输出是 16 kHz 单声道；README 的 -dur 默认 10 秒、--ddim_steps 默认 200、-gs 默认 2.5、-b 默认 1。模型侧有 6 个 checkpoint（s/m/l 各 full 与 text-ft），主观分最高 6.85/10，仍是 2023 年那一档质量。显存门槛 README 写 8GB VRAM、16GB 内存，本机 8188 MiB 刚好够但 batchsize 只能 1；权重体积 README 未声明（批次表记约 2GB）。没有时长外推或立体声选项，超过 10 秒只能拼接，接缝无交叉淡化。",
+  "capabilities": {
+    "maxDurationZh": "默认 10 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "16 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "潜空间扩散：VAE 压 mel 到潜空间，UNet 去噪",
+    "CLAP 对齐：文本用 CLAP 编码，匹配更准",
+    "CLI 参数：-t/-dur/-gs 等参数可改",
+    "三种模式：生成、转换、超分三种任务",
+    "HF 生态：diffusers 0.15 起可调用"
+  ],
+  "limits": [
+    "README 的安装段落明确要求 conda create -n audioldm python=3.8，Python 3.13 的默认 venv 装不动这批 2023 年的依赖",
+    "bin/audioldm 把模型缓存写死成 ~/.cache/audioldm，Windows 上等于落 C 盘，必须先改代码或设 HOME 才能守住 25GB 余量的 C 盘",
+    "audioldm/utils.py 里 vocoder 与写盘统一按 16000 Hz，输出只有 16 kHz 单声道，高频细节和立体声都没有",
+    "README 声明最低 8GB 显存，本机 8188 MiB 刚好卡在门槛上，batchsize 只能保持 1",
+    "默认 ddim_steps=200，10 秒片段在 4060 Laptop 上要跑数分钟；降到 50 步质量明显下滑但不至于崩",
+    "HF 直连只通 HEAD 不通数据，必须先 set HF_ENDPOINT=https://hf-mirror.com 并把 HF_HOME 指到 F 盘",
+    "README 的 Gradio app 只接了 text-to-audio，音频生音频与风格迁移只能走命令行"
+  ],
+  "signatureZh": "潜扩散加 CLAP 文本对齐，16 kHz 出短音效与音乐",
+  "chooseWhenZh": "要快速批量出短音效/环境声，并能接受 16 kHz 单声道的研究者或短视频配乐工作者",
+  "avoidWhenZh": "README 的安装段落明确要求 conda create -n audioldm python=3.8，Python 3.13 的默认 venv 装不动这批 2023 年的依赖",
+  "contrastWith": [
+    "Stability-AI__stable-audio-tools",
+    "haidog-yaqub__EzAudio"
+  ]
+}

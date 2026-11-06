@@ -1,0 +1,188 @@
+{
+  "id": "naudio__NAudio",
+  "taglineZh": ".NET 框架，WASAPI/ASIO 播放采集与 DSP",
+  "summaryZh": "NAudio 是 .NET 音频库，3 拆成 15 个 NuGet 包。它覆盖 WASAPI/ASIO/DirectSound/ALSA 播放采集、WAV/AIFF/MP3/G.711/ADPCM/Opus/WMA/AAC 读取、经 libsndfile 的 FLAC/Ogg/Opus/MP3 写出，外加 32 位浮点混音、效果链、SoundFont 与 VST3 宿主。代价是它只是库：没有 CLI，net9.0 起，后端以 Windows 为主，macOS 无 CoreAudio。",
+  "whatItMakes": [
+    {
+      "type": "播放器/录音机",
+      "exampleZh": "WasapiPlayer 播 24bit/96k WAV，WasapiRecorder 录回环",
+      "strength": "核心能力"
+    },
+    {
+      "type": "信号处理链",
+      "exampleZh": "WaveStream → 重采样 → EQ/压缩/限幅 → 输出",
+      "strength": "核心能力"
+    },
+    {
+      "type": "格式转换器",
+      "exampleZh": "MP3 读入后经 SoundFileWriter 写成 FLAC/Ogg/Opus",
+      "strength": "核心能力"
+    },
+    {
+      "type": "SoundFont 演奏器",
+      "exampleZh": "NAudio.Sampler 加载 .sf2，按 MIDI 事件多声部发声",
+      "strength": "附加能力"
+    },
+    {
+      "type": "硬件自检报表",
+      "exampleZh": "NAudioConsoleTest run-batch 输出 summary.json/md",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "开发 Windows 桌面音频工具",
+      "whoZh": "C# 开发者",
+      "whyZh": "WASAPI/ASIO/WinMM 都有封装，NuGet 一装即用，效果与重采样齐全",
+      "deliverableZh": "exe 或类库",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "多轨实时监听与录音",
+      "whoZh": "硬件上位机开发者",
+      "whyZh": "AsioDevice 加 32 位浮点混音，可绕过系统混音降延迟",
+      "deliverableZh": "监听/录音程序",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "macOS/Linux 音频播放器",
+      "whoZh": "跨平台开发者",
+      "whyZh": "Core/Midi/SoundFile 跨平台，但播放采集仍以 Windows 为主，无 CoreAudio",
+      "deliverableZh": "需换方案",
+      "fit": "不适合"
+    },
+    {
+      "scenarioZh": "命令行批量转码",
+      "whoZh": "脚本用户",
+      "whyZh": "无 CLI，必须自写 C# 程序；纯转码用 ffmpeg 更快",
+      "deliverableZh": "需自写工具",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "15 个包",
+      "descZh": "按需引用，核心包跨平台"
+    },
+    {
+      "titleZh": "低延迟后端",
+      "descZh": "现代 WASAPI 与 ASIO"
+    },
+    {
+      "titleZh": "32 位浮点链",
+      "descZh": "混音 DSP 效果统一 float"
+    },
+    {
+      "titleZh": "SF2 采样",
+      "descZh": "sf2/SFZ/单样本多声部"
+    },
+    {
+      "titleZh": "硬件测试台",
+      "descZh": "44 项测试可批量出报表"
+    }
+  ],
+  "ceilingsZh": "目标框架最低 net9.0，Native-AOT 兼容 Core/Midi/Wasapi/WinMM/Asio/Dmo/Sampler/Nam/SoundFile/Alsa（README.md#L20, L47）。混音统一 32-bit float，可串 EQ、压缩、限幅、饱和、延迟、卷积混响与变调（README.md#L81-L89）。格式覆盖 WAV/AIFF/MP3/G.711/ADPCM/Opus/WMA/AAC，以及经 libsndfile 的 FLAC/Ogg/Opus/MP3（README.md#L66-L80）。采样率上限、位深上限、最大通道数、ASIO 实测延迟均未声明；ASIO/AOT 实测还依赖真实声卡与 MSVC。",
+  "workflowZh": "四步：装 .NET 9 SDK → 引 NAudio 包 → 串信号链 → dotnet run 出声",
+  "workflow": [
+    {
+      "stepZh": "装 SDK",
+      "detailZh": "winget install Microsoft.DotNet.SDK.9，dotnet --list-sdks 确认 9.x",
+      "effortZh": "约 5 分钟"
+    },
+    {
+      "stepZh": "建项目引包",
+      "detailZh": "dotnet new console，dotnet add package NAudio，按需再引 SoundFile/Asio",
+      "effortZh": "2 分钟"
+    },
+    {
+      "stepZh": "写播放/处理代码",
+      "detailZh": "WasapiPlayer 或 WaveOutEvent，AudioFileReader 读文件，串 ISampleProvider 效果链",
+      "effortZh": "30 分钟起"
+    },
+    {
+      "stepZh": "跑硬件测试（可选）",
+      "detailZh": "dotnet run --project NAudioConsoleTest -- diagnose --format=json",
+      "effortZh": "1 分钟"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "AudioKit__AudioKit",
+      "whenZh": "做 Windows/.NET 应用选 NAudio；做 iOS/macOS 应用选 AudioKit，CoreAudio 与 Swift 生态更顺。",
+      "adviceZh": "做 Windows/.NET 应用选 NAudio；做 iOS/macOS 应用选 AudioKit，CoreAudio 与 Swift 生态更顺。"
+    },
+    {
+      "vs": "JorenSix__TarsosDSP",
+      "whenZh": "要 Windows 播放采集与编解码选 NAudio；要现成 pitch/onset/BPM 分析且用 Java/Android 选 TarsosDSP。",
+      "adviceZh": "要 Windows 播放采集与编解码选 NAudio；要现成 pitch/onset/BPM 分析且用 Java/Android 选 TarsosDSP。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L18-L45",
+      "noteZh": "15 个包与职责"
+    },
+    {
+      "field": "ceilingsZh",
+      "source": "README.md#L66-L80",
+      "noteZh": "格式清单与 32-bit float 引擎"
+    },
+    {
+      "field": "pros[3]",
+      "source": "samples/NAudioConsoleTest/README.md#L3-L19",
+      "noteZh": "44 个测试与 run-batch/diagnose"
+    },
+    {
+      "field": "cons[0]",
+      "source": "README.md#L20",
+      "noteZh": "最低 net9.0"
+    },
+    {
+      "field": "cons[2]",
+      "source": "README.md#L229-L231",
+      "noteZh": "WASAPI 等仅 Windows，无 CoreAudio"
+    }
+  ],
+  "blockerZh": ".NET 运行时在（Microsoft.NETCore.App 6.0/8.0 + WindowsDesktop.App 6.0/8.0），但没有 .NET SDK：dotnet --version 直接报 No .NET SDKs were found，而本机也没有 MSVC/CMake。NAudio 是纯库，仓库内没有任何 .DLL/.EXE 预编译产物，samples 目录全是 WinForms/WPF 图形 Demo 加单元测试，没有命令行或离线渲染入口；无 SDK 就编不出可执行样例，装 SDK 会把文件写进 C:\\Program Files，按本次约束不允许。",
+  "whatItWouldNeed": "安装 .NET SDK 8（写入 C:\\Program Files\\dotnet）才有能力 dotnet build 出控制台样例；或者退一步，把 NuGet 包解压后在 PowerShell 宿主编程调用 WaveFileWriter/BiQuadFilter——但那样发声内容由自写合成代码决定，不能代表仓库能力，故不做。",
+  "ceilingZh": "目标框架最低 net9.0，Native-AOT 兼容 Core/Midi/Wasapi/WinMM/Asio/Dmo/Sampler/Nam/SoundFile/Alsa（README.md#L20, L47）。混音统一 32-bit float，可串 EQ、压缩、限幅、饱和、延迟、卷积混响与变调（README.md#L81-L89）。格式覆盖 WAV/AIFF/MP3/G.711/ADPCM/Opus/WMA/AAC，以及经 libsndfile 的 FLAC/Ogg/Opus/MP3（README.md#L66-L80）。采样率上限、位深上限、最大通道数、ASIO 实测延迟均未声明；ASIO/AOT 实测还依赖真实声卡与 MSVC。",
+  "capabilities": {
+    "maxDurationZh": "未声明",
+    "formatsZh": [
+      "wav",
+      "mp3",
+      "m4a",
+      "flac",
+      "ogg",
+      "mid"
+    ],
+    "sampleRateZh": "未声明",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "部分可批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "15 个包：按需引用，核心包跨平台",
+    "低延迟后端：现代 WASAPI 与 ASIO",
+    "32 位浮点链：混音 DSP 效果统一 float",
+    "SF2 采样：sf2/SFZ/单样本多声部",
+    "硬件测试台：44 项测试可批量出报表"
+  ],
+  "limits": [
+    "最低目标框架 net9.0，本机 `dotnet --list-sdks` 没有任何 SDK，必须先装 .NET 9 SDK 才能编译（README.md#L20）",
+    "NAudio 是类库不是工具：官方 FAQ 明确是「构造你自己音频应用的类集合」，出声得自己写 C# 工程（README.md#L221-L223）",
+    "播放/采集仍以 Windows 后端为主，WASAPI/WinMM/ASIO/DMO/WinForms 包仅 Windows，macOS 无 CoreAudio 后端（README.md#L229-L231）",
+    "Native AOT 发布与 ASIO 实测需要真实声卡和 MSVC 工具链，本机没有，只能做普通 JIT 构建（samples/NAudioConsoleTest/README.md#L41-L48）",
+    "net9.0 项目用 .NET 8 SDK 会直接报目标框架不受支持，先 `dotnet --list-sdks` 确认",
+    "从 NAudio 2 升级到 3 有大量破坏性改名，先读 Docs/MigratingFromNAudio2.md",
+    "ASIO 测试需要装厂商驱动；没有声卡时用 NAudioConsoleTest 的 headless 测试子集"
+  ],
+  "signatureZh": ".NET 框架，WASAPI/ASIO 播放采集与 DSP",
+  "chooseWhenZh": "要做 Windows 桌面音频工具、播放器、录音机或 DSP 处理链的 .NET 开发者",
+  "avoidWhenZh": "最低目标框架 net9.0，本机 `dotnet --list-sdks` 没有任何 SDK，必须先装 .NET 9 SDK 才能编译（README.md#L20）",
+  "contrastWith": [
+    "AudioKit__AudioKit",
+    "JorenSix__TarsosDSP"
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "id": "facebookresearch__audiocraft",
+  "taglineZh": "MusicGen 文本生音乐，32kHz 编解码",
+  "summaryZh": "AudioCraft 是 Meta 音频生成库，含 MusicGen、AudioGen、EnCodec。MusicGen 用 4 个 codebook、每秒 50 步自回归，按文本（可选旋律）生成 8–30 秒音频并写 wav。文档给 10 个权重：small 300M、medium/melody 1.5B、large 3.3B 与 5 个 stereo 版。约束是 torch 2.1.0 与 Python 3.9 钉死、medium 要 16GB 显存、权重 CC-BY-NC 不可商用。",
+  "whatItMakes": [
+    {
+      "type": "文本生音乐片段",
+      "exampleZh": "prompt 写 happy rock，出 8 秒 wav",
+      "strength": "核心能力"
+    },
+    {
+      "type": "旋律条件改编",
+      "exampleZh": "喂 bach.mp3 的旋律，再按文本改风格",
+      "strength": "核心能力"
+    },
+    {
+      "type": "音效与氛围声",
+      "exampleZh": "AudioGen 按文本生成脚步、雨声等环境音",
+      "strength": "附加能力"
+    },
+    {
+      "type": "神经编解码 tokens",
+      "exampleZh": "EnCodec 把 32kHz 音频压成 4 路 codebook",
+      "strength": "附加能力"
+    }
+  ],
+  "useCases": [
+    {
+      "scenarioZh": "给视频批量生成配乐草稿",
+      "whoZh": "内容团队/剪辑师",
+      "whyZh": "一句 prompt 出 10–30 秒片段，自带响度归一化，试听成本低",
+      "deliverableZh": "多条 wav 候选",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "旋律沿用但换风格",
+      "whoZh": "音乐制作人",
+      "whyZh": "generate_with_chroma 能用现成旋律约束走向，比纯文本可控",
+      "deliverableZh": "旋律改编版 wav",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "做音频生成算法研究",
+      "whoZh": "音频 ML 研究者",
+      "whyZh": "训练代码覆盖 EnCodec/MusicGen/MBD/JASCO，可直接改数据管线",
+      "deliverableZh": "复现实验与 checkpoint",
+      "fit": "适合"
+    },
+    {
+      "scenarioZh": "要可商用的生成音乐",
+      "whoZh": "商业产品团队",
+      "whyZh": "权重是 CC-BY-NC 4.0，商用需另找授权或换权重",
+      "deliverableZh": "受许可限制",
+      "fit": "不适合"
+    }
+  ],
+  "featureCallouts": [
+    {
+      "titleZh": "单阶段生成",
+      "descZh": "4 codebook 并行，每秒仅 50 步"
+    },
+    {
+      "titleZh": "10 个预训练",
+      "descZh": "300M 到 3.3B，含 stereo 微调"
+    },
+    {
+      "titleZh": "-14 LUFS",
+      "descZh": "audio_write 自动响度归一化"
+    },
+    {
+      "titleZh": "旋律条件",
+      "descZh": "chroma 约束走向，保留原旋律"
+    },
+    {
+      "titleZh": "训练代码开源",
+      "descZh": "四条模型管线与配置全在仓库"
+    }
+  ],
+  "ceilingsZh": "规格写得很清楚：MusicGen 跑在 32kHz EnCodec 上，4 个 codebook、50Hz，每秒音频只需 50 步自回归（MUSICGEN.md#L4-L9）。权重分 300M/1.5B/3.3B 三档共 10 个（#L50-L61），训练用 20K 小时音乐（#L20）。时长由 duration 控制，示例 8 秒，代码默认 15 秒，预训练上限 30 秒（musicgen.py#L54, #L80）。显存官方要求 medium 至少 16GB（#L33），8GB 只能跑 small。权重文件大小 README 未声明，本次也未下载。",
+  "workflowZh": "五步：建 3.11 环境装 torch 2.1.0 → 装 audiocraft → 下权重 → generate → audio_write 出 wav",
+  "workflow": [
+    {
+      "stepZh": "建环境",
+      "detailZh": "用 cpython 3.11 建 venv，pip install torch==2.1.0（cu121 轮子）",
+      "effortZh": "20–40 分钟"
+    },
+    {
+      "stepZh": "装库",
+      "detailZh": "python -m pip install -e .，附加 ffmpeg<5 供音频解码",
+      "effortZh": "5–10 分钟"
+    },
+    {
+      "stepZh": "下权重",
+      "detailZh": "MusicGen.get_pretrained('facebook/musicgen-small')，先设 HF_ENDPOINT 与 AUDIOCRAFT_CACHE_DIR",
+      "effortZh": "视网速 2–15 分钟"
+    },
+    {
+      "stepZh": "生成",
+      "detailZh": "set_generation_params(duration=8) 后 generate(descriptions)，GPU 上跑",
+      "effortZh": "8 秒音频约 10–30 秒"
+    },
+    {
+      "stepZh": "落盘",
+      "detailZh": "audio_write('out', wav.cpu(), model.sample_rate, strategy='loudness')",
+      "effortZh": "秒级"
+    }
+  ],
+  "compareTips": [
+    {
+      "vs": "Stability-AI__stable-audio-tools",
+      "whenZh": "要 Meta 官方 MusicGen 权重与训练代码选 audiocraft；要可商用许可与更长音频的 Stable Audio 选 stable-audio-tools。",
+      "adviceZh": "要 Meta 官方 MusicGen 权重与训练代码选 audiocraft；要可商用许可与更长音频的 Stable Audio 选 stable-audio-tools。"
+    },
+    {
+      "vs": "haoheliu__AudioLDM",
+      "whenZh": "要 32kHz 音乐生成与旋律条件选 audiocraft；要文本到音效/环境声的扩散方案选 AudioLDM。",
+      "adviceZh": "要 32kHz 音乐生成与旋律条件选 audiocraft；要文本到音效/环境声的扩散方案选 AudioLDM。"
+    },
+    {
+      "vs": "lucidrains__audiolm-pytorch",
+      "whenZh": "要开箱 10 个官方权重选 audiocraft；要读实现细节、自己搭两阶段结构选 audiolm-pytorch。",
+      "adviceZh": "要开箱 10 个官方权重选 audiocraft；要读实现细节、自己搭两阶段结构选 audiolm-pytorch。"
+    }
+  ],
+  "evidence": [
+    {
+      "field": "summaryZh",
+      "source": "README.md#L6-L8; docs/MUSICGEN.md#L4-L9",
+      "noteZh": "AudioGen/MusicGen 与 32kHz 4 codebook 50Hz"
+    },
+    {
+      "field": "pros[0]",
+      "source": "docs/MUSICGEN.md#L50-L61",
+      "noteZh": "10 个预训练模型与 300M/1.5B/3.3B 分档"
+    },
+    {
+      "field": "pros[2]",
+      "source": "docs/MUSICGEN.md#L84-L86",
+      "noteZh": "audio_write 默认 -14 dB LUFS"
+    },
+    {
+      "field": "cons[0]",
+      "source": "requirements.txt#L12-L17",
+      "noteZh": "torch 2.1.0/xformers 版本钉死"
+    },
+    {
+      "field": "cons[1]",
+      "source": "docs/MUSICGEN.md#L33; #L64-L65",
+      "noteZh": "medium 需 16GB 显存，本地必须有 GPU"
+    },
+    {
+      "field": "cons[3]",
+      "source": "audiocraft/models/musicgen.py#L54, #L80",
+      "noteZh": "默认 15 秒，上限 30 秒"
+    }
+  ],
+  "blockerZh": null,
+  "whatItWouldNeed": null,
+  "ceilingZh": "规格写得很清楚：MusicGen 跑在 32kHz EnCodec 上，4 个 codebook、50Hz，每秒音频只需 50 步自回归（MUSICGEN.md#L4-L9）。权重分 300M/1.5B/3.3B 三档共 10 个（#L50-L61），训练用 20K 小时音乐（#L20）。时长由 duration 控制，示例 8 秒，代码默认 15 秒，预训练上限 30 秒（musicgen.py#L54, #L80）。显存官方要求 medium 至少 16GB（#L33），8GB 只能跑 small。权重文件大小 README 未声明，本次也未下载。",
+  "capabilities": {
+    "maxDurationZh": "默认 15 秒",
+    "formatsZh": [
+      "wav"
+    ],
+    "sampleRateZh": "32 kHz",
+    "realtimeZh": "离线渲染为主",
+    "batchZh": "可脚本批量",
+    "platformZh": "Windows 需额外工具链或宿主"
+  },
+  "differentiators": [
+    "单阶段生成：4 codebook 并行，每秒仅 50 步",
+    "10 个预训练：300M 到 3.3B，含 stereo 微调",
+    "-14 LUFS：audio_write 自动响度归一化",
+    "旋律条件：chroma 约束走向，保留原旋律",
+    "训练代码开源：四条模型管线与配置全在仓库"
+  ],
+  "limits": [
+    "requirements.txt 钉死 torch==2.1.0、torchvision==0.16.0、xformers<0.0.23，Python 3.13 无可用轮子",
+    "文档要求 medium（1.5B）推理至少 16GB 显存，本机 8GB 只能跑 small",
+    "模型权重是 CC-BY-NC 4.0，代码 MIT 但商用权重受限",
+    "默认只生成 15 秒、单模型上限 30 秒，长曲要切片 extend",
+    "先装 torch==2.1.0 再装 audiocraft，否则 pip 会把 torch 升到不兼容版本",
+    "HF 直连下不动权重，必须设 HF_ENDPOINT=hf-mirror.com 与 AUDIOCRAFT_CACHE_DIR 到 F 盘"
+  ],
+  "signatureZh": "MusicGen 文本生音乐，32kHz 编解码",
+  "chooseWhenZh": "有 16GB 以上显存、要一句 prompt 出 10–30 秒配乐片段的音乐生成研究者或内容团队",
+  "avoidWhenZh": "requirements.txt 钉死 torch==2.1.0、torchvision==0.16.0、xformers<0.0.23，Python 3.13 无可用轮子",
+  "contrastWith": [
+    "Stability-AI__stable-audio-tools",
+    "haoheliu__AudioLDM"
+  ]
+}
