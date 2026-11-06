@@ -1,0 +1,13 @@
+{
+  "id": "surge-synthesizer__surge",
+  "status": "failed",
+  "capabilitiesZh": [
+    "虽然有 300+ 个调制目标、wavetable/物理建模/模拟滤波等强项，但本机无法把它「离线响一次」，因此没有可听样例"
+  ],
+  "segments": [],
+  "signatureZh": "（未出样）Surge XT 的辨识点是可按任意调制矩阵路由的混合合成器，但这台机器上没有能把它的 VST3 离线驱动的链路",
+  "chooseWhenZh": "要做复杂调制矩阵的混合合成器音色、并且有 DAW/宿主（Bitwig/Reaper）时选它；只要命令行出音频则不要选",
+  "contrastWith": ["cycfi__q", "grame-cncm__faust"],
+  "evidenceZh": "尝试路径与结果：(1) 源码构建 src/surge-xt/cli —— libs/JUCE、sst、fmt、simde 等十余个子模块在本 checkout 全是空目录，GitHub code archive（codeload/github.com/.../archive）本机连不通，无法补齐；(2) 用已装的 pedalboard 0.9.26 加载 VST3 —— 该版本没有任何 MIDI 输入 API（dir(pedalboard) 里无 midi），乐器插件无法发声；(3) 用同机已装的 DawDreamer 0.9.0 作为 MIDI 宿主加载官方 VST3 —— 需要 GitHub release 的插件包，portable-install.zip(372MB) 与 pluginsonly.zip(44.6MB) 两次下载均在传输中被重置（curl 56），ghfast.top 代理也不可达，35 分钟窗口内拿不到二进制。",
+  "limitsZh": "仓库本身是 VST3/CLAP 仪器插件，必须宿主；无宿主即无声。源码构建依赖十余个未拉取的子模块，本机 GitHub archive 通道不通。插件包下载通道（github release assets）在本机不稳定（同一通道此前下载 FluidSynth 成功，说明是间歇性重置）。没有用其它合成器音频冒充它的输出。"
+}

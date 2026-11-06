@@ -1,0 +1,21 @@
+# surge-synthesizer/surge --- NOT RENDERED (failed), commands actually attempted
+
+# 1) source build of the offline CLI: impossible here
+Get-ChildItem F:\coding音乐\surge-synthesizer__surge\libs -Force
+#   -> JUCE / sst / fmt / simde / tuning-library / pffft: all empty (submodules never fetched)
+curl.exe -sS -m 60 -o infra.zip https://github.com/cycfi/infra/archive/refs/heads/master.zip
+#   -> github.com archive / codeload / cdn.jsdelivr.net all time out from this host
+
+# 2) host the VST3 with pedalboard: no MIDI API in 0.9.26
+F:\coding音乐\_env\venv\Scripts\python.exe -c "import pedalboard, inspect; print([m for m in dir(pedalboard) if 'midi' in m.lower()])"
+#   -> []
+
+# 3) host with DawDreamer (installed, has MIDI) -> needs the plugin binary
+curl.exe -sS -L -m 900 -o surge_portable.zip https://github.com/surge-synthesizer/surge/releases/download/Nightly/surge-xt-win64-NIGHTLY-2026-11-05-d152d79-portable-install.zip
+#   -> curl: (56) Recv failure: Connection was reset (372MB asset)
+curl.exe -sS -L -m 900 -o surge_plugin.zip https://github.com/surge-synthesizer/surge/releases/download/Nightly/surge-xt-win64-NIGHTLY-2026-11-05-d152d79-pluginsonly.zip
+#   -> curl: (56) Recv failure: Connection was reset (44.6MB asset)
+curl.exe -sS -L -m 45 -o surge_plugin.zip https://ghfast.top/https://github.com/.../pluginsonly.zip
+#   -> curl: (28) Failed to connect to ghfast.top port 443
+
+# Verdict: failed. No sample.wav was produced and no substitute audio was written.

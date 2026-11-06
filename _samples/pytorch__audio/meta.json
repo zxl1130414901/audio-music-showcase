@@ -1,0 +1,23 @@
+{
+  "id": "pytorch__audio",
+  "status": "ok",
+  "nativeOutput": false,
+  "nativeNoteZh": "仓库即 torchaudio 库本体（pip 安装的同源包）。样例由自写脚本调用 torchaudio 的 transforms/functional 处理，源素材和弦琶音由脚本内 torch 运算合成，非 ffmpeg 合成。",
+  "spec": { "durationSec": 20.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3528078 },
+  "capabilitiesZh": [
+    "Spectrogram + GriffinLim 相位重建：同一旋律从频谱反推回波形，听感发闷带涂抹",
+    "PitchShift 相位声码器移调（+7 半音），瞬态被拉宽、出现金属感",
+    "functional.lfilter / lowpass_biquad / gain：用系数直接做梳状回声与滤波"
+  ],
+  "signatureZh": "同一段和弦琶音在 20 秒里被「依次拆解」：先干净、再像隔着毛玻璃、再被抬高五度变金属、最后裹上回声收尾，辨识点是变换痕迹非常明确。",
+  "chooseWhenZh": "当你的需求是音频数据管线与可微变换（频谱、重采样、滤波、增广）而不是生成新音乐时选它；同样的 melody 这里更像「信号处理演示」，audiocraft 才是「凭空作曲」。",
+  "contrastWith": ["facebookresearch__audiocraft", "torchsynth__torchsynth"],
+  "segments": [
+    { "startSec": 0.0, "endSec": 6.5, "capZh": "原始合成素材：三和弦叠加六连琶音，作为后面所有变换的参照，音色干净、瞬态清晰。" },
+    { "startSec": 6.5, "endSec": 13.0, "capZh": "Spectrogram 转频谱后经 48 次 GriffinLim 迭代重建，展示相位丢失再估计带来的发闷与轻微调制。" },
+    { "startSec": 13.0, "endSec": 17.5, "capZh": "PitchShift 上移 7 个半音的相位声码器处理，同一和弦变高变薄，起音被抹开成金属质感。" },
+    { "startSec": 17.5, "endSec": 20.0, "capZh": "lfilter 梳状滤波器加 60ms 回声、3.2kHz 低通，把结尾压暗并留出衰减尾音完成收束。" }
+  ],
+  "evidenceZh": "入口 _tmp\\batchB\\run_torchaudio.py（torchaudio 2.6.0+cu124）：T.Spectrogram(n_fft=1024,hop=256,power=1) → T.GriffinLim(n_iter=48,momentum=0.99)；T.PitchShift(sr=44100,n_steps=7,n_fft=2048,hop=256)；AF.lfilter(b[0]=1,b[2646]=0.5,a[0]=1)、AF.lowpass_biquad(3200Hz)、AF.gain(1.4)；torchaudio.save 44.1k/16bit。",
+  "limitsZh": "a) torchaudio 2.6 在 Windows 上不再提供 sox 扩展（apply_effects_tensor 直接抛 not supported），只能用 functional 手写效果；b) PitchShift 12.9s 处理 4.5s 音频，CPU 代价高；c) 全流程需自备源素材，库本身不作曲。"
+}

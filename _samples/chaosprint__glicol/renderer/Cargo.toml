@@ -1,0 +1,7 @@
+[package]
+name = "glicol_render"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+glicol = { path = "F:/coding音乐/chaosprint__glicol/rs/main" }

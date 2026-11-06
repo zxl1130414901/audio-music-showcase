@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "Qt6 + CMake 构建链需要 >200MB 工具链（本机无 Qt、无 cmake），且官方 Windows 发行版只提供 GUI 主程序，没有命令行导出 WAV 的入口；3 个子模块（RtAudio/RtMidi/emu2149）虽小，但主程序仍需 Qt Widgets。",
+  "capabilitiesZh": [
+    "多芯片追踪器：PC-88/PC-98 的 OPN/SSG 与 NES/GB 风格通道仿真",
+    "模块化音序编辑 + WAV 导出，适合做 chiptune 与复古游戏配乐",
+    "模块文件（.btm/.wop）与音色库可复用，支持 VGM 导出"
+  ],
+  "signatureZh": "（未出样）它的声音是芯片追踪器：方波/三角/噪声通道 + 琶音与音色表，颗粒感很强。",
+  "chooseWhenZh": "要做 8-bit/PC-98 芯片音乐、需要音符表级精确控制时选它；要做通用短曲请选 torchsynth 或 SuperCollider。",
+  "contrastWith": [
+    "supercollider__supercollider",
+    "torchsynth__torchsynth"
+  ],
+  "evidenceZh": "核查 CMakeLists.txt / Project.pro（Qt6 Widgets + submodules/RtAudio、RtMidi、emu2149）、README 编译说明（需 Qt 与 CMake），以及 release-data 目录只含 GUI 数据文件；本机 Get-Command qmake/cmake 均不存在。",
+  "limitsZh": "GUI 追踪器，无 CLI 导出；Qt6 安装包 >200MB，超出「装 >200MB 工具链就跳过」的纪律；芯片仿真音色无法用 ffmpeg 合成替代（会变成假音频）。",
+  "id": "BambooTracker__BambooTracker",
+  "segments": []
+}

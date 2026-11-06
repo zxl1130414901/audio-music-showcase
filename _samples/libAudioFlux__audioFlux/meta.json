@@ -1,0 +1,45 @@
+{
+  "id": "libAudioFlux__audioFlux",
+  "status": "ok",
+  "signatureZh": "纯 C 的 STFT 引擎，24 秒双声道往返只要约 0.7 秒；频域门限把混响尾巴直接抹掉，整段瞬间从“有空间”变“干声”",
+  "chooseWhenZh": "要在 CPU 上大批量做频谱分析、去混响、特征提取，又不想背 torch/GPU 依赖时选它",
+  "contrastWith": [
+    "KinWaiCheuk__nnAudio"
+  ],
+  "capabilitiesZh": [
+    "C 实现的 STFT/ISTFT（radix2_exp=10、hop=256），复数谱往返重建几乎无损",
+    "频域维纳式软门限（噪声底 -40dB）压掉混响与弱尾音，听感明显变干",
+    "任意频域掩码：180Hz 高通 + 8kHz 低通 + 2kHz 轻微提亮，直接改音色",
+    "速度：24 秒双声道三段处理（含 STFT/掩码/ISTFT）总计约 0.6 秒，全部单核 CPU"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 8,
+      "capZh": "第一段：STFT→ISTFT 原样往返，FluidSynth 渲染的合唱混响完整保留，作为基准"
+    },
+    {
+      "startSec": 8,
+      "endSec": 16,
+      "capZh": "第二段：同一旋律过 -40dB 维纳门限，混响尾巴被削掉，声音变干、背景变黑"
+    },
+    {
+      "startSec": 16,
+      "endSec": 24,
+      "capZh": "第三段：180Hz 高通+8kHz 低通+2kHz 提亮，低频轰鸣消失、中频更突出，收束成干净结尾"
+    }
+  ],
+  "evidenceZh": "调用仓库同版本（0.1.9）的 audioflux：af.STFT(radix2_exp=10, window_type=Hann, slide_length=256)，对每 8 秒段做 stft -> 掩码 -> istft(method_type=0)，各段 RMS 对齐到 0.16，边界 50ms 淡入淡出，最终峰值归一 0.92。输入是 FluidSynth 渲染的持续段 16–40s（24s，先 +10dB）。",
+  "limitsZh": "仓库源码构建需要自带 fftw 与定制 mingw 的 win64.cmake，本机未从源码编译，直接用了 PyPI 同版本 0.1.9 wheel（版本号与仓库一致，但不是仓库源码产物）；除 ISTFT 外的变换（CQT/小波/reassign/synsq）没有逆变换，只能分析不能出声；iSTFT 首尾帧权重未归一化，边界不做淡入淡出会出现 6.9 倍峰值毛刺。",
+  "spec": {
+    "durationSec": 24.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 4233644
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    66 ms] 验收文件：F:\\coding音乐\\_samples\\libAudioFlux__audioFlux\\sample.wav\n[   229 ms] 文件大小：4,134.4 KB\n[   434 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=24.000 s 码率=1411 kbps (188 ms)\n[   686 ms] 幅度统计：峰值=-0.72 dBFS  RMS=-11.85 dBFS  样本数=1058400 (223 ms)\n[   956 ms] 频谱检测：非背景像素占比=66.16%  阈值=2.00%  结果=有能量 (269 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\libAudioFlux__audioFlux\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 24.000 s\n峰值        : -0.72 dBFS\nRMS         : -11.85 dBFS\n频谱非空度  : 66.16%（阈值 2.00%）\n总耗时      : 968 ms\n判定        : PASS  -> 有声音"
+  }
+}

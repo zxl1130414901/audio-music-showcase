@@ -1,0 +1,16 @@
+# AudioMass 样例复现命令（Windows / headless Chrome）
+# 1) 起本地静态服务（仓库自带 src 即可运行，无后端）
+F:\coding音乐\_env\venv\Scripts\python.exe -m http.server 8899 --directory "F:\coding音乐\pkalogiros__AudioMass\src"
+
+# 2) puppeteer 自动化（脚本会：加载页面 -> wavesurfer 载入 test.mp3
+#    -> 对 84.5s 处 FadeIn 0.7s、108.8s 处 FadeOut 0.6s、整段 Gain 0.84
+#    -> 提取 84.5-109.5s 立体声 buffer 写 WAV）
+$env:NODE_PATH='F:\coding音乐\_env\npmtest\node_modules'
+node F:\coding音乐\_tmp\batchD\am_headless.js
+
+# 3) 验收
+powershell -NoProfile -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\pkalogiros__AudioMass\sample.wav"
+
+# 4) 波形/频谱图（截取 1-21 s 内容区段）
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 1 -t 20 -i sample.wav -filter_complex "showwavespic=s=1024x256:colors=0x66e08a" -frames:v 1 waveform.png
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 1 -t 20 -i sample.wav -lavfi "showspectrumpic=s=1024x512" -frames:v 1 spectrogram.png

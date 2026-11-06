@@ -1,0 +1,12 @@
+# fundsp 离线短曲（Rust harness，path 依赖仓库，不改仓库文件）
+# 1) 编译与运行
+cd F:\coding音乐\_tmp\batchB\fundsp_demo
+set CARGO_HOME=F:\coding音乐\_env\cargo_home
+set CARGO_TARGET_DIR=F:\coding音乐\_tmp\batchB\fundsp_target
+cargo run --release
+#    main.rs：Sequencer::new(0,2) / bpm=120 / 20s
+#    seq.push(t0,t1,Fade::Smooth,0.0,amp,Box::new(bassdrum(1.0,0.3) | snaredrum(...) | cymbal(...)))
+#    Wave::render(sr, dur, &mut seq) -> filter(reverb2_stereo(6.0,1.2,0.4,1.0)) -> limiter_stereo -> save_wav16("fundsp_out.wav")
+# 2) 统一规格转换 + 截图
+powershell -File F:\coding音乐\_tmp\batchB\make_sample.ps1 -Src F:\coding音乐\_tmp\batchB\fundsp_out.wav -OutDir F:\coding音乐\_samples\SamiPerttu__fundsp -StartSec 0 -DurationSec 20
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\SamiPerttu__fundsp\sample.wav

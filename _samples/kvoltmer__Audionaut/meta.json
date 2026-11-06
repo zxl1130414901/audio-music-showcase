@@ -1,0 +1,16 @@
+{
+  "id": "kvoltmer__Audionaut",
+  "owner": "kvoltmer",
+  "repo": "Audionaut",
+  "status": "skipped",
+  "blockerZh": "桌面应用而非可脚本化渲染器：C++ + JUCE 工程（Audionaut/Builds/VisualStudio2026/Audionaut.sln + vcxproj），本机无 MSVC/CMake，仓库也不含任何预编译二进制，无法构建。唯一自动化入口是 npx audionaut-mcp，但 MCP 只是把编辑指令投给「已经打开工程」的桌面 App，前提是先安装官方 Windows 安装包（默认写入 C:\\Program Files，违反「不装需写 C 盘的软件」），且没有可用的命令行「离线导出」命令。",
+  "whatItWouldNeed": "Visual Studio 2022/2026 + CMake 编译 JUCE 工程（或直接装官方安装包常驻运行），再配 Node 18+ 跑 audionaut-mcp，并把工程文件与音频素材预先摆好；这套 GUI 依赖与「一个进程离线出 wav」的目标不兼容。",
+  "alternativePath": "要「多轨剪辑/交叉淡入淡出/导出」的自动化示例，用已落盘的 DBraun__DawDreamer（Python 直接渲染多轨 DAW 工程）更合适；要浏览器内编辑器交互参考，用 pkalogiros__AudioMass。",
+  "capabilitiesZh": [
+    "多轨音频剪辑与录音：精确切分、per-track playlist、多声道素材、交叉淡入淡出与整体淡出",
+    "面向 AI Agent 的 MCP 接口：把「按 16 小节切分、分到两条轨、补空、设交叉淡入」这类编辑动作变成可远程调用的工具",
+    "桌面 GUI 内可做 Auto Edit、stem separation（人声/伴奏分离）等辅助流程"
+  ],
+  "chooseWhenZh": "需要人类可视化界面剪辑、同时让 AI 通过 MCP 批量操作剪辑动作时选它；只要命令行离线生成或批量渲染音频，不必选它。",
+  "contrastWith": ["DBraun__DawDreamer", "pkalogiros__AudioMass", "stargatedaw__stargate"]
+}

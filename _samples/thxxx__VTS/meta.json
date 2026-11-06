@@ -1,0 +1,22 @@
+{
+  "id": "thxxx__VTS",
+  "status": "ok",
+  "engine": "VTS (Video-to-Sound / dynamic_v3_0415.ckpt, 5.2 GB) + Oobleck vocoder，fp16，64 步 ODE，CFG 3.0",
+  "spec": {"durationSec": 22.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3880844},
+  "capabilitiesZh": [
+    "文本 + 动态包络双条件生成音效，能按草图控制强弱起伏与节奏",
+    "44.1 kHz 原生输出，低频雷声、宽带雨声、瞬态溅水都能分开塑造",
+    "8 GB 显存即可跑：fp16 下峰值显存仅 2.02 GB"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 8.6, "capZh": "雨夜底噪：稳定雨声铺满整条时间线，建立场景与空间感"},
+    {"startSec": 1.4, "endSec": 5.0, "capZh": "远处雷声：低频隆隆由弱到强再衰减，撑开远近层次"},
+    {"startSec": 8.6, "endSec": 11.4, "capZh": "汽车驶过：湿路面轮胎溅水扫过中频，形成明确的动态事件"},
+    {"startSec": 14.2, "endSec": 17.4, "capZh": "二次雷声：较弱的低频收束，把听感从事件拉回雨幕尾声"}
+  ],
+  "signatureZh": "给一段噪声包络草图加一句场景文本，VTS 就能生成有空间层次的雨夜街景声，雷声低频与轮胎溅水各自独立成形。",
+  "chooseWhenZh": "需要按文本快速产出 4–5 秒级、动态可控的音效素材（游戏拟音、短片声音设计、氛围草稿）时选它；它擅长音效与氛围，而不是长曲生成。",
+  "contrastWith": ["hkchengrex__MMAudio", "facebookresearch__audiocraft"],
+  "evidenceZh": "在独立 Python 3.11.14 环境 _env\\venv_vts 里装 torch 2.4.1+cu124（绕过 requirements 的 2.4.1 锁定），权重 _models\\VTS\\dynamic_v3_0415.ckpt 5.2 GB 从 Daniel777/VTS 取得；模型 CPU 载入 227 s、转 fp16 上卡后权重约 2.9 GB，64 步 ODE 生成 5 s 片段仅 12–23 s、峰值显存 2.02 GB；共生成 2 段稳定雨、2 段雷声草图触发、1 段汽车掠过的音效，用 Python 把雨声循环叠底、雷声与汽车裁到事件段并按 RMS 平衡，拼成 22 s 44.1 kHz 双声道 PCM_16。",
+  "limitsZh": "① 单次生成受 max_audio_len=400 与 Oobleck hop 限制，最佳片段 4–5 s，20 秒作品需多段生成后拼贴；② 动态条件用噪声包络替代真人哼唱，只有给真人 voice sketch 才能发挥音色迁移的全部能力；③ 64 步 ODE 在 8 GB 笔记本卡上每 5 s 片段约 12–25 s，时长线性增成本；④ 条件包络会被模型放大成周期性强弱起伏，需压限或改用稳定包络。"
+}

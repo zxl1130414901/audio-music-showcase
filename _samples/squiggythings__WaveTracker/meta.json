@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "C# / .NET 工程（WaveTracker.sln + WaveTracker.csproj），本机 `dotnet` 不可用（.NET SDK 未安装），装 SDK 属 >200MB 工具链；且它是 GUI 追踪器，无命令行导出 WAV 入口。",
+  "capabilitiesZh": [
+    "现代 wave 追踪器：采样器 + 波形表 + 效果列，编辑 .wtr 模块",
+    "内置采样编辑与波表合成，可导出 WAV",
+    "MonoGame 渲染的跨平台 GUI"
+  ],
+  "signatureZh": "（未出样）同样是追踪器音色：短采样循环 + 波表，节奏颗粒感强。",
+  "chooseWhenZh": "要做波形表追踪器音乐、且愿意在 Windows/macOS 桌面手动编辑时选它；要脚本化出曲请选 torchsynth。",
+  "contrastWith": [
+    "torchsynth__torchsynth",
+    "SamiPerttu__fundsp"
+  ],
+  "evidenceZh": "核查 WaveTracker.sln 与 WaveTracker/WaveTracker.csproj（.NET + MonoGame 工程）与 README 运行说明；执行 dotnet --version 返回「command could not be loaded」，确认 SDK 缺失。",
+  "limitsZh": "无 .NET SDK；GUI-only 无 CLI；按纪律（>200MB 工具链跳过）不安装 SDK，也未用替代音频冒充其输出。",
+  "id": "squiggythings__WaveTracker",
+  "segments": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": "milkytracker__MilkyTracker",
+  "owner": "milkytracker",
+  "repo": "MilkyTracker",
+  "status": "ok",
+  "spec": {
+    "durationSec": 28.5,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 5027478
+  },
+  "capabilitiesZh": [
+    "仓库自带 milkycli 命令行工具，可把 XM/MOD 等 tracker 模块离线渲染成 WAV，无需开图形界面",
+    "完整还原模块内的多轨乐器、音量/音高包络、效果命令与采样重采样，支持 -multi-track 逐轨导出",
+    "可指定采样率、混音音量与重采样算法，纯 CPU 运行，不依赖显卡与任何模型权重"
+  ],
+  "signatureZh": "硬边 8-bit 采样与方整步进的颗粒感，旋律像被节拍器一格格钉在网格上。",
+  "segments": [
+    { "startSec": 0.0, "endSec": 5.0, "capZh": "开场由低频主题与稀疏琶音建立 tracker 标志性的采样颗粒音色" },
+    { "startSec": 5.0, "endSec": 14.0, "capZh": "主段推进，多轨鼓点与旋律分层同步，展示模块化编曲的组织能力" },
+    { "startSec": 14.0, "endSec": 23.0, "capZh": "中段变化，音量包络与效果命令带来明显的动态起伏与转调" },
+    { "startSec": 23.0, "endSec": 28.5, "capZh": "收束回落并把音量淡出，结束在低频动机上" }
+  ],
+  "evidenceZh": "cmake -S 仓库 -B mt_build -G \"Visual Studio 17 2022\" -A x64 后 cmake --build --target milkycli；再执行 milkycli.exe resources/music/milky.xm -output xm_milky.wav -sample-rate 44100 -verbose；最后 post.py --start 2.0 --dur 28.5 --gain 4 --fade 1.2。",
+  "limitsZh": "无任何权重、显存占用 0MB。短板有三：原仓库只提供 GUI，命令行工具需自行用 MSVC+CMake 编译；LoaderAMS.cpp 在中文 GBK 代码页会报 C1071，必须预处理该文件；演示曲 milky.xm 原始混音峰值已达 -0.53dBFS，几乎没有增益余量，且 BassoonTracker 的 spacedeb.mod 在同工具下导出全静音，说明并非所有 MOD 兼容。",
+  "chooseWhenZh": "需要完全离线、零显存、且要求逐音符可编辑的传统 tracker 编曲或芯片音乐复原时选它；想让模型按文字即兴生成音乐则不该选它。",
+  "contrastWith": ["chaosprint__glicol", "hkchengrex__MMAudio"]
+}

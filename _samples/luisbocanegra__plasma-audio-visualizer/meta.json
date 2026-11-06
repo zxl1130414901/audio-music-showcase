@@ -1,0 +1,16 @@
+{
+  "id": "luisbocanegra__plasma-audio-visualizer",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "KDE Plasma 6 桌面小组件：系统音频实时频谱条/波形可视化",
+    "基于 CAVA 采集音频，支持自定义配色、形状与刷新率",
+    "可作为桌面面板挂件或独立窗口显示"
+  ],
+  "blockerZh": "平台与产物双重不符：它是 KDE Plasma 6 的 C++/Qt6 QML 插件（CMake 构建，仅 Linux），Windows 上没有 Plasma 桌面，无法加载；本机也没有 cmake/MSVC。且产物是桌面频谱动画，不产生音频文件。",
+  "whatItWouldNeed": "Linux + KDE Plasma 6 + Qt6 + CAVA + cmake；或在 OBS 中用 cava 采集可视化。",
+  "alternativePath": "本机可立即用 ffmpeg showspectrum 生成频谱动画视频；桌面实时可视化需 Linux 环境。",
+  "chooseWhenZh": "只有当你在 Linux/KDE 桌面上想要“系统播放时实时频谱”，才值得为它装 Plasma 6 环境；要音频或视频交付，直接用 ffmpeg。",
+  "contrastWith": ["kosua20__MIDIVisualizer", "pkalogiros__AudioMass"],
+  "evidenceZh": "README 标题与安装说明只覆盖 Arch AUR、KDE Store、openSUSE/Fedora 包，依赖 KDE Plasma 桌面与 CAVA；仓库为 CMake 工程；本机为 Windows，Get-Command 检查 cmake/MSVC 均缺失。",
+  "limitsZh": "仅 Linux 桌面；依赖系统音频回环（PipeWire/PulseAudio），无头环境不可用；不导出音频。"
+}

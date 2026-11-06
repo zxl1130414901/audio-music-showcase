@@ -1,0 +1,16 @@
+{
+  "id": "stargatedaw__stargate",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "一体化 DAW：模式化编曲、音频剪辑、混音与导出成品 wav",
+    "内置合成器/效果器插件与模块化路由矩阵，专注 EDM 制作",
+    "引擎带 CLI（文档提到通过 engine CLI 传参渲染），可脚本化导出"
+  ],
+  "blockerZh": "构建链全缺：源码为 C++（src/sglib、sgui）+ Python 打包，Makefile 需要 make 与 C++ 编译器；本机 cmake/gcc/clang/MSVC 全部缺失，且 .gitmodules 里的 portaudio-binaries、soundtouch、sbsms 三个子模块目录为空（未初始化），直接 make 会因缺依赖失败。仓库不发预编译 Windows 包。",
+  "whatItWouldNeed": "MSVC（或 mingw）+ cmake/make + git submodule update --init 三个子模块 + PortAudio/PortMidi；若走 CLI 渲染，还需先用 GUI 生成 “Copy cmd args” 的工程参数。",
+  "alternativePath": "本机无；可用 DawDreamer 的 Faust/JUCE 图离线渲染作为可编程 DAW 替代（已出样）。",
+  "chooseWhenZh": "只有当你需要完整 DAW 工程（内置乐器+效果链+路由）并愿意装 MSVC 工具链、初始化子模块时才值得；单纯要离线出音频，DawDreamer 已经够用。",
+  "contrastWith": ["DBraun__DawDreamer", "Ameobea__web-synth"],
+  "evidenceZh": "检查 src 目录：Makefile + requirements.txt + sglib/sgui（C++）；.gitmodules 列出 portaudio-binaries、soundtouch、sbsms；本机 Get-Command 检查 cmake/gcc/clang/MSVC 全部 MISSING；docs/benchmarking.md 提到 engine CLI 与 “Copy cmd args”，说明渲染入口存在但需构建后可用。",
+  "limitsZh": "即便构建成功，它是 GUI DAW，无头渲染要先从界面导出工程参数；自定义引擎对 Windows 音频设备依赖 PortAudio，自动化程度低。"
+}

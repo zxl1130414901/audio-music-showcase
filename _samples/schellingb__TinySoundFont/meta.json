@@ -1,0 +1,44 @@
+{
+  "id": "schellingb__TinySoundFont",
+  "status": "ok",
+  "signatureZh": "单文件 SoundFont 采样直出，干声、无混响、颗粒清晰且略带硬边，主题一进来就能听出是“裸采样”",
+  "chooseWhenZh": "要把 MIDI+SF2 塞进游戏/嵌入式或单文件分发、只求稳定发声不追求发烧音质时选它",
+  "contrastWith": [
+    "FluidSynth__fluidsynth"
+  ],
+  "capabilitiesZh": [
+    "把标准 MIDI 事件（Note On/Off、Program Change、Pitch Bend、CC）驱动 SoundFont 采样，离线渲染成 44.1kHz 立体声",
+    "按 MIDI 通道切换 SoundFont 预设，并把第 10 通道走 bank 128 打击乐",
+    "纯 CPU 批量渲染，不需要声卡：用自写 harness 调用 tsf.h/tml.h 替代仓库自带的 miniaudio 实时示例"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 8,
+      "capZh": "MIDI 前奏段：TSF 解析音符事件并以 SoundFont 采样合成，力度轻、RMS 约 0.07"
+    },
+    {
+      "startSec": 8,
+      "endSec": 16,
+      "capZh": "旋律推进段：多通道交织触发，演示 tml.h 对多音轨事件的时序调度"
+    },
+    {
+      "startSec": 16,
+      "endSec": 24,
+      "capZh": "主段齐奏：多音符同时发声、立体声左右混音，RMS 升到约 0.12，可听出采样合成器层次"
+    }
+  ],
+  "evidenceZh": "用 zig cc 编译自写 harness tsf_render.c（内联 TSF_IMPLEMENTATION/TML_IMPLEMENTATION）：tsf_load_filename 载入 examples/florestan-subset.sf2，tsf_set_output(TSF_STEREO_INTERLEAVED, 44100, -2dB)，逐块 tsf_render_short 写入 16-bit WAV；输入 examples/venture.mid，渲染 49s 后 ffmpeg 截取 0–24s。",
+  "limitsZh": "仓库示例只能实时播放（依赖 miniaudio 与声卡），离线渲染需自写 harness；自带 florestan-subset.sf2 是精简音源，音色数量有限、无完整 GM 音色库；tml.h 不支持全部 MIDI 元事件；无混响/空间处理，高频细节一般。",
+  "spec": {
+    "durationSec": 24.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 4233678
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    72 ms] 验收文件：F:\\coding音乐\\_samples\\schellingb__TinySoundFont\\sample.wav\n[   129 ms] 文件大小：4,134.5 KB\n[   328 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=24.000 s 码率=1411 kbps (131 ms)\n[   627 ms] 幅度统计：峰值=-3.15 dBFS  RMS=-19.17 dBFS  样本数=1058400 (257 ms)\n[  1044 ms] 频谱检测：非背景像素占比=97.71%  阈值=2.00%  结果=有能量 (415 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\schellingb__TinySoundFont\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 24.000 s\n峰值        : -3.15 dBFS\nRMS         : -19.17 dBFS\n频谱非空度  : 97.71%（阈值 2.00%）\n总耗时      : 1054 ms\n判定        : PASS  -> 有声音"
+  }
+}

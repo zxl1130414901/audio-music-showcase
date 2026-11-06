@@ -1,0 +1,16 @@
+# Brickworks 离线渲染（纯头文件，自写 harness 逐块驱动）
+# 仓库示例都是插件工程，这里复用 examples/synth_simple 的信号链做离线合成
+F:\coding音乐\_env\venv\Scripts\python.exe -m ziglang c++ -O2 `
+  -I "F:\coding音乐\Orastron__brickworks\include" `
+  "F:\coding音乐\_tmp\batchA\src\bw_synth.cpp" -o "F:\coding音乐\_tmp\batchA\out\bw_synth.exe"
+
+# 渲染 20 秒：A2 铺底 -> 中速琶音 -> 高 Q 酸味琶音 -> 扫频下行 -> 收束
+F:\coding音乐\_tmp\batchA\out\bw_synth.exe "F:\coding音乐\_tmp\batchA\out\bw_synth.wav" 20
+
+# +7dB 归一到峰值 -1.5 dBFS
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\bw_synth.wav" `
+  -af "volume=7dB" -c:a pcm_s16le "F:\coding音乐\_samples\Orastron__brickworks\sample.wav"
+
+# 收尾：波形/频谱图 + 静音校验 + meta.json
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py `
+  "F:\coding音乐\_samples\Orastron__brickworks\sample.wav" F:\coding音乐\_tmp\batchA\meta_brickworks.json

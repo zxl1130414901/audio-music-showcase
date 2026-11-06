@@ -1,0 +1,46 @@
+{
+  "id": "cycfi__q",
+  "status": "ok",
+  "capabilitiesZh": [
+    "DX7 六算子 FM 合成：dx_patcher 按 DX7 面板参数（算法/反馈/算子包络/键盘缩放）离线编译 patch，fm_voice 逐样本相位调制发声",
+    "四种原厂音色：E.PIANO 1 / MARIMBA / BRASS 1 / BASS 1 均由同一套算子表驱动，只需换 config",
+    "多声部与音符调度：fm_voice 池默认 16 路，按 MIDI 事件分配空闲声部，占满时抢占最旧音符",
+    "标准 MIDI 文件读取：q::midi_file 解析 .mid，按采样时钟把 note on/off 事件排到样本位置"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 4,
+      "capZh": "DX7 E.PIANO 1 的六算子 FM 琶音，C-E-G-B 逐个铺陈主题，缓慢起音"
+    },
+    {
+      "startSec": 5.6,
+      "endSec": 12.9,
+      "capZh": "同一动机加速成八分音符并垫入低音，演示多声部叠层与宽阔音域"
+    },
+    {
+      "startSec": 13.2,
+      "endSec": 20.1,
+      "capZh": "Cmaj7 与 Fmaj7 长音和弦叠加，靠 FM 包络自然衰减收束，无外部混响"
+    }
+  ],
+  "signatureZh": "DX7 电钢琴的玻璃味泛音：六算子相位调制出干净的高次谐波，尾音由包络完成而不是靠混响",
+  "chooseWhenZh": "要做实时/嵌入式固件里的 FM 乐器音源，或需要 DX7 那种金属味电钢、马林巴、铜管音色时选它",
+  "contrastWith": [
+    "grame-cncm__faust",
+    "Orastron__brickworks"
+  ],
+  "evidenceZh": "把仓库 example/fm_synth/fm_synth.cpp 复制为 _tmp/batchA/src/q_fm.cpp，仅去掉 PortAudio 播放路径（player 结构）、固定 sps=44100、MIDI_DIR 改为相对目录 midi；用 python -m ziglang c++ -std=c++20 -O2 编译 q_fm.cpp + q_io/src/audio_file.cpp（include q_lib/include、q_io/include、q_io/external/include，另补 infra/* 四个空子模块的 shim）；_tmp/batchA/src/q_compose.py 用 mido 现写 21 秒 MIDI（ticks_per_beat=1000、tempo=1 秒/拍，即 1 tick=1ms），再用 epiano_1 patch 渲染；ffmpeg 从渲染结果 0.95s 起取 20.1s，30ms 淡入 + 末段 450ms 淡出，得到 44.1kHz 单声道 sample.wav。",
+  "limitsZh": "仓库没有可直接编译的独立程序（示例依赖 CMake + PortAudio 播放），我们自写 harness 才跑通；q_io 依赖的 infra 子模块在此 checkout 中是空目录，必须用本地 shim（CYCFI_ASSERT/int_max/pow2/iterator_range）；仓库的 stdio 走窄字符，中文路径读不了，MIDI 与输出必须放在 ASCII 相对路径下；输出单声道、无混响与母带处理；fm_voice 为浮点逐样本计算，未做 SIMD 优化。",
+  "spec": {
+    "durationSec": 20.1,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 1772898
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    61 ms] 验收文件：F:\\coding音乐\\_samples\\cycfi__q\\sample.wav\n[   113 ms] 文件大小：1,731.3 KB\n[   228 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=20.100 s 码率=706 kbps (98 ms)\n[   344 ms] 幅度统计：峰值=-1.00 dBFS  RMS=-17.93 dBFS  样本数=886410 (94 ms)\n[   474 ms] 频谱检测：非背景像素占比=39.40%  阈值=2.00%  结果=有能量 (129 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\cycfi__q\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 20.100 s\n峰值        : -1.00 dBFS\nRMS         : -17.93 dBFS\n频谱非空度  : 39.40%（阈值 2.00%）\n总耗时      : 479 ms\n判定        : PASS  -> 有声音"
+  }
+}

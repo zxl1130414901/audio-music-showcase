@@ -1,0 +1,13 @@
+# TinySoundFont 离线渲染（Windows / MSVC 或 zig cc）
+# 1) 编译自写 harness（只有 C 标准库依赖，不需要仓库自带的 miniaudio 实时示例）
+cd F:\coding音乐\_tmp\batchA
+F:\coding音乐\_env\venv\Scripts\python.exe -m ziglang cc -O2 -I "F:\coding音乐\schellingb__TinySoundFont" src\tsf_render.c -o out\tsf_render.exe
+
+# 2) 渲染：MIDI + SF2 -> WAV（全部在 _tmp，不进仓库目录）
+.\out\tsf_render.exe "F:\coding音乐\schellingb__TinySoundFont\examples\venture.mid" "F:\coding音乐\schellingb__TinySoundFont\examples\florestan-subset.sf2" out\tsf_full.wav 90
+
+# 3) 截取前奏+主段 24 秒，落到样例目录
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i out\tsf_full.wav -t 24 -c:a pcm_s16le "F:\coding音乐\_samples\schellingb__TinySoundFont\sample.wav"
+
+# 4) 收尾：波形/频谱图 + 静音校验 + meta.json
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py "F:\coding音乐\_samples\schellingb__TinySoundFont\sample.wav" F:\coding音乐\_tmp\batchA\meta_tsf.json

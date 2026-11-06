@@ -1,0 +1,16 @@
+{
+  "id": "syedhali__EZAudio",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "iOS/macOS 实时录音、播放与音频文件读写组件",
+    "波形视图与实时频谱可视化（EZAudioPlot / EZAudioPlotGL）",
+    "麦克风输入电平检测与音频单元封装"
+  ],
+  "blockerZh": "平台锁定：Objective-C 框架（EZAudio.podspec），依赖 CoreAudio/AVFoundation/AudioToolbox，只能跑 iOS/macOS，Windows 无法编译或运行；项目已废弃并推荐迁移到 AudioKit；仓库不含任何示例音频或命令行工具。",
+  "whatItWouldNeed": "macOS + Xcode（或 iOS 设备）；若只是要处理音频，改走跨平台库。",
+  "alternativePath": "本机无；音频读写/可视化可用 ffmpeg + Python(soundfile/matplotlib) 完全替代。",
+  "chooseWhenZh": "只有当你在维护 Apple 平台老项目、必须保留 EZAudio 的 API 时才值得；新项目应直接上 AudioKit 或跨平台方案。",
+  "contrastWith": ["kosua20__MIDIVisualizer", "Ameobea__web-synth"],
+  "evidenceZh": "仓库根目录仅有 README/LICENSE/EZAudio.podspec 与源码目录，README 首句为 “A simple, intuitive audio framework for iOS and OSX”，并标注 Deprecated；无 Windows 构建脚本、无 CLI、无预置音频。",
+  "limitsZh": "已停止维护；仅 Apple 平台；无可脚本化出样路径。"
+}

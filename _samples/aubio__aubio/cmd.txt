@@ -1,0 +1,21 @@
+# aubio 样例复现命令（全部落 F 盘；aubio 为预编译包，不编译）
+# 说明：venv(Python 3.13) 无 aubio 预编译轮子、且本机不装 MSVC/cmake，故把 conda-forge 的 cp311 预编译包
+#      aubio-0.4.9-py311hf5660dd_9 解包到 venv_vts(Lib/site-packages/aubio)，并补 ffmpeg 4.4 的
+#      avcodec-58/avformat-58/avutil-56/swresample-3 及其依赖 DLL（同目录），仅用于本机运行。
+
+# 1) 分析：onset / tempo / pitch，切片与每片音高
+$env:TMP='F:\coding音乐\_env\tmp'; $env:TEMP='F:\coding音乐\_env\tmp'
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\C1\aubio\analyze.py
+
+# 2) 用分析结果驱动三段式渲染（A 打点 / B 按音高切片重排 / C 按 BPM 门控）
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\C1\aubio\render.py
+
+# 3) 复核驱动效果与音频质量
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\C1\aubio\check.py
+powershell -NoProfile -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\aubio__aubio\sample.wav"
+
+# 4) 波形/频谱图（截取 1-19 s，避开片尾淡出）
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 1 -t 18 -i sample.wav -filter_complex "showwavespic=s=1280x360:colors=0xffc247" -frames:v 1 waveform.png
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 1 -t 18 -i sample.wav -lavfi "showspectrumpic=s=1280x640:legend=1" -frames:v 1 spectrogram.png
+
+# 源音乐：F:\coding音乐\_samples\facebookresearch__audiocraft\sample.wav（MusicGen 生成的 20 s 带结构音乐）

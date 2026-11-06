@@ -1,0 +1,51 @@
+{
+  "id": "KinWaiCheuk__nnAudio",
+  "status": "ok",
+  "signatureZh": "GPU 上可微的 STFT/iSTFT，能在频域把同一段旋律任意改形：梳状掩码出金属味、丢掉相位再迭代重建出涂抹感",
+  "chooseWhenZh": "要在一套可微/可批的频谱管线里做频域掩码、源分离前端、频谱损失训练时选它，而不是只做一次性 librosa 分析",
+  "contrastWith": [
+    "JorenSix__TarsosDSP",
+    "libAudioFlux__audioFlux"
+  ],
+  "capabilitiesZh": [
+    "STFT/iSTFT 用 torch 卷积核实现，复数谱输出 shape=(ch,f,t,2)，可在 CUDA 上整批前向",
+    "直接在复数谱上乘频域掩码（梳状/带通/低通）再逆变换，得到金属化、闷化的音色",
+    "丢掉相位只留幅度，再用 STFT/iSTFT 迭代 32 次找回相位，验证“只有幅度也能听”",
+    "四段处理一次跑完只要约 5.8s（含首块 kernel 编译），可做实时实验"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 6,
+      "capZh": "第一段：STFT→iSTFT 恒等往返，重建声与原声几乎一致，验证变换可逆"
+    },
+    {
+      "startSec": 6,
+      "endSec": 12,
+      "capZh": "第二段：9 bin 周期梳状掩码叠中频带通，音色被切成金属齿状，只剩中频谐波"
+    },
+    {
+      "startSec": 12,
+      "endSec": 18,
+      "capZh": "第三段：幅度保留、相位清零后迭代 32 次重建，出现典型相位涂抹，节奏仍在但瞬态发糊"
+    },
+    {
+      "startSec": 18,
+      "endSec": 24,
+      "capZh": "第四段：3kHz 低通加 150Hz 高通收尾，声音被压暗成中频段，作为整段的收束"
+    }
+  ],
+  "evidenceZh": "直接用仓库 Installation/nnAudio（不安装，sys.path 注入）；STFT(n_fft=1024, hop_length=256, sr=44100, output_format='Complex').cuda() 与 iSTFT(同参数).cuda()，每 6s 一段做不同频域处理，iSTFT(onesided=True, length=段长)；第 3 段用 stft/istft 自行迭代相位 32 次；各段 RMS 对齐到 0.15 后拼接。输入是 TinySoundFont 渲染的持续段 16–40s（24s）。",
+  "limitsZh": "仓库自带 Griffin_Lim 用 real-imag 双通道构造复数，torch 2.6 的 istft 要求 complex 类型，直接调用会报错，只能自己用 STFT/iSTFT 迭代相位；nnAudio 本身只产出频谱，回放音质完全取决于 iSTFT/相位重建，瞬态会糊；CUDA 首个 kernel 有约 2.5s 编译延迟；包源码在 Installation/ 下，pip install -e 会在仓库内生成 egg-info，故只用 sys.path 注入。",
+  "spec": {
+    "durationSec": 24.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 4233644
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[   155 ms] 验收文件：F:\\coding音乐\\_samples\\KinWaiCheuk__nnAudio\\sample.wav\n[   237 ms] 文件大小：4,134.4 KB\n[   476 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=24.000 s 码率=1411 kbps (208 ms)\n[   860 ms] 幅度统计：峰值=-0.72 dBFS  RMS=-14.27 dBFS  样本数=1058400 (347 ms)\n[  1383 ms] 频谱检测：非背景像素占比=97.85%  阈值=2.00%  结果=有能量 (515 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\KinWaiCheuk__nnAudio\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 24.000 s\n峰值        : -0.72 dBFS\nRMS         : -14.27 dBFS\n频谱非空度  : 97.85%（阈值 2.00%）\n总耗时      : 1401 ms\n判定        : PASS  -> 有声音"
+  }
+}

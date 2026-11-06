@@ -1,0 +1,28 @@
+{
+  "id": "djfun__audio-visualizer-python",
+  "owner": "djfun",
+  "repo": "audio-visualizer-python",
+  "status": "ok",
+  "spec": {
+    "durationSec": 22.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 3880878
+  },
+  "capabilitiesZh": [
+    "把任意音频实时驱动成频谱类可视化视频，内置 Classic/Bar/Line 等组件并支持多图层叠加",
+    "命令行 avp 可完全无界面批量导出 mp4，由 ffmpeg 合成画面与音轨，可自定分辨率、帧率、码率",
+    "支持 .avp 项目文件保存配置，便于同一套视觉模板反复套用不同音源"
+  ],
+  "signatureZh": "声音原样不动，作品是画面：频谱柱逐帧咬住节拍，音频一个采样都没改。",
+  "segments": [
+    { "startSec": 0.0, "endSec": 7.0, "capZh": "开场低频鼓点建立律动，频谱柱开始明显响应低频能量" },
+    { "startSec": 7.0, "endSec": 15.0, "capZh": "主段旋律推进，频谱柱与波形随中高频变化密集起伏" },
+    { "startSec": 15.0, "endSec": 22.0, "capZh": "段落转缓后画面亮度随之下降，收束在较安静的音尾" }
+  ],
+  "evidenceZh": "设置 PYTHONPATH=仓库/src、QT_QPA_PLATFORM=offscreen，执行 python -m avp -i vis_input.wav -o vis_out.mp4 -c 0 vis layout=classic --no-preview --verbose；ffmpeg 实际用 -s 1280x720 -r 30 -t 22.1 合成，导出耗时约 16s（1.4x 实时）。",
+  "limitsZh": "无权重、显存 0MB。短板：只做可视化，音频 100% 直通、一个采样都不改，所以本样例的音色完全等于输入音源（取自 MilkyTracker 自带 universalnetwork2_real.xm，非它自己生成）；必须依赖 PyQt6 与 ffmpeg，无头运行要设 QT_QPA_PLATFORM=offscreen；导出速度为实时的 1.4 倍左右，长音频批量导出并不快。",
+  "chooseWhenZh": "已有成品音频、只需快速批量做出发布级频谱可视化视频且绝不改原音轨时选它；要生成或改编音乐本身请选 MMAudio / MilkyTracker / glicol。",
+  "contrastWith": ["milkytracker__MilkyTracker"]
+}

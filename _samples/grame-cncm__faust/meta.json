@@ -1,0 +1,51 @@
+{
+  "id": "grame-cncm__faust",
+  "status": "ok",
+  "signatureZh": "逐振荡器叠加的加法管风琴，泛音分层清晰、无采样痕迹，Zita 混响把尾音拉出教堂空间感",
+  "chooseWhenZh": "需要把合成器/效果器写成数学公式再编译成独立程序（自定义音色、物理建模、算法作曲）时选它，而不是靠采样或插件宿主",
+  "contrastWith": [
+    "Orastron__brickworks",
+    "surge-synthesizer__surge"
+  ],
+  "capabilitiesZh": [
+    "Faust 编译器把 .dsp 公式编译成 C++ 类，离线逐块渲染出 44.1kHz 立体声",
+    "加法合成：16 个正弦泛音各自独立增益，可实时改变音色厚度",
+    "内置 Zita 轻量混响（dm.zita_light），给出真实尾音与空间感",
+    "用 MapUI 按乐谱驱动 freq/gate/泛音增益，做出有起伏的完整乐段"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 6,
+      "capZh": "引子：单音 C4 进入，只有基频与低八度，音色清亮，混响开始铺底"
+    },
+    {
+      "startSec": 6,
+      "endSec": 11,
+      "capZh": "圣咏主题：C5 到 G4 的级进，泛音逐层加入，听出加法合成的“管风琴音栓”效果"
+    },
+    {
+      "startSec": 11,
+      "endSec": 17,
+      "capZh": "断句后琶音展开：3 次泛音与 5 次泛音增益提高，音色明显变厚变暗，混响密度上升"
+    },
+    {
+      "startSec": 17,
+      "endSec": 22.5,
+      "capZh": "终止长音 C4 收束，关门后只剩 Zita 混响的自然衰减尾巴"
+    }
+  ],
+  "evidenceZh": "用官方 Faust 2.88.0 安装包（解到 _tmp，仅取 faust.exe）；从 faustlibraries 拉 stdfaust.lib；执行 faust -I <libs> -lang cpp examples/generator/churchOrgan.dsp -o organ.cpp，再用 zig c++ 编译自写 harness faust_organ.cpp（MapUI 设 /churchOrgan/freq、/gate、各泛音增益），按 22.5s 乐谱逐块 compute 并写 WAV。",
+  "limitsZh": "Windows 安装包默认只装编译器，Faust 标准库需另下 faustlibraries；churchOrgan 是单声部乐器，和弦需多实例或外部混音；仓库示例本身只提供 UI 控件，要出声必须自写渲染 harness；Zita 混响在 8GB 机器上 CPU 单核渲染 22.5s 约数秒，算力不是瓶颈但长曲会慢。",
+  "spec": {
+    "durationSec": 22.5,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 3969068
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    80 ms] 验收文件：F:\\coding音乐\\_samples\\grame-cncm__faust\\sample.wav\n[   144 ms] 文件大小：3,876.0 KB\n[   282 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=22.500 s 码率=1411 kbps (119 ms)\n[   505 ms] 幅度统计：峰值=-2.14 dBFS  RMS=-16.07 dBFS  样本数=992250 (195 ms)\n[   807 ms] 频谱检测：非背景像素占比=94.19%  阈值=2.00%  结果=有能量 (300 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\grame-cncm__faust\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 22.500 s\n峰值        : -2.14 dBFS\nRMS         : -16.07 dBFS\n频谱非空度  : 94.19%（阈值 2.00%）\n总耗时      : 816 ms\n判定        : PASS  -> 有声音"
+  }
+}

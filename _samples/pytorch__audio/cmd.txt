@@ -1,0 +1,4 @@
+# pytorch/audio 样例命令（在 F:\coding音乐\_tmp\batchB 下执行）
+F:\coding音乐\_env\venv\Scripts\python.exe run_torchaudio.py
+powershell -NoProfile -ExecutionPolicy Bypass -File make_sample.ps1 -Src torchaudio_work.wav -OutDir F:\coding音乐\_samples\pytorch__audio -DurationSec 20
+powershell -NoProfile -ExecutionPolicy Bypass -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\pytorch__audio\sample.wav

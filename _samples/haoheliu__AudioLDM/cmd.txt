@@ -1,0 +1,23 @@
+# haoheliu/AudioLDM --- text-to-audio latent diffusion, 20 s rain narrative
+# Env: shared venv (torch 2.6+cu124, RTX 4060 8GB)
+# Weights: _models/AudioLDM/audioldm-s-full.ckpt 2440MB
+#   (official source is zenodo @0.1MB/s -> unusable; taken from hf-mirror.com/circulus/AudioLDM)
+# Tokenizer: facebook roberta-base (vocab/merges only) at _models/roberta-base, ASCII junction F:\_roberta
+
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\src\audioldm_demo.py
+#   monkeypatches: torch.load -> weights_only=False ; RobertaTokenizer.from_pretrained -> F:\_roberta
+#   build_model(ckpt_path=..., model_name='audioldm-s-full')   (load 594s cold / 104s warm)
+#   text_to_audio(ddim_steps=100, duration=10, guidance_scale=2.5, seed=20261106/07)
+#   part0 10.24s (23.8s)  part1 10.24s (8.3s)  -> audioldm_rain.wav 20.18s @16000Hz, total 136.3s
+
+# level-match the two halves by RMS (0.10 each), 300 ms crossfade, peak 0.9
+F:\coding音乐\_env\venv\Scripts\python.exe -c "import numpy as np, soundfile as sf; ..."   # see _tmp log
+#   -> F:\_al_out\audioldm_rain_mix.wav 20.18s peak 0.9 rms 0.077
+
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i F:\_al_out\audioldm_rain_mix.wav ^
+  -af "afade=t=in:st=0:d=0.05,afade=t=out:st=19.6:d=0.5" -ar 44100 ^
+  F:\coding音乐\_samples\haoheliu__AudioLDM\sample.wav
+
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py ^
+  F:\coding音乐\_samples\haoheliu__AudioLDM\sample.wav F:\coding音乐\_tmp\batchA\meta_audioldm.json 0.3:19
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\haoheliu__AudioLDM\sample.wav

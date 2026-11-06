@@ -1,0 +1,19 @@
+{
+  "status": "failed",
+  "blockerZh": "PyPI 只有 essentia-2.1b5 源码包，无 cp313 wheel；仓库自带 waf 构建需要 cmake 与 C++ 工具链，本机无 cmake，装 CMake(~50MB)+编译 essentia 全套（含 Eigen/FFTW/TensorFlow 依赖）远超 35 分钟预算。",
+  "capabilitiesZh": [
+    "音乐信息检索全家桶：频谱/梅尔/LPC/HPCP、节拍与调性分析、音高与和弦识别",
+    "可把一段音频拆成能量、节奏、调性等结构化特征，常用来做数据集标注与相似检索",
+    "自带 MusicExtractor 级流水线，输出 json/yaml 特征文件"
+  ],
+  "signatureZh": "（未出样）它的产物是特征与标注，本身不合成声音；要听差别得先有一个奏鸣的输入。",
+  "chooseWhenZh": "要做音乐检索、自动标注、把音频转成特征表时选它；要出可听音频请选 pytorch__audio 或合成器类仓库。",
+  "contrastWith": [
+    "pytorch__audio",
+    "facebookresearch__audiocraft"
+  ],
+  "evidenceZh": "只做可达性核查：(1) pip index/下载确认 PyPI 仅有 essentia-2.1b5.tar.gz（无 cp313-cp313-win_amd64 wheel）；(2) 读 pyproject.toml/setup.py 与 wscript，构建依赖 waf + CMake + Eigen；(3) 仓库 src/ 约 164MB 源码，本机 cmake 不存在。",
+  "limitsZh": "分析型库，即使跑通也不产出音频，无法在「听感对比」维度成立；本机缺 cmake，源码构建不可行；conda-only 的二进制分发在无 conda 环境下用不上。",
+  "id": "MTG__essentia",
+  "segments": []
+}

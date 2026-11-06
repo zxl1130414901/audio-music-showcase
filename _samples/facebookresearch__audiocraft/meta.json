@@ -1,0 +1,19 @@
+{
+  "id": "facebookresearch__audiocraft",
+  "status": "ok",
+  "engine": "audiocraft 1.4.0a2 / MusicGen-small（30M 级 32kHz 单声道自回归 LM）+ EnCodec 解码",
+  "promptZh": "cinematic lo-fi beat：软电钢琴琶音铺垫 → 稳定 hip-hop 鼓组 + 黑胶噪声 → 平静钢琴收尾（英文原文见 cmd.txt）",
+  "promptEn": "cinematic lo-fi beat: soft electric piano arpeggio intro over a warm analog pad, then steady hip-hop drums with vinyl crackle, ending with a calm piano resolution",
+  "spec": {"durationSec": 20.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3528078},
+  "capabilitiesZh": ["文本提示直接生成 20 秒连贯音乐（非拼接）", "能在同一段里完成乐器/段落切换：琶音 → 鼓组 → 收尾", "32kHz 单声道源，可经内部 encodec 声码器重建出完整混音"],
+  "segments": [
+    {"startSec": 0.0, "endSec": 5.0, "capZh": "文本驱动的开场：电钢琴琶音叠暖色 pad，建立 lo-fi 动机"},
+    {"startSec": 5.0, "endSec": 14.0, "capZh": "同一提示继续展开，鼓组进入并铺黑胶噪声，节奏型稳定推进"},
+    {"startSec": 14.0, "endSec": 20.0, "capZh": "情绪回落，钢琴与低频收束，句尾自然淡出而非硬切"}
+  ],
+  "signatureZh": "一句话变成一段有段落起伏的完整混音，鼓、琴、噪声层同时存在且相位连贯。",
+  "chooseWhenZh": "需要「给一句描述就要一段能用的成品音乐」时选它；不在意逐样本可控性、也不需要手写 DSP 参数。",
+  "contrastWith": ["torchsynth__torchsynth", "Signalsmith-Audio__dsp"],
+  "evidenceZh": "入口 S:\\_tmp\\batchB\\run_musicgen_local.py：MusicGen.get_pretrained(本地权重) → set_generation_params(duration=20, use_sampling=True, top_k=250, temperature=0.9, cfg_coef=3.5) → model.generate([prompt])（采样 1003 步 / 86s，RTX 8GB）→ torchaudio.save 32kHz 单声道 → ffmpeg 重采样 44.1kHz 双声道并 loudnorm。",
+  "limitsZh": "① HF 直连不可用、hf-mirror 的 resolve 会 302 回 huggingface.co 导致 huggingface_hub 抛 FileMetadataError，权重只能从 ModelScope 手工落地（musicgen-small 1.07GB + t5-base 0.89GB）；② 本机无 CUDA toolkit 编译不出 xformers，用 site-packages 内 stub（xformers.ops 仅提供 unbind 等符号，注意力走 torch 后端），非官方安装态；③ sentencepiece 读不了中文路径，tokenizer 必须走 subst 的 S:\\；④ 输出为 32kHz mono，44.1kHz 双声道是后处理，非模型原生；⑤ 段落结构靠提示词+采样运气，无法像合成器那样精确编排小节。"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "Rust workspace（edition 2024，rust-version 1.98）是 egui/Trunk 的 GUI DAW，无 headless 渲染或导出 CLI；cargo 构建需拉取 cpal/midir/symphonia/egui 全量依赖，产物只能开窗口手动操作。",
+  "capabilitiesZh": [
+    "Rust 实现的桌面 DAW：多轨音频、MIDI 编辑与插件宿主 API",
+    "cpal 直出设备、symphonia 解码多格式、hound 写 WAV",
+    "插件 API + 插件宿主，可接第三方处理链"
+  ],
+  "signatureZh": "（未出样）它是工作台而不是乐器：声音来自你导入的素材与插件链。",
+  "chooseWhenZh": "要在 Rust 生态里做一个可扩展 DAW 或研究插件宿主时选它；要离线生成音乐请选 audiocraft / torchsynth。",
+  "contrastWith": [
+    "SamiPerttu__fundsp",
+    "torchsynth__torchsynth"
+  ],
+  "evidenceZh": "读 Cargo.toml（workspace 含 yadaw-plugin-api / yadaw-plugin-host，依赖 cpal/midir/symphonia/egui、rust 1.98、edition 2024）与 README/quick_start.md（启动方式为开窗口的桌面应用）；README 无 CLI/export 关键字。",
+  "limitsZh": "GUI-only，无批量渲染入口；工具链版本要求高（rust 1.98），全量依赖编译耗时长且无法自动出音频；本机虽有 Rust，但按 35 分钟纪律不硬耗。",
+  "id": "mlm-games__yadaw",
+  "segments": []
+}

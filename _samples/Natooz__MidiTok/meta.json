@@ -1,0 +1,31 @@
+{
+  "id": "Natooz__MidiTok",
+  "owner": "Natooz",
+  "repo": "MidiTok",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 28.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le",
+    "bytes": 4939244
+  },
+  "capabilitiesZh": [
+    "把 MIDI 切成模型可读的离散 token：Bar / Position / Program / Pitch / Velocity / Duration / Tempo",
+    "token 可再解码回 symusic Score 并导出标准 MIDI，音符数量、音高分布与时间网格保持一致",
+    "支持 REMI、TSD、MIDI-Like、MMM 等多种分词方案，可配置程序、速度、小节位置量化粒度"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 5.5, "capZh": "钢琴分解和弦进入，建立四四拍开场动机"},
+    {"startSec": 5.5, "endSec": 11.0, "capZh": "底鼓军鼓进入，节奏网格来自Position与Duration"},
+    {"startSec": 11.0, "endSec": 16.5, "capZh": "贝斯低音加入，半音级进的音高来自Pitch"},
+    {"startSec": 16.5, "endSec": 23.0, "capZh": "长笛旋律进入，四条轨起音仍对齐同一时间轴"},
+    {"startSec": 23.0, "endSec": 28.0, "capZh": "鼓与旋律推进，尾段淡出检验长音符时值"}
+  ],
+  "signatureZh": "MIDI 先被切成 18394 个 token，再解码回 4308 个音符，数量与音高分布原地复现，随后用自写合成器出声。",
+  "chooseWhenZh": "要把 MIDI 喂给语言模型/序列模型、又要求解码回 MIDI 时不丢音符与音高时选它；只想要成品音频、不关心 token 结构时没必要。",
+  "contrastWith": ["FluidSynth__fluidsynth", "schellingb__TinySoundFont", "kosua20__MIDIVisualizer"],
+  "evidenceZh": "pip 安装 miditok 3.1.0 + symusic 0.6.0；对仓库自带真实 MIDI《Mr. Blue Sky》用 REMI(use_programs/use_tempos/use_time_signatures) 编码：9 轨 4308 音符 → 1 条序列 18394 个 token（词表 518）→ decode 回 4308 音符、9 轨；逐轨按音符数配对后统计：起点精确 2891/4308、最大偏差 28 tick，时值精确 2498/4308、最大偏差 29 tick（480 tick/拍，约 20 ms），音高多重集完全一致，tempo 175.00→175.48 BPM；力度按 32 级量化，4265/4308 与原始相差 ≤3（1173 个完全一致；43 个同音相邻击键被并入同一 tick 后配对互换，表面差最大 24）。渲染用仓库外部自写的加法合成器（本机无 fluidsynth 可执行文件），输出 44.1 kHz 立体声 28 s，verify_audio.ps1 PASS（峰值 -1.72 dBFS、RMS -13.88 dBFS、频谱非空度 83.06%）。",
+  "limitsZh": "MidiTok 本身不产音频，本样例的可听部分由自写加法合成器渲染，音色与真实音源有差距；REMI 默认丢失轨名与轨顺序、鼓通道信息（鼓轨 program 变 0）；力度按 32 级量化、tempo 按 32 档量化，长曲会累积微小时间漂移；输入必须是 MIDI，不能直接吃波形。"
+}

@@ -1,0 +1,28 @@
+# Faust 2.88.0 离线渲染（编译器来自官方安装包，运行时用自写 harness）
+$faust = "F:\coding音乐\_tmp\batchA\tools\faust_core\bin\faust.exe"
+$libs  = "F:\coding音乐\_tmp\batchA\tools\faustlibraries-master"
+$dsp   = "F:\coding音乐\grame-cncm__faust\examples\generator\churchOrgan.dsp"
+
+# 1) 安装编译器到 _tmp（NSIS 静默安装，不写 C 盘）
+Invoke-WebRequest -Uri "https://github.com/grame-cncm/faust/releases/download/2.88.0/Faust-2.88.0-win64.exe" -OutFile "F:\coding音乐\_tmp\batchA\out\faust_setup.exe"
+Start-Process -FilePath "F:\coding音乐\_tmp\batchA\out\faust_setup.exe" -ArgumentList "/S","/D=F:\coding音乐\_tmp\batchA\tools\faust_core" -Wait
+
+# 2) Faust 标准库单独下载（安装包不自带 stdfaust.lib）
+Invoke-WebRequest -Uri "https://github.com/grame-cncm/faustlibraries/archive/refs/heads/master.zip" -OutFile "F:\coding音乐\_tmp\batchA\out\faustlibs.zip"
+Expand-Archive -Path "F:\coding音乐\_tmp\batchA\out\faustlibs.zip" -DestinationPath "F:\coding音乐\_tmp\batchA\tools" -Force
+
+# 3) .dsp -> C++
+& $faust -I $libs -lang cpp $dsp -o "F:\coding音乐\_tmp\batchA\out\faustgen\organ.cpp"
+
+# 4) 编译自写 harness（MapUI 驱动 freq/gate/泛音增益，逐块 compute）
+F:\coding音乐\_env\venv\Scripts\python.exe -m ziglang c++ -O2 `
+  -I "F:\coding音乐\_tmp\batchA\tools\faust_core\include" `
+  -I "F:\coding音乐\_tmp\batchA\out\faustgen" `
+  "F:\coding音乐\_tmp\batchA\src\faust_organ.cpp" -o "F:\coding音乐\_tmp\batchA\out\faust_organ.exe"
+
+# 5) 渲染 22.5 秒乐段（引子/主题/琶音/终止+混响）
+F:\coding音乐\_tmp\batchA\out\faust_organ.exe "F:\coding音乐\_tmp\batchA\out\faust_organ.wav" 22.5
+
+# 6) 收尾：波形/频谱图 + 静音校验 + meta.json
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py `
+  "F:\coding音乐\_samples\grame-cncm__faust\sample.wav" F:\coding音乐\_tmp\batchA\meta_faust.json

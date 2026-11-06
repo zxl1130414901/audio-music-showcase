@@ -1,0 +1,51 @@
+{
+  "id": "teticio__audio-diffusion",
+  "status": "ok",
+  "capabilitiesZh": [
+    "无条件潜空间扩散：在 256×256 mel 频谱图（22.05kHz、hop 512 ≈ 5.9s/段）上跑 DDPM/DDIM，不需要任何文字或参考音频",
+    "音乐 loop 生成：instrumental-hiphop-256 检查点在嘻哈伴奏数据集上训练，一段即成完整鼓组循环",
+    "多窗口拼接：同一管线多次采样不同种子，用交叉淡化拼成 22 秒连续片段（模型本身以 loop 为单位）",
+    "可复现采样：torch.Generator 固定种子，同种子同结果"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 5.9,
+      "capZh": "第一段 loop：低频鼓与贝斯铺底的嘻哈循环，频谱图能看到稳定的 16 分音符脉冲"
+    },
+    {
+      "startSec": 5.9,
+      "endSec": 11.9,
+      "capZh": "第二段 loop：换种子后鼓型与和弦走向都变了，400ms 交叉淡化处几乎无断层"
+    },
+    {
+      "startSec": 11.9,
+      "endSec": 17.9,
+      "capZh": "第三段 loop：能量明显回落的一段，鼓点更稀疏，做出整段的「间奏」"
+    },
+    {
+      "startSec": 17.9,
+      "endSec": 22.5,
+      "capZh": "第四段 loop：收尾段叠加较多高频帽鼓，最后 0.55s 淡出结束"
+    }
+  ],
+  "signatureZh": "mel 频谱图扩散出来的嘻哈 loop：低频鼓贝斯扎实、高频偏软，能直接当伴奏采样但不宜当成品混音",
+  "chooseWhenZh": "要批量做无文字控制的音乐 loop / 鼓组素材（游戏 BGM、短视频踩点）而手里没有素材版权时选它",
+  "contrastWith": [
+    "haidog-yaqub__EzAudio",
+    "haoheliu__AudioLDM"
+  ],
+  "evidenceZh": "_tmp/batchA/src/audiodiffusion_demo.py：AudioDiffusionPipeline.from_pretrained(_models/audio-diffusion/hiphop256).to('cuda')，四次 pipe(batch_size=1, steps=150, generator=torch.Generator(device='cuda').manual_seed(20261106+i))，每段 5.92s/22050Hz，峰值归一 0.8，400ms 交叉淡化串成 22.48s，最后 ffmpeg 转 44.1kHz 并加 0.55s 淡出。",
+  "limitsZh": "输出 22050Hz，高频上限只有 11kHz（mel hop 512 且 x_res=256，一段固定 5.9s）；模型是无条件的，文字/风格控制完全做不到；四段 loop 各自独立，段落之间只有淡化过渡而不是同一乐思的发展；UNet 454MB + 依赖 diffusers 0.31（仓库 requirements 要求 diffusers>=0.40，与本机为 EzAudio 固定的组合冲突，实测 0.31 仍可加载运行）。",
+  "spec": {
+    "durationSec": 22.48,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 1983198
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    70 ms] 验收文件：F:\\coding音乐\\_samples\\teticio__audio-diffusion\\sample.wav\n[   120 ms] 文件大小：1,936.7 KB\n[   283 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=22.484 s 码率=706 kbps (144 ms)\n[   439 ms] 幅度统计：峰值=-0.63 dBFS  RMS=-16.39 dBFS  样本数=991560 (130 ms)\n[   837 ms] 频谱检测：非背景像素占比=57.67%  阈值=2.00%  结果=有能量 (396 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\teticio__audio-diffusion\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 22.484 s\n峰值        : -0.63 dBFS\nRMS         : -16.39 dBFS\n频谱非空度  : 57.67%（阈值 2.00%）\n总耗时      : 844 ms\n判定        : PASS  -> 有声音"
+  }
+}

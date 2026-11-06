@@ -1,0 +1,13 @@
+:: 1) 编译仓库自带 CLI（无头导出 tracker 模块）
+cmake -S "F:\coding音乐\milkytracker__MilkyTracker" -B "F:\coding音乐\_tmp\batchC\mt_build" -G "Visual Studio 17 2022" -A x64
+cmake --build "F:\coding音乐\_tmp\batchC\mt_build" --config Release --target milkycli -j 8
+:: 注：src/milkyplay/LoaderAMS.cpp 在 GBK 代码页下报 C1071，已将该文件中 >127 字节替换为 '-' 后重建
+
+:: 2) 用 milkycli 渲染仓库自带演示曲 milky.xm 为 WAV（122s，44.1kHz）
+"F:\coding音乐\_tmp\batchC\mt_build\src\tools\milkycli\Release\milkycli.exe" "F:\coding音乐\milkytracker__MilkyTracker\resources\music\milky.xm" -output "F:\coding音乐\_tmp\batchC\xm_milky.wav" -sample-rate 44100 -verbose
+
+:: 3) 裁 2.0s 起 28.5s，+4dB，1.2s 淡出，并截 2-19s 内容区段出波形/频谱图
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchC\tools\post.py --in F:\coding音乐\_tmp\batchC\xm_milky.wav --outdir F:\coding音乐\_samples\milkytracker__MilkyTracker --start 2.0 --dur 28.5 --gain 4 --fade 1.2 --plot-start 2 --plot-dur 17
+
+:: 4) 静音校验
+powershell -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\milkytracker__MilkyTracker\sample.wav"

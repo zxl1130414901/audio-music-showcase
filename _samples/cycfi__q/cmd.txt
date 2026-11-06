@@ -1,0 +1,30 @@
+# cycfi/q --- offline DX7 FM render (harness = repo example minus PortAudio playback)
+# 1) build: repo's example/fm_synth/fm_synth.cpp with playback stripped,
+#    plus the repo's own q_io/src/audio_file.cpp (wav_writer / dr_wav)
+F:\coding音乐\_env\venv\Scripts\python.exe -m ziglang c++ -std=c++20 -O2 -w ^
+  -I F:\coding音乐\cycfi__q\q_lib\include ^
+  -I F:\coding音乐\cycfi__q\q_io\include ^
+  -I F:\coding音乐\cycfi__q\q_io\external\include ^
+  -I F:\coding音乐\_tmp\batchA\include ^
+  F:\coding音乐\_tmp\batchA\src\q_fm.cpp ^
+  F:\coding音乐\cycfi__q\q_io\src\audio_file.cpp ^
+  -o F:\coding音乐\_tmp\batchA\out\qfm\q_fm.exe
+
+# 2) score: 21 s piece written with mido (1 tick = 1 ms, tempo 1 000 000 us/beat)
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\src\q_compose.py
+#    -> F:\coding音乐\_tmp\batchA\out\qfm\midi\epiano_ballad.mid
+
+# 3) render (cwd must be ASCII-relative; repo stdio is narrow-char):
+cd F:\coding音乐\_tmp\batchA\out\qfm
+.\q_fm.exe .
+#    -> epiano_1.wav 21.1 s (patch epiano_1), also marimba/brass_1/bass_1.wav
+
+# 4) cut to 20.1 s, fades
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -ss 0.95 -i F:\coding音乐\_tmp\batchA\out\qfm\epiano_1.wav ^
+  -t 20.1 -af "afade=t=in:st=0:d=0.03,afade=t=out:st=19.65:d=0.45" -ar 44100 ^
+  F:\coding音乐\_samples\cycfi__q\sample.wav
+
+# 5) pictures (content window only) + silence check + meta
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py ^
+  F:\coding音乐\_samples\cycfi__q\sample.wav F:\coding音乐\_tmp\batchA\meta_cycfi_q.json 0.3:18
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\cycfi__q\sample.wav

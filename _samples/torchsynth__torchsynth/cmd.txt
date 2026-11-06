@@ -1,0 +1,14 @@
+# torchsynth 1.0.2 短曲渲染（逐个音符走库内模块，脚本在 _tmp，不改仓库文件）
+# 前置：torchsynth 1.0.2 依赖 pytorch_lightning.core.lightning（PL 2.x 已移除），
+#       site-packages 加 compat shim:
+#       venv\Lib\site-packages\pytorch_lightning\core\lightning.py  ->  from pytorch_lightning import LightningModule
+# 生成
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchB\run_torchsynth.py
+#    SynthConfig(batch_size=1, sample_rate=44100, buffer_size_seconds=音符长+release)
+#    每音：SquareSawVCO(tuning=0, mod_depth=0, shape=0.25→0.60) 或 SineVCO
+#          -> ADSR(attack=0.05, decay=0.35, sustain=0.72, release=0.18, alpha=2.0)
+#          -> ControlRateUpsample -> VCA
+#    22 lead + 7 bass 音符按时序叠加 -> 三段增益 0.75/1.0/0.85 -> S:\_tmp\batchB\torchsynth_out.wav
+# 统一规格
+powershell -File F:\coding音乐\_tmp\batchB\make_sample.ps1 -Src F:\coding音乐\_tmp\batchB\torchsynth_out.wav -OutDir F:\coding音乐\_samples\torchsynth__torchsynth -StartSec 0 -DurationSec 20
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\torchsynth__torchsynth\sample.wav

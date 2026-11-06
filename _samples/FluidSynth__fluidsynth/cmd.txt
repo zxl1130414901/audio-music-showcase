@@ -1,0 +1,22 @@
+# FluidSynth 离线渲染（官方预编译二进制，本机无 GLib 不自行编译）
+$exe = "F:\coding音乐\_tmp\batchA\tools\fluidsynth\fluidsynth-v2.6.2-win10-x64-cpp11\bin\fluidsynth.exe"
+$sf  = "F:\coding音乐\schellingb__TinySoundFont\examples\florestan-subset.sf2"
+$mid = "F:\coding音乐\schellingb__TinySoundFont\examples\venture.mid"
+
+# 1) 下载官方 win10-x64 包并解压到 _tmp（不进仓库目录）
+Invoke-WebRequest -Uri "https://github.com/FluidSynth/fluidsynth/releases/download/v2.6.2/fluidsynth-v2.6.2-win10-x64-cpp11.zip" -OutFile "F:\coding音乐\_tmp\batchA\out\fluidsynth.zip"
+Expand-Archive -Path "F:\coding音乐\_tmp\batchA\out\fluidsynth.zip" -DestinationPath "F:\coding音乐\_tmp\batchA\tools\fluidsynth" -Force
+
+# 2) 快速渲染 MIDI -> WAV（-n 无 MIDI 输入、-i 无交互 shell、-F 写文件）
+Push-Location (Split-Path $exe)
+& $exe -n -i -F "F:\coding音乐\_tmp\batchA\out\fs_full.wav" -r 44100 -g 1.0 `
+  -o synth.reverb.active=1 -o synth.chorus.active=1 $sf $mid
+Pop-Location
+
+# 3) 截 0-24s 并抬电平（原始峰值仅 0.28，抬高 10.5dB 便于与 TinySoundFont 对比）
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\fs_full.wav" -t 24 `
+  -af "volume=10.5dB" -c:a pcm_s16le "F:\coding音乐\_samples\FluidSynth__fluidsynth\sample.wav"
+
+# 4) 收尾：波形/频谱图 + 静音校验 + meta.json
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py `
+  "F:\coding音乐\_samples\FluidSynth__fluidsynth\sample.wav" F:\coding音乐\_tmp\batchA\meta_fluidsynth.json

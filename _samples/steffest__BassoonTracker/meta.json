@@ -1,0 +1,16 @@
+{
+  "id": "steffest__BassoonTracker",
+  "owner": "steffest",
+  "repo": "BassoonTracker",
+  "status": "skipped",
+  "blockerZh": "纯浏览器 WebAudio 应用，仓库没有命令行入口；而且这份克隆是浅克隆（仅 1 个提交），两个 HTML 入口都是坏的：index.html 加载已构建产物 ./live/main-BrbsbuoY.js（live/ 目录根本不存在），dev.html 加载源码时又 import 了不存在的 script/src/audio/sampleBuffer.js 与 script/src/ui/font.js，页面直接卡在模块加载失败，window.Tracker 永远不出现（实测 headless Chrome 等 60 秒超时）。就算补齐构建，音频也只能在真实浏览器 AudioContext 里出声，无法在 Node 侧离线拿到 PCM。",
+  "whatItWouldNeed": "完整的非浅克隆（含 live/ 构建产物或用 vite 全量构建）+ 能跑的 WebAudio 环境（headless Chrome + OfflineAudioContext 注入）；本仓库即使补全，也需要自己写 JS 桥接去调 window.renderToMp3 并把 blob 回传，属于额外工程。",
+  "alternativePath": "要 tracker/MOD 离线渲染，用已落盘的 milkytracker__MilkyTracker（自带 milkycli 命令行）；要能在浏览器里听 tracker 成品，直接把官方 audionaut.app/steffest.github.io 的在线版当播放器用，不需要本地产出。",
+  "capabilitiesZh": [
+    "浏览器里直接播放与编辑 Amiga MOD / XM 模块，支持 ProTracker 效果命令、音量/音高包络与采样编辑",
+    "自带 window.renderToMp3 全曲离线渲染路径（OfflineAudioContext + lamejs 编码 MP3）与 MOD/XM 二进制导出",
+    "零模型、零显存，纯前端 JS 实现，可跑在静态托管上"
+  ],
+  "chooseWhenZh": "要在浏览器里即开即听、甚至用手机编辑 MOD 时选它；需要服务端批量离线出音频、或要求可脚本化流水线时应该用 MilkyTracker 的 milkycli 而不是它。",
+  "contrastWith": ["milkytracker__MilkyTracker", "squiggythings__WaveTracker", "BambooTracker__BambooTracker"]
+}

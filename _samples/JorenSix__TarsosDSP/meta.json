@@ -1,0 +1,51 @@
+{
+  "id": "JorenSix__TarsosDSP",
+  "status": "ok",
+  "signatureZh": "YIN 逐帧跟踪音高再重建正弦，音色像一支“电子长笛”，旋律轮廓完整但原音频的噪声和音色被彻底抹掉",
+  "chooseWhenZh": "要实时从单声道音频里取音高并立刻转成可控合成声（变声、旋律跟随、教学演示）时选它，而不是做频谱/特征分析",
+  "contrastWith": [
+    "grame-cncm__faust",
+    "KinWaiCheuk__nnAudio"
+  ],
+  "capabilitiesZh": [
+    "YIN 基频跟踪 + 中值滤波（7 帧）稳住音高跳变",
+    "PitchResyntheziser 用正弦+4 倍/8 倍泛音重建波形，音色可选纯正弦或带泛音",
+    "EnvelopeFollower 跟随原音频音量轮廓，保留强弱起伏",
+    "离线处理器管线：AudioDispatcherFactory.fromFile -> PitchProcessor -> WaveformWriter 直接落 WAV"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 5,
+      "capZh": "引子：YIN 刚锁定管风琴的单音，重建正弦起步，音量轮廓由 EnvelopeFollower 跟随"
+    },
+    {
+      "startSec": 5,
+      "endSec": 11,
+      "capZh": "圣咏主题：音高逐句变化被实时跟随，4/8 倍泛音给出笛音般的轻微谐波"
+    },
+    {
+      "startSec": 11,
+      "endSec": 15,
+      "capZh": "断句处检测不到基频，算法沿用上一帧频率，声音保持连贯不跳变"
+    },
+    {
+      "startSec": 15,
+      "endSec": 22.5,
+      "capZh": "尾段琶音：音高跟踪加快，重建声随旋律上行再落到终止长音"
+    }
+  ],
+  "evidenceZh": "javac 直接编译 core+jvm 两个模块（排除 module-info.java，共 225 个 class），运行自写 harness ResynthDemo：AudioDispatcherFactory.fromFile(mono 44.1k, 2048, 0) -> PitchProcessor(YIN, 44.1k, 2048, PitchResyntheziser(sr, followEnvelope=true, pureSine=false, filter=7)) -> WaveformWriter。输入是把 Faust 管风琴样例转成的单声道 22.5s（本仓库不含乐器，只做“分析+重合成”）。输出 +11.5dB 归一。",
+  "limitsZh": "只能用单声道单旋律输入：和弦/复音会让 YIN 判错产生跳音；重合成振幅依赖 EnvelopeFollower，原始输出峰值只有 0.23，必须后期归一；仓库把平台 IO 拆进 jvm 模块，javac 需排除 module-info 才能脱离 Gradle 编译；无实时声卡时仓库示例跑不起来，必须自写离线 harness。",
+  "spec": {
+    "durationSec": 22.52,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 1986638
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    61 ms] 验收文件：F:\\coding音乐\\_samples\\JorenSix__TarsosDSP\\sample.wav\n[   108 ms] 文件大小：1,940.1 KB\n[   216 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=22.523 s 码率=706 kbps (91 ms)\n[   343 ms] 幅度统计：峰值=-1.36 dBFS  RMS=-8.70 dBFS  样本数=993280 (105 ms)\n[  1210 ms] 频谱检测：非背景像素占比=95.51%  阈值=2.00%  结果=有能量 (866 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\JorenSix__TarsosDSP\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 22.523 s\n峰值        : -1.36 dBFS\nRMS         : -8.70 dBFS\n频谱非空度  : 95.51%（阈值 2.00%）\n总耗时      : 1216 ms\n判定        : PASS  -> 有声音"
+  }
+}

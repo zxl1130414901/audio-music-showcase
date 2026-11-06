@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "JUCE 子模块拉不到（GitHub 实测 <1B/s，用户已确认）；.gitmodules 里 90+ 个子模块（含 VCVRack/Rack、Carla、PawPaw、JUCE、QuickJS 与 60+ 个插件），单是 JUCE 就 >200MB 工具链级别，且成品是 GUI 插件/独立机架，没有 headless 渲染入口。",
+  "capabilitiesZh": [
+    "把 VCV Rack 模块打包成 VST2/VST3/LV2/CLAP 与独立 App，一份补丁跨插件格式",
+    "内置 Carla 宿主，可加载第三方插件与 MIDI 映射",
+    "模块化合成：振荡器、滤波器、序列器可自由接线"
+  ],
+  "signatureZh": "（未出样）它给的是可拖线的模块化机架，声音取决于你接的补丁，不是某个固定音色。",
+  "chooseWhenZh": "要在 DAW 里用模块化合成、且能接受 GUI 手动接线时选它；要在命令行离线出固定短曲请选 fundsp / SuperCollider。",
+  "contrastWith": [
+    "SamiPerttu__fundsp",
+    "supercollider__supercollider"
+  ],
+  "evidenceZh": "核查 .gitmodules（列出 90+ submodule，含 deps/JUCE 指向 CardinalModules/JUCE、src/Rack 指向 VCVRack/Rack）与 Makefile/Makefile.base.mk（构建产物为 plugin/standalone，需 GL 窗口）；本地 deps/JUCE 为空目录。",
+  "limitsZh": "子模块体量与网速双重不可行（JUCE 实测 <1B/s）；无 headless/CLI 渲染；即使构建成功也只能手动在 GUI 里出活，无法脚本化产出可复现样例。",
+  "id": "DISTRHO__Cardinal",
+  "segments": []
+}

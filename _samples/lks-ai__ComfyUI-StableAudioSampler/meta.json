@@ -1,0 +1,18 @@
+{
+  "id": "lks-ai__ComfyUI-StableAudioSampler",
+  "owner": "lks-ai",
+  "repo": "ComfyUI-StableAudioSampler",
+  "status": "skipped",
+  "blockerZh": "需 HF Token 同意 gated 条款，用户已决定不申请。仓库依赖的 stabilityai/stable-audio-open-1.0 在 HuggingFace 上是 gated 模型，README 明确要求先登录并设置 HF_TOKEN 才能下载 model.safetensors 与 model.config.json；本机未申请、未下载、未绕过限制，因此无法产出样例。",
+  "whatItWouldNeed": "一个已通过 gated 条款审批的 HuggingFace 账号与 HF_TOKEN；stable-audio-open-1.0 约 2.5GB safetensors + config；可运行的 ComfyUI 主机（本仓库只是 ComfyUI 节点，不含 ComfyUI 本体）；requirements 里的 flash_attn 在 Windows 上需自带预编译轮子或 CUDA 工具链，本机也不具备。",
+  "alternativePath": "若只要文本生成短音乐/音效，本机已落盘的 Stability-AI__stable-audio-tools（同源模型，走同一 gated 权重）与 facebookresearch__audiocraft（MusicGen 小模型，非 gated）可直接出样；若坚持用本节点，需先解决 ComfyUI 运行环境与 gated 授权。",
+  "capabilitiesZh": [
+    "把 Stable Audio Open 1.0 的文本到音频采样封装成 ComfyUI 节点：Sampler / Pre-Conditioning / Prompt / Model Loader",
+    "支持正负提示词、seed 控制、可选半精度、步数与 cfg/sigma 调节，可做同 seed 多参数探索",
+    "采样后直接输出原始音频字节与采样率，可存 wav、出频谱图，适合在 ComfyUI 工作流里与其他节点串联"
+  ],
+  "chooseWhenZh": "已经有一套 ComfyUI 工作流、并且愿意申请 Stable Audio Open gated 授权时，选它可以把音频生成接进图节点流程；只想命令行快速出音频或不想申请 Token，就不该选它。",
+  "contrastWith": ["Stability-AI__stable-audio-tools", "facebookresearch__audiocraft"],
+  "evidenceZh": "README「With a HuggingFace Token」段落要求设置 HF_TOKEN 才能加载 stabilityai/stable-audio-open-1.0；模型页为 gated。仓库内只有 nodes.py / web / workflows，无权重、无 ComfyUI 运行时；requirements.txt 含 flash_attn（Windows 无现成轮子）。",
+  "limitsZh": "gated 授权不通过就完全无法出声；节点依赖 ComfyUI 进程与显存，8GB 卡上拼接长音频容易 OOM（README 自述 3060 只试到 10 秒）；flash_attn 安装门槛高。"
+}

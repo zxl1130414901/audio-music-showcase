@@ -1,0 +1,16 @@
+{
+  "id": "Stability-AI__stable-audio-tools",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "文本/音频条件生成 44.1 kHz 立体声音效与氛围音乐，单段最长约 47 秒",
+    "支持音频到音频（audio-to-audio）续写与变形，适合做环境铺底、转场音",
+    "提供训练/微调代码与 Gradio 演示界面，可接自定义数据集"
+  ],
+  "blockerZh": "需 HF Token 同意 gated 条款，用户已决定不申请，因此按「需 Token」归档、不下载不绕过：stabilityai/stable-audio-open-1.0 在 HF 标记 gated=auto，必须登录并接受 Stability 许可后才能取权重；模型本体约 4.7 GB。仓库只提供 run_gradio.py 演示界面，没有开箱即用命令行。",
+  "whatItWouldNeed": "免费 HF Token + 在模型页接受 gated 条款（用户已决定不申请）；约 4.7 GB 权重落 _models；PyTorch ≥2.5（本机 2.6 满足）；8 GB 显存需 fp16。",
+  "alternativePath": "本机暂无同质量替代；可用 pedalboard/DawDreamer 合成氛围，但不具备文本生成能力；若你提供 HF_TOKEN，下一轮可在 20 分钟内出样。",
+  "chooseWhenZh": "当你要“用一句话生成可用的音效/氛围铺底”，并且愿意申请免费 HF Token、接受 gated 条款并腾出 4.7 GB 权重时，才值得走这条路（当前用户已决定不申请 Token）；若只是可控合成音，选 DawDreamer 更省事。",
+  "contrastWith": ["DBraun__DawDreamer", "thxxx__VTS"],
+  "evidenceZh": "hf-mirror API 查询 stabilityai/stable-audio-open-1.0 返回 gated=auto；仓库 README 以 run_gradio.py 为主入口，requirements 依赖 torch>=2.5；本机 torch 2.6.0+cu124 满足，唯一硬门槛是授权 Token 与 4.7 GB 权重额度。本轮按任务要求不下载 gated 权重。",
+  "limitsZh": "生成时长上限约 47 秒，超出需分段拼接；许可禁止商用以外的某些用途（以 Stability 许可为准）；fp16 下 8 GB 可跑但 batch 只能为 1。"
+}

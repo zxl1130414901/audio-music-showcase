@@ -1,0 +1,17 @@
+{
+  "id": "kosua20__MIDIVisualizer",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "把 MIDI 文件渲染成钢琴卷帘动画（音符下落/轨道视图）",
+    "可导出静帧截图或整段视频（--export 参数）",
+    "支持多种布局与配色，适合做音乐演示视频",
+    "注意：它只显示 MIDI，不产生任何音频"
+  ],
+  "blockerZh": "产物类型不符：README 明确写 “not playing any sound”，仓库只输出图像/视频，不输出 wav/mp3，无法满足本批 sample 音频交付；同时源码是 C++/OpenGL（CMake），本机 cmake/MSVC 缺失，只能依赖 GitHub Releases 的 Windows 预编译包，而本机访问 GitHub Release 曾超时。",
+  "whatItWouldNeed": "预编译 exe（Release 页下载）或 cmake + MSVC + OpenGL 3.2；一个 MIDI 文件；输出为 mp4/图片，若需音频还得另配合成器。",
+  "alternativePath": "本机可立即用 ffmpeg 的 showspectrum/showwaves 生成音频频谱/波形动画视频，无需编译。",
+  "chooseWhenZh": "只有当你需要“MIDI 钢琴卷帘演示视频”而非音频文件时，才值得去拿 Release 包；要交付音频或频谱动画，直接用 ffmpeg 更快。",
+  "contrastWith": ["luisbocanegra__plasma-audio-visualizer", "pkalogiros__AudioMass"],
+  "evidenceZh": "README 声明不发声、仅可视化；构建依赖 CMake/OpenGL；本机 cmake/MSVC 缺失；仓库无预编译产物，需从 GitHub Releases 下载（该通道本轮未验证成功）。",
+  "limitsZh": "无音频输出；导出视频依赖 OpenGL 上下文，无头环境需虚拟显示；MIDI 之外不支持音频文件输入。"
+}

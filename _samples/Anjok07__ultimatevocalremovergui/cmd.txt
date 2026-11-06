@@ -1,0 +1,17 @@
+# UVR 替代路径样例复现命令（audio-separator CLI，不装官方 GUI）
+$env:TMP='F:\coding音乐\_env\tmp'; $env:TEMP=$env:TMP
+F:\coding音乐\_env\venv\Scripts\python.exe -m pip install audio-separator onnxruntime audioread --index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 1) 合成 24 s 混音：伴奏和弦/鼓 + 本地 TTS 人声（16k 重采样到 44.1k）
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchD\make_uvr_mix.py
+
+# 2) 分离（模型自动下到 _models\uvr，59 MB，CPU ONNX）
+F:\coding音乐\_env\venv\Scripts\audio-separator.exe "F:\coding音乐\_tmp\batchD\uvr_mix.wav" ^
+  -m UVR-MDX-NET-Inst_HQ_5.onnx --model_file_dir "F:\coding音乐\_models\uvr" ^
+  --output_dir "F:\coding音乐\_tmp\batchD\uvr_out" --single_stem Instrumental --output_format WAV
+
+# 3) 拼成对比音频：0-12 s 原混音 + 12-24 s 伴奏（0.25 s 交叉淡化）
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchD\build_uvr_sample.py
+
+# 4) 验收
+powershell -NoProfile -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\Anjok07__ultimatevocalremovergui\sample.wav"

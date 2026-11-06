@@ -1,0 +1,19 @@
+# audioFlux 频谱处理样例（CPU / C 实现 STFT）
+$py = "F:\coding音乐\_env\venv\Scripts\python.exe"
+$env:PIP_CACHE_DIR = "F:\coding音乐\_env\pipcache"
+$env:TMP = "F:\coding音乐\_env\tmp"; $env:TEMP = "F:\coding音乐\_env\tmp"
+
+# 1) 安装与仓库同版本的 audioflux 0.1.9（源码构建需定制 mingw + fftw，本机未走源码）
+& $py -m pip install audioflux -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 2) 输入：FluidSynth 渲染的持续段 16-40s
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\fs_full.wav" `
+  -ss 16 -t 24 -af "volume=10dB" -c:a pcm_s16le "F:\coding音乐\_tmp\batchA\out\af_in.wav"
+
+# 3) 三段：原样往返 -> -40dB 维纳门限去混响 -> 高通/低通/提亮掩码
+& $py "F:\coding音乐\_tmp\batchA\src\audioflux_demo.py" `
+  "F:\coding音乐\_tmp\batchA\out\af_in.wav" "F:\coding音乐\_tmp\batchA\out\af_out.wav"
+
+# 4) 收尾：波形/频谱图 + 静音校验 + meta.json
+& $py "F:\coding音乐\_tmp\batchA\finish_sample.py" `
+  "F:\coding音乐\_samples\libAudioFlux__audioFlux\sample.wav" "F:\coding音乐\_tmp\batchA\meta_audioflux.json"

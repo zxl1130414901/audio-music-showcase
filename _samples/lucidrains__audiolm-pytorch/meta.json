@@ -1,0 +1,18 @@
+{
+  "id": "lucidrains__audiolm-pytorch",
+  "owner": "lucidrains",
+  "repo": "audiolm-pytorch",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "AudioLM 三阶段架构的 PyTorch 实现：语义 token → 粗粒度声学 token → 细粒度声学 token，再由解码器还原波形",
+    "附带 SoundStream 编解码器、HuBERT+KMeans 语义分词器与三个 Transformer 的训练器（accelerate 驱动）",
+    "扩展支持 T5 条件与 classifier-free guidance，可用于文本到音频/语音的研究性训练"
+  ],
+  "blockerZh": "只有模型定义与训练代码、无权重、需自训：仓库内没有任何 .pt/.ckpt，README 全部用法都是先训练再加载；三个 Transformer 需要先在本机语料上训练，SoundStream 编码器也要在大量音频上自训（README 明确 “SoundStream 需要在大规模语料上训练”），HuBERT 的 KMeans 码本也必须自己拟合。8GB 显存 + 无训练数据集的情况下，无法在合理时间内产出可听音频，故按 skipped 归档。",
+  "whatItWouldNeed": "数十小时以上的音频语料（含可选转写）、预训练或自训的 SoundStream/EnCodec 编码器、fit 过的 HuBERT KMeans 码本、三个 Transformer 的多轮训练（8GB 只能极小 batch 与短序列），以及数小时到数十小时的 GPU 时间。",
+  "alternativePath": "要直接出音频，用本机已落盘的 facebookresearch__audiocraft（MusicGen 有官方权重）或 Stability-AI__stable-audio-tools；AudioLM 更适合作为研究与训练代码参考，而不是现成生成器。",
+  "chooseWhenZh": "当你要复现 AudioLM 的分层 token 语言模型、自己准备数据和算力做训练/改架构时才选它；想要开箱即用的音乐或语音，不要选它。",
+  "contrastWith": ["lucidrains__soundstorm-pytorch", "facebookresearch__audiocraft", "Stability-AI__stable-audio-tools"],
+  "evidenceZh": "检索仓库无权重文件（*.pt/*.ckpt 均为空）；README 行 62–86 要求先 SoundStreamTrainer 训练编码器，行 160–251 要求分别训练 Semantic/Coarse/Fine Transformer 并传入 hubert checkpoint；仓库仅含 audiolm_pytorch 包、demo notebook 与 setup.py。",
+  "limitsZh": "无权重不能出声；训练数据与算力门槛远高于本机 8GB、30 分钟单仓上限；即便训练完，重建质量高度依赖数据规模，短时间小数据只能得到噪声级结果。"
+}

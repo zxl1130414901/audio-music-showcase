@@ -1,0 +1,44 @@
+{
+  "id": "FluidSynth__fluidsynth",
+  "status": "ok",
+  "signatureZh": "完整 SF2 规范的渲染链，默认开 chorus+reverb，音色圆润、尾音有空间感，同一份 MIDI 听上去像录音室而非干声拼接",
+  "chooseWhenZh": "要做标准 GM/GS 兼容的 MIDI 批量渲染、需要合唱混响与多 bank/多通道路由时选它，而不是追求零依赖嵌入",
+  "contrastWith": [
+    "schellingb__TinySoundFont"
+  ],
+  "capabilitiesZh": [
+    "用 SoundFont 音源把标准 MIDI 离线渲染成 44.1kHz 立体声 WAV（-F 快速渲染，无需声卡）",
+    "按 SF2 规范做 bank/program/通道路由、Pitch Bend 与 CC 控制",
+    "可切换内置 chorus 与 reverb，渲染出带空间感的成品音色"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 8,
+      "capZh": "序章建立主题：单薄力度、少量通道，chorus 让音色比干声更宽"
+    },
+    {
+      "startSec": 8,
+      "endSec": 16,
+      "capZh": "主题复现：更多通道加入，SF2 预设切换出不同音色层"
+    },
+    {
+      "startSec": 16,
+      "endSec": 24,
+      "capZh": "主段全奏：动态抬升，reverb 尾音与余响清晰可闻，收束干净"
+    }
+  ],
+  "evidenceZh": "下载官方 win10-x64 预编译包 v2.6.2（仅用 bin 内 fluidsynth.exe + libfluidsynth-3.dll），执行 fluidsynth -n -i -F out.wav -r 44100 -g 1.0 -o synth.reverb.active=1 -o synth.chorus.active=1 florestan-subset.sf2 venture.mid；渲染 50.3s 后 ffmpeg 截 0–24s 并 +10.5dB 归一到峰值 -0.6 dBFS。",
+  "limitsZh": "本机无 MSVC 以外的 GLib 依赖，故直接用官方预编译二进制而非仓库源码编译，未验证仓库自带的测试套件；自带 VintageDreamsWaves 音源缺打击乐 bank 128（通道 9 报警告）；快渲染固定单声道源上混，多声道分轨需额外配置。",
+  "spec": {
+    "durationSec": 24.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 4233678
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[   134 ms] 验收文件：F:\\coding音乐\\_samples\\FluidSynth__fluidsynth\\sample.wav\n[   204 ms] 文件大小：4,134.5 KB\n[   336 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=24.000 s 码率=1411 kbps (110 ms)\n[   637 ms] 幅度统计：峰值=-0.57 dBFS  RMS=-13.63 dBFS  样本数=1058400 (280 ms)\n[  1068 ms] 频谱检测：非背景像素占比=88.43%  阈值=2.00%  结果=有能量 (429 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\FluidSynth__fluidsynth\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 24.000 s\n峰值        : -0.57 dBFS\nRMS         : -13.63 dBFS\n频谱非空度  : 88.43%（阈值 2.00%）\n总耗时      : 1101 ms\n判定        : PASS  -> 有声音"
+  }
+}

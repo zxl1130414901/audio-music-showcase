@@ -1,0 +1,15 @@
+:: glicol 本身是 Rust crate，仓库无现成离线导出器；用 renderer/main.rs 做离线渲染
+:: renderer/Cargo.toml 依赖 glicol = { path = "F:/coding音乐/chaosprint__glicol/rs/main" }
+
+:: 1) 编译离线渲染器（读取带 @秒 时间轴的乐谱 cue，逐块 engine.next_block 渲染成 WAV）
+cd /d "F:\coding音乐\_samples\chaosprint__glicol\renderer"
+cargo build --release
+
+:: 2) 渲染 28 秒、4 段 cue 的 live-coding 乐谱（renderer/score.txt）
+"F:\coding音乐\_samples\chaosprint__glicol\renderer\target\release\glicol_render.exe" "F:\coding音乐\_samples\chaosprint__glicol\renderer\score.txt" "F:\coding音乐\_tmp\batchC\glicol_pat.wav" 28 44100
+
+:: 3) +20dB 补偿电平，1.5s 淡出，截 8-22s 琶音段出图
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchC\tools\post.py --in F:\coding音乐\_tmp\batchC\glicol_pat.wav --outdir F:\coding音乐\_samples\chaosprint__glicol --start 0 --dur 28 --gain 20 --fade 1.5 --plot-start 8 --plot-dur 14
+
+:: 4) 静音校验
+powershell -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\chaosprint__glicol\sample.wav"

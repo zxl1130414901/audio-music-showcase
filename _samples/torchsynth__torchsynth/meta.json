@@ -1,0 +1,23 @@
+{
+  "id": "torchsynth__torchsynth",
+  "status": "ok",
+  "nativeOutput": false,
+  "nativeNoteZh": "用库内 SynthModule（SquareSawVCO / SineVCO / ADSR / VCA / ControlRateUpsample）逐个音符渲染再叠成曲；旋律编排脚本在 _tmp\\batchB，未改动仓库文件。",
+  "engine": "torchsynth 1.0.2（PyTorch 可微合成器模块库）+ pytorch-lightning 2.6.6（compat shim）",
+  "spec": {"durationSec": 20.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3528078},
+  "capabilitiesZh": [
+    "每个音符都可由 ADSR/VCO/VCA 的可微参数生成，同一 batch_id 可复现同一音色",
+    "SquareSawVCO 的 shape 参数在锯齿与方波之间连续过渡，段间变换音色不用换乐器",
+    "44100 Hz 原生采样率直出，模块全部是 batched tensor，可批量生成可复现的训练数据"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 6.5, "capZh": "A 段慢速动机（A-C-E-D），锯齿偏柔、留白大，正弦低音托底"},
+    {"startSec": 6.5, "endSec": 13.5, "capZh": "B 段同一动机加速，shape 参数推向方波、上探高音，亮度与密度明显提升"},
+    {"startSec": 13.5, "endSec": 20.0, "capZh": "C 段长音下行收束，力度回落，末尾 0.9s 淡出"}
+  ],
+  "signatureZh": "干净的合成器音色：锯齿带轻微方波感、音符边界像被包络精确切出来，整段没有混响与噪声垫底。",
+  "chooseWhenZh": "要在代码里精确控制每个音符的振荡器波形、包络与参数、还要可微/可复现地批量生成时选它；要成品混音选 audiocraft，要复杂总线效果选 fundsp。",
+  "contrastWith": ["facebookresearch__audiocraft", "SamiPerttu__fundsp"],
+  "evidenceZh": "入口 S:\\_tmp\\batchB\\run_torchsynth.py：SynthConfig(batch_size=1, sample_rate=44100, buffer_size_seconds=音符长+release)；每个音符 SquareSawVCO(tuning=0, mod_depth=0, shape=0.25→0.60) 或 SineVCO，经 ADSR(attack=0.05, decay=0.35, sustain=0.72, release=0.18, alpha=2.0) + ControlRateUpsample 进 VCA；22 个 lead 音符 + 7 个 bass 音符按时序叠加，三段增益 0.75/1.0/0.85。渲染总耗时 0.6s。",
+  "limitsZh": "① 模块按「一次一个音符 / 固定 buffer」设计，长曲要自己切音符再拼，库本身不提供序列器或乐谱输入；② AudioMixer 在当前 torchaudio 下对普通 Tensor 调 num_samples 报错，最终混轨用张量相加，未走 AudioMixer；③ torchsynth 1.0.2 依赖 pytorch_lightning.core.lightning（PL 2.x 已删），本机在 site-packages 加了一行 compat shim 才能 import；④ 无混响/无总线压缩，听感偏干；⑤ setuptools 84 移除 pkg_resources 时也曾导致 import 失败（已用 setuptools 75.8.0）。"
+}

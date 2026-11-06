@@ -1,0 +1,17 @@
+# teticio/audio-diffusion --- unconditional mel-spectrogram diffusion, hip-hop loops
+# Weights (hf-mirror, curl; 454MB UNet): _models/audio-diffusion/hiphop256/{model_index.json,m el/mel_config.json,scheduler/,unet/}
+# F:\_ad_out is a junction to _tmp/batchA/out/audiodiffusion (libsndfile dislikes the CJK path)
+
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\src\audiodiffusion_demo.py
+#   AudioDiffusionPipeline.from_pretrained(...).to('cuda')
+#   4 x pipe(batch_size=1, steps=150, generator=torch.Generator('cuda').manual_seed(20261106+i))
+#   part0..part3.wav 5.92s @22050Hz -> 400ms crossfades -> audiodiffusion_loop.wav 22.48s
+#   first window 19.3s, then ~17-19s each, total 74.1s
+
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i F:\_ad_out\audiodiffusion_loop.wav ^
+  -af "afade=t=in:st=0:d=0.05,afade=t=out:st=21.9:d=0.55" -ar 44100 ^
+  F:\coding音乐\_samples\teticio__audio-diffusion\sample.wav
+
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py ^
+  F:\coding音乐\_samples\teticio__audio-diffusion\sample.wav F:\coding音乐\_tmp\batchA\meta_audiodiffusion.json 0.3:21.5
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\teticio__audio-diffusion\sample.wav

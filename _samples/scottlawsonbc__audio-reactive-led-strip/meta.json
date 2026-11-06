@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "项目产物是 LED 灯带的实时驱动（python/visualizer.py 读音频输入→FFT→串口写 Arduino），本身不输出音频；需要 LED 硬件 + Arduino，Windows 上无音频产物可验收。",
+  "capabilitiesZh": [
+    "实时频谱可视化：音频 FFT → 分频段亮度/色相映射",
+    "Python 端串口驱动 + Arduino 固件，低延迟灯带控制",
+    "提供音量/频谱两种可视化模式与平滑参数"
+  ],
+  "signatureZh": "（未出样）没有音频输出，它的「作品」是灯光随音乐呼吸，不是声音本身。",
+  "chooseWhenZh": "要做音频可视化灯效、且手上有 LED 灯带与 Arduino 时选它；要可听样例请选 pytorch__audio 或 Djfun 类可视化仓库（可出图不出声）。",
+  "contrastWith": [
+    "pytorch__audio",
+    "supercollider__supercollider"
+  ],
+  "evidenceZh": "核查目录结构（python/ 下 visualizer.py + config.py，arduino/ 下固件，README 说明需 LED 灯带与串口设备）；脚本仅有音频输入与灯控输出，无音频写文件逻辑。",
+  "limitsZh": "硬件依赖（LED 灯带 + Arduino）无法在纯软件环境复现；仓库不产出音频文件，无法满足「sample.wav 非静音」的验收口径；不伪造灯效演示音频。",
+  "id": "scottlawsonbc__audio-reactive-led-strip",
+  "segments": []
+}

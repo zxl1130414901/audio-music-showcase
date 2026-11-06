@@ -1,0 +1,28 @@
+{
+  "id": "pkalogiros__AudioMass",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 25.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le"
+  },
+  "capabilitiesZh": [
+    "纯浏览器音频编辑器：波形显示、选区裁切、复制粘贴、静音/反转等基础剪辑",
+    "内置效果库（淡入淡出、增益、EQ、延迟、混响、压缩等）通过 Web Audio 离线渲染",
+    "导出 wav/mp3，支持多声道与位深选择；可加载 MP3/OGG/WAV 等常见格式",
+    "零安装、零后端，静态页面即可运行"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 6.0, "capZh": "接手歌曲高潮段，立体声宽、瞬态强，展示原始素材质感"},
+    {"startSec": 6.0, "endSec": 13.0, "capZh": "全编制推进段，裁切加淡入后动态层次保持"},
+    {"startSec": 13.0, "endSec": 22.0, "capZh": "持续高潮，整体增益后峰值受控不削波"},
+    {"startSec": 22.0, "endSec": 25.0, "capZh": "淡出收束到结尾，验证淡出效果的平滑度"}
+  ],
+  "signatureZh": "一首真实歌曲的高潮段被精准裁成 25 秒：入口淡入平滑、整体压 1.5 dB 后仍保留原始混音的宽度与瞬态。",
+  "chooseWhenZh": "当你要在浏览器里快速剪一段成品、加淡入淡出/增益并直接导出 wav，且不想装 DAW 时选它；批量自动化编辑不如 DawDreamer，单曲精修它最快。",
+  "contrastWith": ["DBraun__DawDreamer", "sergree__matchering"],
+  "evidenceZh": "本地 HTTP 起静态页 + headless Chrome(puppeteer) 加载 AudioMass，wavesurfer 载入仓库自带 test.mp3（110 s），调用 engine.FXPreviewHost.FX + FXBank.FadeIn/FadeOut/Gain 做真实编辑，再提取 buffer 84.5–109.5 s 写为 WAV；verify_audio.ps1 判定 PASS（峰值 -1.51 dBFS、RMS -14.58 dBFS、时长 25.0 s、频谱非空 68.07%）。",
+  "limitsZh": "导出走了页面 buffer 提取 + Node 写 WAV，未走仓库 DownloadFile（浏览器下载路径在 headless 下不可靠）；长音频全量载入内存，110 s 歌曲约 38 MB 浮点；复杂效果链依赖 Web Audio 支持。"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "Ameobea__web-synth",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "浏览器端模块化合成器 / DAW：8 算子 FM 合成、滤波、效果链与 MIDI 编辑",
+    "可保存/加载工程，实时可视化波形与频谱",
+    "提供 headless 构建入口（src/headless/index.tsx），可离线渲染成音频",
+    "多端协作编辑（后端 Rust/Node）"
+  ],
+  "blockerZh": "构建工具链缺失：headless 包需要 Rust wasm32-unknown-unknown target、wasm-bindgen-cli、binaryen(wasm-opt)、just 与 yarn；本机 rustup 只装 x86_64-pc-windows-msvc（无 wasm32 target），wasm-bindgen/wasm-opt/just 全部缺失，rustc 还依赖 MSVC 链接器（本机无 MSVC）；仓库也没有提交预编译的 dist/wasm 产物。",
+  "whatItWouldNeed": "rustup target add wasm32-unknown-unknown；安装 wasm-bindgen-cli 与 binaryen；just + yarn；MSVC 链接器；或直接使用线上已部署的 headless bundle。",
+  "alternativePath": "线上 https://ameo.dev/web-synth-headless/ 提供 headless 构建，可用本机 Chrome + puppeteer 加载并渲染（本机已具备 Chrome 与 puppeteer-core，AudioMass 已用同一套验证过）；但需联网访问 ameo.dev，未实测。",
+  "chooseWhenZh": "当你需要浏览器端模块化合成/可视化工程、或想用它的 FM 引擎做交互式 demo 时才值得补 wasm 工具链；纯离线批量出音频，DawDreamer 更直接。",
+  "contrastWith": ["DBraun__DawDreamer", "pkalogiros__AudioMass"],
+  "evidenceZh": "检查环境：rustup target 仅 x86_64-pc-windows-msvc；Get-Command 显示 wasm-opt/wasm-bindgen/just/npm 状态（wasm 相关缺失）；仓库存在 src/headless/index.tsx 与 vite.config.headless.mts（headless 入口），但 public/ 与仓库内均无 .wasm 预编译文件；README 的构建流程依赖 wasm 打包。",
+  "limitsZh": "即便构建成功，headless bundle 仍需在浏览器/Node 的 Web Audio 环境跑；音频导出格式受限于其内部实现；首次 wasm 构建耗时长。"
+}

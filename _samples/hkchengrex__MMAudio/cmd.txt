@@ -1,0 +1,23 @@
+# hkchengrex__MMAudio 样例生成命令
+# 环境：F:\coding音乐\_env\venv（Python 3.13 + torch 2.6.0+cu124），权重在 F:\coding音乐\_models
+
+# 1) 合成 3 段 512x512 篝火画面（每段 8 s、25 fps，共 200 帧/段，火焰亮度脉动）
+& F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\mma_make_frames.py
+# 产出帧目录：F:\coding音乐\_tmp\batchE\mma_video\seg{1,2,3}\f_%04d.png
+
+# 2) ffmpeg 编码为 H.264 视频（seg1~3.mp4）
+& C:\ffmpeg\bin\ffmpeg.exe -y -framerate 25 -i F:\coding音乐\_tmp\batchE\mma_video\seg1\f_%04d.png -c:v libx264 -pix_fmt yuv420p F:\coding音乐\_tmp\batchE\mma_video\seg1.mp4
+& C:\ffmpeg\bin\ffmpeg.exe -y -framerate 25 -i F:\coding音乐\_tmp\batchE\mma_video\seg2\f_%04d.png -c:v libx264 -pix_fmt yuv420p F:\coding音乐\_tmp\batchE\mma_video\seg2.mp4
+& C:\ffmpeg\bin\ffmpeg.exe -y -framerate 25 -i F:\coding音乐\_tmp\batchE\mma_video\seg3\f_%04d.png -c:v libx264 -pix_fmt yuv420p F:\coding音乐\_tmp\batchE\mma_video\seg3.mp4
+
+# 3) 视频+文本条件生成音频（本机 CLIP/BigVGAN 均指向本地目录，离线）
+#    权重路径是相对路径，cwd 必须是 F:\coding音乐\_models\mmaudio
+$env:HF_HUB_OFFLINE='1'; $env:TRANSFORMERS_OFFLINE='1'
+& F:\coding音乐\_env\venv\Scripts\python.exe -u F:\coding音乐\_tmp\batchE\mma_run.py
+# 产出：F:\coding音乐\_tmp\batchE\mma_gen\seg1.wav ~ seg3.wav（各 7.964 s / 44.1 kHz）
+
+# 4) 三段调平拼接 + 波形/频谱图，写入 _samples\hkchengrex__MMAudio
+& F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\mma_compose.py
+
+# 5) 验收
+powershell -NoProfile -ExecutionPolicy Bypass -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\hkchengrex__MMAudio\sample.wav

@@ -1,0 +1,22 @@
+{
+  "id": "hkchengrex__MMAudio",
+  "status": "ok",
+  "engine": "MMAudio small_44k（mmaudio_small_44k.pth 600.8 MB）+ FlowMatching Euler 25 步 + v1-44 VAE + Synchformer 视频同步特征 + CLIP DFN5B 文本/画面条件 + BigVGAN v2 44 kHz 声码器，bf16 推理",
+  "spec": {"durationSec": 23.773, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 4193660},
+  "hardwareZh": "RTX 4060 Laptop 8GB 实测可跑通：bf16 权重常驻 2.93 GB，单段 8 s 生成峰值显存 4.16 GB，无需 offload 或分段推理。",
+  "capabilitiesZh": [
+    "视频 + 文本联合条件生成音效：给一段画面和一句描述，直接产出与画面动作同步的 44.1 kHz 音频",
+    "Synchformer 提供帧级视觉同步信号，火焰脉动、物体碰撞这类瞬时事件能对上拍点",
+    "单段默认 8 秒，可用同一模型多段生成后拼接成更长音轨；FlowMatching 25 步即可收敛"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 7.96, "capZh": "篝火点燃：稀疏噼啪声叠着夜风底噪，演示画面驱动下的起步段与瞬时事件同步"},
+    {"startSec": 7.96, "endSec": 15.93, "capZh": "篝火旺盛：低频轰鸣铺底、爆裂纹理密集，演示提示词强度变化带来的能量抬升"},
+    {"startSec": 15.93, "endSec": 23.77, "capZh": "余烬与夜风：能量收束成细碎轻响，演示同场景长时一致性与结尾自然衰减"}
+  ],
+  "signatureZh": "同一团合成篝火画面，声音从点火时的细碎噼啪，走到旺火的低频轰鸣，再收成余烬轻响，全程贴着火焰脉动走。",
+  "chooseWhenZh": "已经有画面或视频、只需要补一条与画面对齐的环境声/音效时选它；它吃视频加文本、产出同步音频，而不是凭空作曲。",
+  "contrastWith": ["thxxx__VTS", "facebookresearch__audiocraft"],
+  "evidenceZh": "用 PIL 合成 3 段 512x512 篝火画面（每段 200 帧、火焰亮度随时间脉动），经 ffmpeg 编码为 H.264 的 seg1~3.mp4；以 mmaudio small_44k 权重在 RTX 4060 8GB 上做视频+文本条件生成，每段输出 7.964 s / 44.1 kHz 单声道（25 步 Euler、cfg 4.5、bf16），三段分别耗时 24.3 s / 9.3 s / 9.5 s，峰值显存 4.16 GB；再用 Python 按「点燃 0.075 → 旺火 0.150 → 余烬 0.070」的目标 RMS 调平、60 ms 交叉淡化拼成 23.773 s，加 1.8 倍软压缩抬升稀疏爆裂的听感，峰值归一到 0.90，落盘 44.1 kHz PCM_16 双声道。段落实测 RMS：点燃 -22.5 dB、旺火 -17.2 dB、余烬 -18.8 dB。",
+  "limitsZh": "① 单段硬上限 8 s，长音轨靠拼接，接缝处爆裂纹理会轻微不连续；② 8GB 显存只够 small_44k，换 large 或更长序列会 OOM；③ 原始输出 RMS 天然偏低（爆裂是稀疏瞬态），必须做软压缩才不显得小声；④ 语义控制是粗粒度，只能靠提示词描述场景，无法指定音高、节奏或精确发声时刻；⑤ 首次加载 CLIP DFN5B 3.9 GB 权重需约 4.5 分钟 CPU 反序列化，属启动成本。"
+}

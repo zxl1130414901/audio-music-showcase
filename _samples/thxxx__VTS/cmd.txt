@@ -1,0 +1,27 @@
+# thxxx__VTS 样例生成命令
+# 环境：F:\coding音乐\_env\venv_vts（Python 3.11.14 + torch 2.4.1+cu124 + torchaudio 2.4.1）
+# 权重：F:\coding音乐\_models\VTS\dynamic_v3_0415.ckpt（5.2 GB）
+# 文本编码器本地化：F:\coding音乐\_models\flan-t5-base
+# 声码器本地化：F:\coding音乐\_models\vts_vocos\oobleck.safetensors
+
+# 1) 生成 3 类条件草图（噪声包络代替 voice sketch）：雨/雷/车
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_sketch.py
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_sketch_flat.py
+
+# 2) 雨声初版（含漂移包络，后弃用）
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_run.py ^
+  --sketch F:\coding音乐\_tmp\batchE\vts_sketch\rain_sketch.wav ^
+  --text "heavy rain falling on a city street at night, continuous wet ambience" ^
+  --duration 4.0 --steps 64 --seed 11 ^
+  --out F:\coding音乐\_tmp\batchE\vts_gen\rain_01.wav
+
+# 3) 雷声、汽车、第二段雨（同进程载入一次模型，批量生成）
+set HF_HUB_OFFLINE=1
+set TRANSFORMERS_OFFLINE=1
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_batch.py
+
+# 4) 稳定雨声复生成（同样命令，仅改 jobs 列表，见脚本）
+F:\coding音乐\_env\venv_vts\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_batch.py
+
+# 5) 拼贴：雨声循环打底 + 雷声×2 + 汽车驶过，出 22 s 44.1 kHz 双声道与波形/频谱图
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\vts_compose.py

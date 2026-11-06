@@ -1,0 +1,51 @@
+{
+  "id": "haoheliu__AudioLDM",
+  "status": "ok",
+  "capabilitiesZh": [
+    "文本到音频潜扩散：CLAP 文本编码 + 音频 VAE 潜空间 + DDIM 采样，输入一句描述直接生成 16kHz 环境声",
+    "可变时长：一次生成 10s（latent 96×64），两段拼成 20s 叙事；duration 参数直接决定潜序列长度",
+    "HiFiGAN 声码器上采样：从 64-bin mel 还原波形，噪感低但高频上限只有 8kHz（16kHz 采样）",
+    "分类器自由引导：guidance_scale=2.5 控制文字贴合度，n_candidate 可多候选选优"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 5,
+      "capZh": "开头：铁皮屋顶上的持续雨声，高频颗粒被 16kHz 采样率削掉一半，但金属屋顶的共鸣感明显"
+    },
+    {
+      "startSec": 5,
+      "endSec": 10,
+      "capZh": "中段：远处雷声滚过，CLAP 条件把「thunder in the distance」的距离感做进了低频包络"
+    },
+    {
+      "startSec": 10,
+      "endSec": 15,
+      "capZh": "转折：换成「雨势收小」，能量明显下降，雨滴残余的滴答声保留"
+    },
+    {
+      "startSec": 15,
+      "endSec": 20.2,
+      "capZh": "结尾：稀疏滴水与空气感收束，最后 0.5s 淡出"
+    }
+  ],
+  "signatureZh": "16kHz 的「糊而贴题」：雨声高频明显缺失、听起来像隔着窗，但文字关系（远近、屋顶材质、雷）都抓得住",
+  "chooseWhenZh": "要用一句自然语言描述直接造环境声、且显存有限（≤8GB）时选它；对高频保真要求高就别选",
+  "contrastWith": [
+    "haidog-yaqub__EzAudio",
+    "teticio__audio-diffusion"
+  ],
+  "evidenceZh": "_tmp/batchA/src/audioldm_demo.py：sys.path 注入仓库，monkeypatch torch.load 为 weights_only=False、monkeypatch RobertaTokenizer.from_pretrained 指向 ASCII 联接 F:\\_roberta；build_model(ckpt_path=_models/AudioLDM/audioldm-s-full.ckpt, model_name='audioldm-s-full')；两次 text_to_audio(ddim_steps=100, duration=10, guidance_scale=2.5, seed=20261106/20261107)；两段按 RMS 对齐到 0.10 后 300ms 交叉淡化，再 ffmpeg 转 44.1kHz 并加淡入淡出。",
+  "limitsZh": "采样率 16kHz，频谱上限 8kHz（本批生成类里最低）；audioldm-s-full.ckpt 2.44GB 官方只在 zenodo（本机 0.1MB/s 不可用），改从 HF 镜像 circulus/AudioLDM 取；模型加载首次 594s、缓存后 104s，20s 音频两段共 136s；仓库代码是 2023 年形态，torch 2.6 需要 monkeypatch torch.load，tokenizer 需要 ASCII 路径；显存约 2.4GB。",
+  "spec": {
+    "durationSec": 20.18,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 1780308
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    70 ms] 验收文件：F:\\coding音乐\\_samples\\haoheliu__AudioLDM\\sample.wav\n[   123 ms] 文件大小：1,738.6 KB\n[   285 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=20.184 s 码率=706 kbps (141 ms)\n[   403 ms] 幅度统计：峰值=0.00 dBFS  RMS=-22.43 dBFS  样本数=890115 (95 ms)\n[   622 ms] 频谱检测：非背景像素占比=45.85%  阈值=2.00%  结果=有能量 (218 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\haoheliu__AudioLDM\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 20.184 s\n峰值        : 0.00 dBFS\nRMS         : -22.43 dBFS\n频谱非空度  : 45.85%（阈值 2.00%）\n总耗时      : 628 ms\n判定        : PASS  -> 有声音"
+  }
+}

@@ -1,0 +1,16 @@
+# audiocraft / MusicGen-small 本地离线生成
+# 1) 权重：ModelScope 手工下载（HF 直连/镜像不可用）
+#    AI-ModelScope/musicgen-small -> F:\coding音乐\_models\musicgen-small
+#      state_dict.bin / compression_state_dict.bin / config.json / spiece.model
+#    AI-ModelScope/t5-base -> F:\coding音乐\_models\t5-base
+# 2) 中文路径规避：subst S: "F:\coding音乐"（sentencepiece 打不开非 ASCII 路径）
+subst S: "F:\coding音乐"
+set HF_ENDPOINT=https://hf-mirror.com
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchB\run_musicgen_local.py
+#    MusicGen.get_pretrained(r'F:\coding音乐\_models\musicgen-small', device='cuda')
+#    set_generation_params(duration=20.0, use_sampling=True, top_k=250, temperature=0.9, cfg_coef=3.5)
+#    generate(["cinematic lo-fi beat: soft electric piano arpeggio intro over a warm analog pad, then steady hip-hop drums with vinyl crackle, ending with a calm piano resolution"])
+#    输出 S:\_tmp\batchB\musicgen_out.wav（32000 Hz mono, 640000 样本, 86.2s）
+# 3) 统一规格转换 + 截图
+powershell -File F:\coding音乐\_tmp\batchB\make_sample.ps1 -Src F:\coding音乐\_tmp\batchB\musicgen_out.wav -OutDir F:\coding音乐\_samples\facebookresearch__audiocraft -StartSec 0 -DurationSec 20
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\facebookresearch__audiocraft\sample.wav

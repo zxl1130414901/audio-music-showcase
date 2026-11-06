@@ -1,0 +1,22 @@
+{
+  "id": "supercollider__supercollider",
+  "status": "ok",
+  "nativeOutput": true,
+  "nativeNoteZh": "SuperCollider 3.14.1 官方安装包本体（移到 F 盘），用 sclang 写 Score、scsynth -N 非实时渲染，非 ffmpeg 合成。",
+  "spec": { "durationSec": 18.95, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3342862 },
+  "capabilitiesZh": [
+    "sclang 语言内做算法作曲：循环生成音符事件与和弦堆叠，Score 排序后一次性渲染",
+    "scsynth 非实时模式（-N）按事件时间线精确离线出带，不受实时 CPU 抖动影响",
+    "内置 SynthDef/UGens：Saw、RLPF、Ringz、EnvGen、Pan2 等直接搭音色"
+  ],
+  "signatureZh": "听感是「室内电子乐 + 拨弦音色」：低音锯齿垫底不糊，拨弦像被敲响的玻璃杯，有明确的三段式推进和干净收尾。",
+  "chooseWhenZh": "当你需要真正意义上的算法作曲语言（Pattern/Score/实时双向）而不是一堆 DSP 头文件时选它；比 fundsp 更适合写复杂时间结构与音色设计，代价是要装整个运行时。",
+  "contrastWith": ["SamiPerttu__fundsp", "facebookresearch__audiocraft"],
+  "segments": [
+    { "startSec": 0.0, "endSec": 5.0, "capZh": "低频锯齿 pad 铺底，五声音阶拨弦按 0.58s 间隔进入，建立动机并露出 Ringz 的音色特征。" },
+    { "startSec": 5.0, "endSec": 12.0, "capZh": "底鼓每拍落下、旋律上行 16 音，Pan2 声像随音符左右摆动，展示事件密度与打击层的配合。" },
+    { "startSec": 12.0, "endSec": 18.9, "capZh": "三组和弦依次堆叠叠加半拍镲片，末尾以低音 pad 与单音拨弦收束，展示段落式结构与淡出。" }
+  ],
+  "evidenceZh": "S:\\_tmp\\batchB\\sc_write.scd（sclang 执行，subst S: 规避中文路径）：4 个 SynthDef、Score.add 生成约 60 个 \\s_new 事件、score.write 得 sc_score.osc；再 scsynth -N sc_score.osc _ sc_nrt3.wav 44100 wav int16 -o 2 -i 0 渲染 19.75s。",
+  "limitsZh": "a) Windows 版 sclang 对非 ASCII 路径直接报 bad conversion，必须用 subst 盘符绕开；b) 默认 8 声道输出，需显式 -o 2；c) recordNRT 依赖系统临时目录（会写 C 盘），改用 score.write + 手动 scsynth；d) 安装包 /D 重定向未生效，首次装到了 C:\\Program Files，已复制到 F 盘并卸载 C 盘副本。"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "Anjok07__ultimatevocalremovergui",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 24.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le"
+  },
+  "capabilitiesZh": [
+    "人声/伴奏分离：MDX-Net、VR、Demucs 系列模型，输出 vocals 与 instrumental 两条音轨",
+    "配套降噪、去回声、人声增强等预处理，可批量处理整张专辑",
+    "支持输出 wav/flac/mp3，并可按 stem 单取（本例只取 Instrumental）"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 12.0, "capZh": "原始混音：合成伴奏叠加本地 TTS 人声，作为分离前对照"},
+    {"startSec": 12.0, "endSec": 24.0, "capZh": "UVR-MDX-Net 分离出的伴奏，人声被去掉只留音乐层"}
+  ],
+  "signatureZh": "同一段 24 秒素材先听后对比：前半有说话人声，后半是人声被剥掉的纯伴奏，接缝处仅 0.25 秒交叉淡化。",
+  "chooseWhenZh": "当你需要把歌曲/配音素材拆成人声与伴奏、且希望用现成 UVR 模型批量处理时选它；偶尔分一首歌用 audio-separator CLI 即可，不必装 C 盘的官方 GUI。",
+  "contrastWith": ["sergree__matchering", "pkalogiros__AudioMass"],
+  "evidenceZh": "官方 GUI 因要求装 C:\\ 且无 CLI 被跳过，改走 pip audio-separator 0.48.0（主 venv，Python 3.13）；模型 UVR-MDX-NET-Inst_HQ_5.onnx（59 MB）从 GitHub Releases 下载到 _models\\uvr；对 24 s 合成混音（合成伴奏 + 本地 TTS 人声）用 --single_stem Instrumental 分离，CPU ONNX 耗时 66 s；拼接成 0-12 s 原混音 / 12-24 s 伴奏，verify_audio.ps1 判定 PASS（峰值 -1.51 dBFS、RMS -15.62 dBFS、24.0 s）。",
+  "limitsZh": "分离质量取决于模型：本例人声是 TTS 语音而非真实演唱，MDX 对合成语音的残留抑制不如真人；CPU 推理 24 s 素材耗时 66 s；官方 GUI 的批量/预处理功能未验证。"
+}

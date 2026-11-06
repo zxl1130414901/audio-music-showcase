@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "QA-MDT 文本生音乐：需要 audioldm_train 全量依赖（torch/lightning/funasr 等）与多份预训练权重（offset_pretrained_checkpoints.json 指向的数 GB checkpoint），本机 HF 直连与镜像均不可用，只能用 ModelScope 逐文件手工搬运，超出本批 20GB 额度与 35 分钟单仓库预算。",
+  "capabilitiesZh": [
+    "质量感知（QA）驱动的文本到音乐生成，按 MOS 打分挑更好的采样",
+    "基于 AudioLDM 训练框架，支持多阶段（latent diffusion + 声码器）",
+    "提供 gradio 界面与批量推理脚本"
+  ],
+  "signatureZh": "（未出样）目标是「文本 → 更耐听的音乐」，与 audiocraft 同一赛道但走质量对齐路线。",
+  "chooseWhenZh": "要研究文本生音乐的质量对齐、且能整机按 Linux/CUDA 环境部署数 GB 权重时选它；本机单卡 8GB + 无 HF 直连条件下选 audiocraft 更实际。",
+  "contrastWith": [
+    "facebookresearch__audiocraft",
+    "torchsynth__torchsynth"
+  ],
+  "evidenceZh": "读 readme.md / run.sh / offset_pretrained_checkpoints.json / requirements.txt：推理入口是 gradio 与 infer 脚本，权重清单指向 HF 上的 QA-MDT checkpoint；本机 HF_ENDPOINT 镜像实测 302 回 huggingface.co 导致 huggingface_hub 抛 FileMetadataError。",
+  "limitsZh": "权重体积与下载通道双重受限（本批已用 ~2GB 给 audiocraft+t5，额度 20GB 内但要留余量）；audioldm_train 依赖在 py3.13 上有冲突（pytorch-lightning / funasr 版本）；无 headless 快速路径。",
+  "id": "ivcylc__OpenMusic",
+  "segments": []
+}

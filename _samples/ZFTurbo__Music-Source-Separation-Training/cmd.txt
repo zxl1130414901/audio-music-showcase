@@ -1,0 +1,16 @@
+# ZFTurbo__Music-Source-Separation-Training 样例生成命令
+# 1) 从 DawDreamer 测试资产合成 8 s 混音（四轨相加，峰值归一到 0.89）
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\mss_prep.py
+
+# 2) MDX23C 人声分离（44.1 kHz / 2ch，8.85 s 推理）
+cd /d F:\coding音乐\ZFTurbo__Music-Source-Separation-Training
+F:\coding音乐\_env\venv\Scripts\python.exe inference.py ^
+  --model_type mdx23c ^
+  --config_path configs\config_vocals_mdx23c.yaml ^
+  --start_check_point F:\coding音乐\_models\mss\model_vocals_mdx23c_sdr_10.17.ckpt ^
+  --input_folder F:\coding音乐\_tmp\batchE\mss_in ^
+  --store_dir F:\coding音乐\_tmp\batchE\mss_out ^
+  --extract_instrumental --device_ids 0
+
+# 3) 把「原曲 7.8 s -> 人声 7.8 s -> 伴奏 7.8 s」拼成 23.32 s 对比音频，并出波形/频谱图
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchE\mss_compose.py

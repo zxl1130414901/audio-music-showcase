@@ -1,0 +1,21 @@
+{
+  "id": "ZFTurbo__Music-Source-Separation-Training",
+  "status": "ok",
+  "engine": "ZFTurbo MSS / MDX23C vocals 模型（model_vocals_mdx23c_sdr_10.17.ckpt，448 MB）+ --extract_instrumental 反相求伴奏",
+  "spec": {"durationSec": 23.32, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 4113692},
+  "capabilitiesZh": [
+    "把真实多轨音乐拆成「人声 / 伴奏」两条干声，可直接用于翻唱、二创与混音替换",
+    "MDX23C 频谱掩码模型，44.1 kHz 原生采样率、双声道推理，Si-SDR 训练目标",
+    "支持自定义 overlap 分段推理，长曲可按块拼接避免显存溢出"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 7.8, "capZh": "原曲混音：鼓、贝斯、人声与其它声部同场，作为分离输入"},
+    {"startSec": 7.8, "endSec": 15.6, "capZh": "仅人声：伴奏被剥离，只剩主唱旋律线与少量和声残留"},
+    {"startSec": 15.6, "endSec": 23.32, "capZh": "伴奏：人声被反相抵消，鼓、贝斯与吉他垫音完整保留"}
+  ],
+  "signatureZh": "同一段迪斯科乐队录音先放全混音，再切到干净人声与纯伴奏，分离前后能量和频谱层次一眼可辨。",
+  "chooseWhenZh": "需要把成品歌拆成人声/伴奏做翻唱、二创、配音替换或训练数据制作时选它；它给出可分轨干声，而不是重新生成一段音乐。",
+  "contrastWith": ["Anjok07__ultimatevocalremovergui", "facebookresearch__audiocraft"],
+  "evidenceZh": "素材来自仓库生态内的真实多轨测试资产 DBraun__DawDreamer\\tests\\assets\\Music Delta - Disco（vocals/drums/bass/other 各 124.8 s @44.1 kHz），按能量选出第 107 s 起的 8 s 段并把四轨相加成混音；用 inference.py --model_type mdx23c --config_path configs/config_vocals_mdx23c.yaml --start_check_point _models\\mss\\model_vocals_mdx23c_sdr_10.17.ckpt --extract_instrumental 在 RTX 4060 8GB 上推理 8.85 s 得 vocals.wav / instrumental.wav；再用 Python 把「原曲→人声→伴奏」各自 7.8 s 以 40 ms 交叉淡化拼成 23.32 s，44.1 kHz PCM_16 落盘。",
+  "limitsZh": "① 当前权重只做人声/伴奏二分，鼓、贝斯、其它不单独出轨（要 4-stem 需另配模型）；② 推理片段仅 8 s，强混响与瞬态处仍有少量伴奏泄漏进人声；③ 伴奏用 mix−vocals 反相求得，人声估计欠佳时会连带残留在伴奏里；④ 素材为 MUSDB 风格测试多轨而非商业歌曲，复杂现场录音效果会下降。"
+}

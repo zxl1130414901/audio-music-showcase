@@ -1,0 +1,22 @@
+{
+  "id": "SamiPerttu__fundsp",
+  "status": "ok",
+  "nativeOutput": false,
+  "nativeNoteZh": "用 fundsp 的 Sequencer/Wave 渲染管线；harness 放在 _tmp\\batchB\\fundsp_demo（cargo path 依赖仓库），未改动仓库文件。",
+  "spec": { "durationSec": 20.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3528078 },
+  "capabilitiesZh": [
+    "图形化算子组合（>> / & / |）把振荡器、滤波器接成网络",
+    "Sequencer 按时间轴推入事件，做有节拍结构的编曲",
+    "reverb2_stereo / limiter_stereo 等现成总线效果，Wave 直接写 wav"
+  ],
+  "signatureZh": "节奏驱动的电子小品：底鼓扎实、锯齿旋律带滤波包络，整体像模块化机架即兴，音符边界干净但不机械。",
+  "chooseWhenZh": "当你要用 Rust 在代码里搭合成网络并离线出完整短曲、还要保留实时播放能力时选它；比 Signalsmith 更高层，比 SuperCollider 更贴近宿主程序。",
+  "contrastWith": ["Signalsmith-Audio__dsp", "torchsynth__torchsynth"],
+  "segments": [
+    { "startSec": 0.0, "endSec": 5.0, "capZh": "稀疏琶音＋四拍底鼓建立律动，展示 Sequencer 事件调度与 bassdrum 的低频冲击。" },
+    { "startSec": 5.0, "endSec": 12.0, "capZh": "旋律上行段加入军鼓反拍，锯齿波经 lowpass_q 滤波，展示持续音与打击乐的层次。" },
+    { "startSec": 12.0, "endSec": 20.0, "capZh": "密集和弦＋半拍镲片，末尾经 reverb2_stereo 与 limiter 收束，展示总线效果与动态控制。" }
+  ],
+  "evidenceZh": "_tmp\\batchB\\fundsp_demo：Cargo.toml 以 path 依赖 F:\\coding音乐\\SamiPerttu__fundsp；main.rs 用 Sequencer::new(0,2)、bpm=120、20s，push(bassdrum/snaredrum/cymbal/sine_hz/saw_hz)，Wave::render → filter(reverb2_stereo(6.0,1.2,0.4,1.0)) → filter_latency(limiter_stereo(4.0,4.0)) → save_wav16。",
+  "limitsZh": "编译需 Rust+MSVC 链接器（本机可用，但 20 分钟内完成）；Sequencer 要求每条推入节点输出声道数与总线一致，写错直接 panic；库不提供 GUI/乐谱输入，旋律要在代码里手写数组。"
+}

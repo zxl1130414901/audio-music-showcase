@@ -1,0 +1,11 @@
+# alibaba/unified-audio --- SKIPPED, no audio produced
+# Reachability check only (no install attempted):
+
+Get-ChildItem F:\coding音乐\alibaba__unified-audio\UniTok-audio -Recurse -Filter *.py | Measure-Object
+#   -> Count = 0  (folder holds only demo audio + figures)
+(Get-ChildItem F:\coding音乐\alibaba__unified-audio\QuarkAudio-HCodec -Recurse -Filter *.py).Count   # 92
+(Get-ChildItem F:\coding音乐\alibaba__unified-audio\QuarkAudio-UniSE -Recurse -Filter *.py).Count    # 34
+
+# environment.yml is a linux-64 conda lock (cuda-cudart 12.4.127, cuda-version 12.8, conda-pack, funasr, espnet-model-zoo, audioldm-eval ...)
+# weights: https://huggingface.co/QuarkAudio/QuarkAudio-HCodec  +  https://www.modelscope.cn/models/QuarkAudio/QuarkAudio-HCodec
+# Verdict: skipped (env + weights cannot be assembled inside the 35-minute per-repo window on Windows)

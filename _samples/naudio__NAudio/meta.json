@@ -1,0 +1,16 @@
+{
+  "id": "naudio__NAudio",
+  "owner": "naudio",
+  "repo": "NAudio",
+  "status": "skipped",
+  "blockerZh": ".NET 运行时在（Microsoft.NETCore.App 6.0/8.0 + WindowsDesktop.App 6.0/8.0），但没有 .NET SDK：dotnet --version 直接报 No .NET SDKs were found，而本机也没有 MSVC/CMake。NAudio 是纯库，仓库内没有任何 .DLL/.EXE 预编译产物，samples 目录全是 WinForms/WPF 图形 Demo 加单元测试，没有命令行或离线渲染入口；无 SDK 就编不出可执行样例，装 SDK 会把文件写进 C:\\Program Files，按本次约束不允许。",
+  "whatItWouldNeed": "安装 .NET SDK 8（写入 C:\\Program Files\\dotnet）才有能力 dotnet build 出控制台样例；或者退一步，把 NuGet 包解压后在 PowerShell 宿主编程调用 WaveFileWriter/BiQuadFilter——但那样发声内容由自写合成代码决定，不能代表仓库能力，故不做。",
+  "alternativePath": "只需要「读写音频 + 滤波/重采样/混音」这类底层能力时，用本机 _env 里已有的 soundfile + pedalboard（或 numpy/scipy）即可等价完成；要 .NET 生态的 WASAPI 播放/录制才必须用 NAudio。",
+  "capabilitiesZh": [
+    "Windows 下的音频 I/O 基础设施：WASAPI/WaveOut/WaveIn 播放录制、WaveFileWriter/Reader、多种编码与流式读写",
+    "实用 DSP 组件：BiQuad 滤波、重采样、混音/音量、SampleProvider 管道、DMO/MediaFoundation 编解码",
+    "整套可复用的 .NET 音频对象模型（WaveStream/SampleProvider 组合），供上层 DAW 或语音应用搭建"
+  ],
+  "chooseWhenZh": "在 .NET 里做实时播放、录音、格式转换或给自研 C# 音频应用打底时才选它；它本身不产生内容，不能当生成器用，脱离 .NET 技术栈更没必要选。",
+  "contrastWith": ["TRAE-sample-env: soundfile+pedalboard", "SamiPerttu__fundsp"]
+}

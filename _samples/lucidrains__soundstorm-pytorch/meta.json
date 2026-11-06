@@ -1,0 +1,16 @@
+{
+  "id": "lucidrains__soundstorm-pytorch",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "SoundStorm 并行音频 token 生成（TTS 语音、音频续写、语义到声学生成）",
+    "配套 accelerate 训练器，可自训/微调 transformer",
+    "需搭配 SoundStream/EnCodec 解码器才能还原成波形"
+  ],
+  "blockerZh": "仓库只有模型定义与训练代码，没有任何预训练权重；README 的用法全部是“先训练再加载”，并要求额外提供已训练的 SoundStream 编码器与 TTS 文本编码器（spear-tts-pytorch 仍是 WIP）。本机没有训练数据，也没有数十小时 GPU 预算。",
+  "whatItWouldNeed": "训练数据（音频 + 转写/语义标签）、预训练 SoundStream/EnCodec、数小时到数十小时 GPU（8 GB 只能极小 batch）、文本编码器权重。",
+  "alternativePath": "本机无；若只需 TTS 可改用已发布模型（XTTS/F5-TTS），音乐生成可走 MusicGen/stable-audio。仓库价值在研究而非直接出样。",
+  "chooseWhenZh": "只有你要复现/改进 SoundStorm 架构、自己做研究训练时才值得为它准备数据与 GPU；想直接得到音频，不要选它。",
+  "contrastWith": ["Stability-AI__stable-audio-tools", "thxxx__VTS"],
+  "evidenceZh": "README 明确 “you need to pass in your pretrained SoundStream into SoundStorm”“You can train your own SoundStream”；仓库内无 .pt/.ckpt 权重；完整 text-to-speech 依赖 spear-tts-pytorch 的 TextToSemantic，而该项目自述模型架构完成、预训练逻辑未完成。",
+  "limitsZh": "无权重即无法出声；训练需大量数据与算力；8 GB 显存训练 SoundStorm 只能极小模型/序列。"
+}

@@ -1,0 +1,26 @@
+# TarsosDSP 离线渲染（Java，无需 Gradle，直接 javac 编译 core+jvm）
+$repo = "F:\coding音乐\JorenSix__TarsosDSP"
+
+# 1) 编译 core + jvm（必须排除 module-info.java，否则 javac 进入模块模式读不到 java.desktop）
+$srcs = @()
+Get-ChildItem "$repo\core\src\main\java","$repo\jvm\src\main\java" -Recurse -Filter *.java |
+  Where-Object { $_.Name -ne "module-info.java" } | ForEach-Object { $srcs += $_.FullName }
+javac -encoding UTF-8 -d "F:\coding音乐\_tmp\batchA\out\tarsos" $srcs
+
+# 2) 输入：把 Faust 管风琴样例转成单声道 44.1k（本仓库只做分析/重合成，没有乐器）
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\faust_organ.wav" `
+  -ac 1 -ar 44100 "F:\coding音乐\_tmp\batchA\out\tarsos_in.wav"
+
+# 3) 自写 harness：YIN -> PitchResyntheziser -> WaveformWriter
+javac -encoding UTF-8 -cp "F:\coding音乐\_tmp\batchA\out\tarsos" -d "F:\coding音乐\_tmp\batchA\out\tarsos" `
+  "F:\coding音乐\_tmp\batchA\src\ResynthDemo.java"
+java -cp "F:\coding音乐\_tmp\batchA\out\tarsos" ResynthDemo `
+  "F:\coding音乐\_tmp\batchA\out\tarsos_in.wav" "F:\coding音乐\_tmp\batchA\out\tarsos_out.wav"
+
+# 4) +11.5dB 归一
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\tarsos_out.wav" `
+  -af "volume=11.5dB" -c:a pcm_s16le "F:\coding音乐\_samples\JorenSix__TarsosDSP\sample.wav"
+
+# 5) 收尾：波形/频谱图 + 静音校验 + meta.json
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py `
+  "F:\coding音乐\_samples\JorenSix__TarsosDSP\sample.wav" F:\coding音乐\_tmp\batchA\meta_tarsos.json

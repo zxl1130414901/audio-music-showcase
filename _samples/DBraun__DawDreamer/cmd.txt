@@ -1,0 +1,14 @@
+# DawDreamer 样例复现命令（Windows / Python 3.13 venv）
+# 1) 预编译 wheel（PyPI 清华源，23.1 MB）
+F:\coding音乐\_env\venv\Scripts\python.exe -m pip download dawdreamer==0.9.0 --no-deps --only-binary=:all: --dest F:\coding音乐\_tmp\batchD --index-url https://pypi.tuna.tsinghua.edu.cn/simple
+F:\coding音乐\_env\venv\Scripts\python.exe -m pip install F:\coding音乐\_tmp\batchD\dawdreamer-0.9.0-cp313-cp313-win_amd64.whl --no-deps
+
+# 2) 渲染：4 个 Faust DSP + 加法混音 + 滤波 + 延迟 + 混响，分 4 段改参数后拼接
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchD\run_dawdreamer.py
+
+# 3) 验收
+powershell -NoProfile -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\DBraun__DawDreamer\sample.wav"
+
+# 4) 波形/频谱图（截取 5-15 s 内容区段）
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 5 -t 10 -i sample.wav -filter_complex "showwavespic=s=1024x256:colors=0xffaa33" -frames:v 1 waveform.png
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 5 -t 10 -i sample.wav -lavfi "showspectrumpic=s=1024x512" -frames:v 1 spectrogram.png

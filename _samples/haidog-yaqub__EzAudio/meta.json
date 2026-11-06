@@ -1,0 +1,46 @@
+{
+  "id": "haidog-yaqub__EzAudio",
+  "status": "ok",
+  "capabilitiesZh": [
+    "文本到音频扩散生成：MaskDiT（1024 维/24 层）在 128 维稳定 VAE 潜空间上做 100 步 DDIM 采样，按文字描述直接产出 24kHz 环境声",
+    "可变时长生成：generate_audio 的 length 参数按秒控制潜序列长度，本样例分别生成 9s/9s/7s 三段",
+    "固定种子可复现：random_seed 控制初始噪声，同一文字与种子可重复得到同一段声音",
+    "分类器引导 + 引导重缩放：guidance_scale=5、guidance_rescale=0.75 让文字贴合度与音质稳定"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 6.5,
+      "capZh": "开头：稳定的铁皮屋顶雨声，模型按「close perspective」把高频雨滴质感做得很细"
+    },
+    {
+      "startSec": 6.5,
+      "endSec": 13.5,
+      "capZh": "中段：雷声滚过，低频轰鸣叠加持续暴雨，演示同一潜在空间里的低频事件生成"
+    },
+    {
+      "startSec": 13.5,
+      "endSec": 24.4,
+      "capZh": "结尾：雨势逐渐收小、远处滴水，能量自然回落，三段用 300ms 交叉淡化接成一段叙事"
+    }
+  ],
+  "signatureZh": "扩散模型直接「画」出来的环境声：雨滴的高频颗粒和雷声低频都很自然，但缺少真实录音的微观细节",
+  "chooseWhenZh": "要按文字快速批量造环境音/音效素材（游戏场景声、短视频铺底），且能接受 10 秒级粒度时选它",
+  "contrastWith": [
+    "teticio__audio-diffusion",
+    "haoheliu__AudioLDM"
+  ],
+  "evidenceZh": "_tmp/batchA/src/ezaudio_demo.py：cwd 指向 _tmp/batchA/out/ezaudio/run（内含修改过的 ckpts/ezaudio-l.yml，text_encoder 改成本地 flan-t5-large），sys.path 注入仓库；EzAudio(model_name='s3_l', ckpt_path=_models/EzAudio/ckpts/s3/ezaudio_s3_l.pt, vae_path=.../vae/1m.pt, device='cuda')，三次 generate_audio(length=9/9/7, ddim_steps=100, guidance_scale=5, guidance_rescale=0.75, random_seed=11/12/13)，每段峰值归一 0.85，300ms 交叉淡化拼接，最后 ffmpeg -ar 44100 转样。",
+  "limitsZh": "权重 s3_l 2.2GB + VAE 0.17GB + flan-t5-large 2.9GB；首次生成含 CUDA 预热耗时 204s，之后每 10s 音频约 20–30s（RTX 4060 8GB）；输出 24kHz 单声道、上限约 10 秒左右一段，更长要分段拼接；镜像下载只能 curl 直连 hf-mirror，huggingface_hub 的 HEAD 请求不通；sentencepiece 读不了中文路径，必须用 ASCII 目录联接（F:\\_t5_local）。",
+  "spec": {
+    "durationSec": 24.4,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 2152158
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    72 ms] 验收文件：F:\\coding音乐\\_samples\\haidog-yaqub__EzAudio\\sample.wav\n[   120 ms] 文件大小：2,101.7 KB\n[   285 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=24.400 s 码率=706 kbps (145 ms)\n[   441 ms] 幅度统计：峰值=-0.89 dBFS  RMS=-19.05 dBFS  样本数=1076040 (127 ms)\n[   637 ms] 频谱检测：非背景像素占比=64.06%  阈值=2.00%  结果=有能量 (194 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\haidog-yaqub__EzAudio\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 24.400 s\n峰值        : -0.89 dBFS\nRMS         : -19.05 dBFS\n频谱非空度  : 64.06%（阈值 2.00%）\n总耗时      : 645 ms\n判定        : PASS  -> 有声音"
+  }
+}

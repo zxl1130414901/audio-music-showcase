@@ -1,0 +1,16 @@
+{
+  "id": "TencentARC__AudioStory",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "由长文本规划叙事，生成带旁白 + 音效 + 背景声的几分钟级“有声故事”",
+    "基于 Qwen2.5-3B 指令模型 + 音频 detokenizer 的音频续写与配乐",
+    "支持音效生成与语音合成的统一接口（AudioStory-3B 权重）"
+  ],
+  "blockerZh": "权重总量与显存超限：AudioStory-3B 权重含 Qwen2.5-3B-Instruct 两片 safetensors（单片 3.97 GB，合计约 7.9 GB）加两个音频 detokenizer，合计约 10 GB+，超出本批 10 GB 额度；3B LLM + 音频 codec 在 8 GB 显存只能强量化，长音频推理官方建议 ≥16 GB（A100 级别）。install_audiostory.sh 绑定 Python 3.10 与多个 Git 依赖。",
+  "whatItWouldNeed": "≥16 GB 显存（建议 24 GB）；约 10–12 GB 权重落 _models；Python 3.10 环境；长文本分段与音频拼接策略；可选 HF Token（仓库 gated=False，实测公开）。",
+  "alternativePath": "本机无可直接替代的长叙事音频模型；短音效可退到 stable-audio-tools（同样需授权）或 DawDreamer 合成。",
+  "chooseWhenZh": "当你需要“几分钟带旁白与音效的叙事音频”并且有 16 GB 以上显存时，才值得为它准备 10 GB 权重与 py3.10 环境；做短音效或音乐片段则不值得。",
+  "contrastWith": ["SAIL-PRLab__Foley-Omni", "Stability-AI__stable-audio-tools"],
+  "evidenceZh": "hf-mirror API：TencentARC/AudioStory-3B gated=False；HEAD 测得 Qwen2.5-3B-Instruct/model-00001-of-00002.safetensors 为 3.97 GB，两片合计约 7.9 GB，另需 AudioStory detokenizer 与 FLUX 相关组件；仓库安装脚本要求 conda + Python 3.10。本机 8 GB 显存 + 本批 10 GB 额度均不满足，未下载。",
+  "limitsZh": "生成长音频需要把文本切成段再拼接，容易出现段落音色漂移；中文旁白效果未验证；显存不足时会 OOM 而非降级运行。"
+}

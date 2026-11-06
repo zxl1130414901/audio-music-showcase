@@ -1,0 +1,23 @@
+# haidog-yaqub/EzAudio --- text-to-audio diffusion, 3-part soundscape
+# Env: F:\coding音乐\_env\venv (torch 2.6+cu124, CUDA on RTX 4060 8GB)
+# Weights (hf-mirror, curl because huggingface_hub HEAD is blocked):
+#   _models/EzAudio/ckpts/s3/ezaudio_s3_l.pt   2277MB
+#   _models/EzAudio/ckpts/vae/1m.pt            174.6MB (+ repo's ckpts/vae/config.json)
+#   _models/flan-t5-large/*                    model.safetensors 2987.5MB
+# ASCII junction needed: sentencepiece cannot open the CJK path
+New-Item -ItemType Junction -Path F:\_t5_local -Target "F:\coding音乐\_models\flan-t5-large"
+# run dir = copy of ckpts/ezaudio-l.yml with text_encoder.model -> F:/_t5_local
+# (_tmp/batchA/out/ezaudio/run/ckpts/ezaudio-l.yml)
+
+$env:HF_HOME="F:\coding音乐\_models\hf"
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\src\ezaudio_demo.py
+#   -> steady_11.wav 9.00s, thunder_12.wav 9.00s, light_13.wav 7.00s
+#   -> ezaudio_storm.wav 24.40s (300ms crossfades between the three parts)
+#   first generation 203.7s (CUDA warm-up), then 28.5s / 19.1s
+
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i F:\coding音乐\_tmp\batchA\out\ezaudio\ezaudio_storm.wav ^
+  -ar 44100 F:\coding音乐\_samples\haidog-yaqub__EzAudio\sample.wav
+
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchA\finish_sample.py ^
+  F:\coding音乐\_samples\haidog-yaqub__EzAudio\sample.wav F:\coding音乐\_tmp\batchA\meta_ezaudio.json 0.4:23
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\haidog-yaqub__EzAudio\sample.wav

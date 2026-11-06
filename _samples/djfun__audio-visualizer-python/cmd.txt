@@ -1,0 +1,18 @@
+:: audio-visualizer-python 是纯可视化工具，音频原样直通；输入取自 MilkyTracker 自带模块
+:: 1) 准备输入音源：milkycli 渲染 universalnetwork2_real.xm，再截 20-42s
+"F:\coding音乐\_tmp\batchC\mt_build\src\tools\milkycli\Release\milkycli.exe" "F:\coding音乐\milkytracker__MilkyTracker\resources\music\universalnetwork2_real.xm" -output "F:\coding音乐\_tmp\batchC\xm_universalnetwork2_real.wav" -sample-rate 44100
+C:\ffmpeg\bin\ffmpeg.exe -y -ss 20 -t 22 -i "F:\coding音乐\_tmp\batchC\xm_universalnetwork2_real.wav" -ac 2 -ar 44100 -c:a pcm_s16le "F:\coding音乐\_tmp\batchC\vis_input.wav"
+
+:: 2) 无头渲染 1280x720/30fps 可视化视频（Qt offscreen）
+set PYTHONPATH=F:\coding音乐\djfun__audio-visualizer-python\src
+set QT_QPA_PLATFORM=offscreen
+set PATH=C:\ffmpeg\bin;%PATH%
+F:\coding音乐\_env\venv\Scripts\python.exe -m avp -i "F:\coding音乐\_tmp\batchC\vis_input.wav" -o "F:\coding音乐\_tmp\batchC\vis_out.mp4" -c 0 vis layout=classic --no-preview --verbose
+
+:: 3) 从成品 mp4 抽回音轨作为 sample.wav（证明音频直通），并生成图
+C:\ffmpeg\bin\ffmpeg.exe -y -i "F:\coding音乐\_tmp\batchC\vis_out.mp4" -vn -ac 2 -ar 44100 -c:a pcm_s16le "F:\coding音乐\_tmp\batchC\vis_audio.wav"
+F:\coding音乐\_env\venv\Scripts\python.exe F:\coding音乐\_tmp\batchC\tools\post.py --in "F:\coding音乐\_tmp\batchC\vis_audio.wav" --outdir "F:\coding音乐\_samples\djfun__audio-visualizer-python" --start 0 --dur 22 --gain 0 --fade 0.8 --plot-start 3 --plot-dur 15
+copy "F:\coding音乐\_tmp\batchC\vis_out.mp4" "F:\coding音乐\_samples\djfun__audio-visualizer-python\visualization.mp4"
+
+:: 4) 静音校验
+powershell -ExecutionPolicy Bypass -File "F:\coding音乐\_env\verify_audio.ps1" -Path "F:\coding音乐\_samples\djfun__audio-visualizer-python\sample.wav"

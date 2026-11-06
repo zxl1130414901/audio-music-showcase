@@ -1,0 +1,16 @@
+{
+  "id": "SAIL-PRLab__Foley-Omni",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "视频 + 文本提示生成同步拟音：脚步、雨声、碰撞、机械声等 10 秒级视频配音",
+    "支持单独的音效生成、语音与音乐分支（同一套多任务声学生成模型）",
+    "输出 44.1 kHz 立体声音轨，可与视频时长对齐"
+  ],
+  "blockerZh": "权重体积与显存双重超标：HF 上 ckpts/Foley-Omni/v2st.pth 单个文件 HEAD 实测 22.2 GB，另需 Wan2.2-TI2V-5B 的 T5 编码器 11.4 GB；合计远超本批 10 GB 额度，8 GB 显存也装不下 5B 视频分支（需 ≥24 GB）。仓库还要求 Python 3.10 + CUDA 12.4 与预抽 CLIP/sync 特征。",
+  "whatItWouldNeed": "≥40 GB 权重磁盘空间；24 GB 显存显卡（或 CPU offload + 极慢推理）；Python 3.10 独立环境；MMAudio VAE/Synchformer 配套权重；输入视频片段。",
+  "alternativePath": "本机无现成替代；同一机器上已克隆 hkchengrex__MMAudio，可做更轻的视频→音效，但同样未验证显存；纯音效可选稳定音频生成系列。",
+  "chooseWhenZh": "只有当你明确要做“视频自动拟音”（给素材视频配脚步/环境声），且能上 24 GB 显存工作站、愿意为其单独留 40 GB 权重时，才值得投入；只要一段音效，选 DawDreamer 或 stable-audio-tools 更快。",
+  "contrastWith": ["hkchengrex__MMAudio", "TencentARC__AudioStory"],
+  "evidenceZh": "通过 hf-mirror.com API 与 HEAD 实测：Foley-Omni 模型仓库 gated=False、v2st.pth 22.2 GB、Wan2.2-TI2V-5B T5 权重 11.4 GB；仓库 requirements 指定 Python 3.10/CUDA 12.4，本机为 Python 3.13 + torch 2.6。未下载任何权重（遵守 10 GB 额度）。",
+  "limitsZh": "本机 8 GB 显存无法承载 5B 视频主干；即便跑通，10 秒视频推理也需数分钟；权重总量与本批额度冲突。"
+}

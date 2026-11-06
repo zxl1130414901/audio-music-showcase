@@ -1,0 +1,11 @@
+# SuperCollider 3.14.1 非实时渲染（NRT）
+# sclang 打不开非 ASCII 路径，先 subst 出一个纯 ASCII 盘符
+subst S: "F:\coding音乐"
+# 1) 用 sclang 跑编曲脚本，写出 OSC score（4 个 SynthDef: pad/pluck/kick/hat，约 60 个 \s_new 事件）
+F:\coding音乐\_env\supercollider\sclang.exe S:\_tmp\batchB\sc_write.scd
+#    ~score.write("S:/_tmp/batchB/sc_score.osc");
+# 2) scsynth 读 score 直接渲染 wav（注意 -N <score> _ <out> <sr> <fmt>，默认 8 声道需显式 -o 2 -i 0）
+F:\coding音乐\_env\supercollider\scsynth.exe -N S:\_tmp\batchB\sc_score.osc _ S:\_tmp\batchB\sc_nrt.wav 44100 wav int16 -o 2 -i 0
+# 3) 统一规格转换 + 截图
+powershell -File F:\coding音乐\_tmp\batchB\make_sample.ps1 -Src F:\coding音乐\_tmp\batchB\sc_nrt.wav -OutDir F:\coding音乐\_samples\supercollider__supercollider -StartSec 0 -DurationSec 19
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\supercollider__supercollider\sample.wav

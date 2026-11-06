@@ -1,0 +1,20 @@
+{
+  "id": "BazedFrog__SongGeneration-Studio",
+  "owner": "BazedFrog",
+  "repo": "SongGeneration-Studio",
+  "status": "skipped",
+  "blockerZh": "显存与权重双重不满足：仓库自带模型注册表（models.py）标注 base 需 10GB VRAM、base_full 需 12GB、large 需 22GB，本机 RTX 4060 Laptop 只有 8GB；HF 上 lglg666/SongGeneration-base 的 model.pt 实测 10.54GB，单这一项就吃掉 15GB 权重额度的大半。LeVo 是 AR 语言模型 + 扩散双阶段，权重无法塞进 8GB，强上必然 OOM。补充：克隆到本地的是 BazedFrog__SongGeneration-Studio（Pinokio 包装层，非 Tencent 官方仓库），本质仍是 LeVo 权重。",
+  "whatItWouldNeed": "至少 10GB（建议 12–16GB）显存的 NVIDIA 卡、约 12GB 磁盘、完整的 LeVo 推理代码与 audio tokenizer/vocoder 权重、单首歌 30–60 分钟推理；Pinokio 安装脚本还会在用户目录自建 venv 与前端，环境侧成本远高于 30 分钟上限。",
+  "alternativePath": "短片段/音效用已落盘的 Stability-AI__stable-audio-tools 或 hkchengrex__MMAudio；要整首带人声的歌曲只能换 ≥12GB 显存的机器，或租云 GPU 跑官方仓库。",
+  "capabilitiesZh": [
+    "文字 + 歌词直接生成整首歌（人声与伴奏同出），不是纯音效片段",
+    "按段落控制结构（intro/verse/chorus/bridge/instrumental/outro），并可设 BPM、情绪、乐器、男女声",
+    "支持上传参考音频做风格克隆，输出时长可到 2 分 30 秒甚至 4 分 30 秒"
+  ],
+  "chooseWhenZh": "需要一次性拿到带真唱人声的完整歌曲，且手上至少有 10GB 以上显存时才选它；只做环境音、短 BGM 或 8GB 显卡时不该选。",
+  "contrastWith": [
+    "Stability-AI__stable-audio-tools",
+    "hkchengrex__MMAudio",
+    "Text-to-Audio__AudioLCM"
+  ]
+}

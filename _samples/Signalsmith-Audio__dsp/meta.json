@@ -1,0 +1,22 @@
+{
+  "id": "Signalsmith-Audio__dsp",
+  "status": "ok",
+  "nativeOutput": false,
+  "nativeNoteZh": "仓库是纯头文件 C++11 DSP 库，本身没有任何可执行示例；样例由自写 harness（_tmp\\batchB\\signalsmith_demo.cpp）调用库内 filters/delay 头文件渲染，非 ffmpeg 合成。",
+  "spec": { "durationSec": 20.0, "sampleRate": 44100, "channels": 2, "codec": "pcm_s16le", "bytes": 3528078 },
+  "capabilitiesZh": [
+    "BiquadStatic 二阶滤波器（低通/Q/峰值 EQ），系数可逐块重算做扫频",
+    "Delay 带插值读指针，可做反馈与乒乓延迟",
+    "纯头文件、零依赖，C++11 直接编译进宿主"
+  ],
+  "signatureZh": "声音像「被一只有质感的滤波器慢慢打开的小调琶音」：低通从左到右张开，高频不刺、尾巴是插值延迟的圆润回声。",
+  "chooseWhenZh": "当你需要把 DSP 嵌进自己的 C++ 工程、要可控的 biquad 与低抖动延迟，而不是要一个现成合成器或脚本引擎时选它。",
+  "contrastWith": ["SamiPerttu__fundsp", "supercollider__supercollider"],
+  "segments": [
+    { "startSec": 0.0, "endSec": 6.0, "capZh": "D 小调琶音建立动机，低通固定在 2.6kHz，展示 BiquadStatic 的音色塑形与延迟回声空间感。" },
+    { "startSec": 6.0, "endSec": 13.0, "capZh": "同一旋律上行，低通 300Hz→8kHz 指数扫频，演示系数逐块重算时的连续开合与共振质感。" },
+    { "startSec": 13.0, "endSec": 20.0, "capZh": "密集和弦叠加 1kHz +3dB 峰值 EQ 与更强的乒乓反馈，展示 EQ 与反馈延迟叠加的收束效果。" }
+  ],
+  "evidenceZh": "编译：_tmp\\batchB\\build_signalsmith.ps1（cl /std:c++17 /O2，INCLUDE/LIB 指向 MSVC 14.43 + SDK 10.0.22621）→ signalsmith_demo.exe；入口源码 _tmp\\batchB\\signalsmith_demo.cpp，关键参数 cutoff=300→8000Hz、Q=1.4、delay=0.18s、反馈 0.5/0.55、peakDbQ(1000Hz,+3dB,Q1.2)。",
+  "limitsZh": "没有现成播放器/示例，必须自己写 harness 和 WAV 写盘；BiquadStatic 不支持音频率调制（快速扫频需每 32 采样重算，会有轻微阶跃）；库不含混响、振荡器与音序器。"
+}

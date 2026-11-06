@@ -1,0 +1,14 @@
+# nnAudio 频谱处理样例（CUDA，仓库源码直接用 sys.path 注入，不 pip install）
+$py = "F:\coding音乐\_env\venv\Scripts\python.exe"
+
+# 1) 准备输入：TinySoundFont 渲染的持续段 16-40s（24s 连续旋律）
+C:\ffmpeg\bin\ffmpeg.exe -y -v error -i "F:\coding音乐\_tmp\batchA\out\tsf_full.wav" `
+  -ss 16 -t 24 -c:a pcm_s16le "F:\coding音乐\_tmp\batchA\out\nn_in2.wav"
+
+# 2) 四段频谱处理：恒等往返 -> 梳状+带通掩码 -> 32 次迭代相位重建 -> 3kHz 低通
+& $py "F:\coding音乐\_tmp\batchA\src\nn_audio_demo.py" `
+  "F:\coding音乐\_tmp\batchA\out\nn_in2.wav" "F:\coding音乐\_tmp\batchA\out\nnaudio_out.wav"
+
+# 3) 收尾：波形/频谱图 + 静音校验 + meta.json
+& $py "F:\coding音乐\_tmp\batchA\finish_sample.py" `
+  "F:\coding音乐\_samples\KinWaiCheuk__nnAudio\sample.wav" "F:\coding音乐\_tmp\batchA\meta_nnaudio.json"

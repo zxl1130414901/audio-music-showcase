@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "blockerZh": "Swift Package（Package.swift + Package@swift-6.1.swift），面向 macOS/iOS，依赖 AVFoundation/CoreAudio 与 Apple 平台框架；本机是 Windows，无 Swift 工具链也无法链接 Apple 音频框架。",
+  "capabilitiesZh": [
+    "Apple 平台音频引擎与 DSP 工具箱（振荡器、滤波器、混响、音序）",
+    "面向 iOS/macOS 的实时音频应用开发，含 SwiftUI 示例",
+    "高层 API 封装 AVAudioEngine，适合做交互式音乐 App"
+  ],
+  "signatureZh": "（未出样）它的声音是系统级音频引擎的实时输出，离线渲染不是主场景。",
+  "chooseWhenZh": "要做 iOS/macOS 实时音乐 App、用 Swift 快速搭音频链路时选它；Windows 离线出样请选 fundsp / SuperCollider。",
+  "contrastWith": [
+    "supercollider__supercollider",
+    "pytorch__audio"
+  ],
+  "evidenceZh": "核查 Package.swift（platforms 为 macOS/iOS，依赖 Apple 框架）与 Sources/ 结构；本机操作系统为 Windows，无 swift/sdk。",
+  "limitsZh": "平台专用（Apple 框架不可替代），Windows 上无法编译；即使有 Swift for Windows，AVAudioEngine 也不存在，无法产出等价音频。",
+  "id": "AudioKit__AudioKit",
+  "segments": []
+}

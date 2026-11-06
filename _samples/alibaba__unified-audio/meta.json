@@ -1,0 +1,15 @@
+{
+  "id": "alibaba__unified-audio",
+  "status": "skipped",
+  "capabilitiesZh": [
+    "仓库含三个子项目：UniTok-audio（音频 tokenizer）、QuarkAudio-HCodec（1.0 语义+声学离散码本）、QuarkAudio-UniSE（语音增强），但本次没有一个能出样",
+    "UniTok-audio 目录里只有 AudioSamples 示例音频与论文插图，0 个 .py 文件，无可运行实现",
+    "HCodec-1.0 / UniSE 的权重发布在 huggingface.co/QuarkAudio 与 ModelScope，需要额外的 WavLM/语义编码器"
+  ],
+  "segments": [],
+  "signatureZh": "（未出样）它想做的事是把音频压成离散 token 再做生成/增强，但这台机器上没有可跑起来的实现",
+  "chooseWhenZh": "要做音频编解码 token 化、语音增强或多任务统一音频建模、且能按 Linux+CUDA 12.8+torch 环境整机部署时选它；单机 35 分钟出可听样例不适合",
+  "contrastWith": ["libAudioFlux__audioFlux", "teticio__audio-diffusion"],
+  "evidenceZh": "只做了可达性核查，未进入安装：(1) 统计 UniTok-audio 为 0 个 .py；(2) 读完 QuarkAudio-HCodec/README 与 requirements.txt，确认权重在 hf.co/QuarkAudio 与 modelscope.cn；(3) 读 environment.yml，发现整套依赖锁定在 linux-64 的 conda 包（cuda 12.4/12.8、conda-pack、funasr/espnet/audioldm-eval 等 60+ 项）。",
+  "limitsZh": "环境是 Linux conda 全量锁定（linux-64 包名写在 environment.yml 里），Windows 上无法按图施工；依赖表包含 funasr、espnet-model-zoo、audioldm-eval、bigvgan、encodec 等重型包，安装本身就会超过 35 分钟预算；权重还需要从 HF 与 ModelScope 双通道下载；因此按纪律判 skipped，且没有拿任何替代音频冒充它的输出。"
+}

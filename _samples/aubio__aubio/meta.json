@@ -1,0 +1,29 @@
+{
+  "id": "aubio__aubio",
+  "owner": "aubio",
+  "repo": "aubio",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 23.9,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le",
+    "bytes": 4216004
+  },
+  "capabilitiesZh": [
+    "实时/离线音频分析：onset 起音检测、pitch 基频追踪（yin/yinfft/mcomb）、tempo 节拍与 BPM 估计",
+    "C 实现 + Python 绑定，单声道逐帧输入，可对长音频做流式处理；还提供 mel/滤波组、MFCC 等特征",
+    "分析结果可直接驱动切片、对齐、节奏化等后续处理，不依赖深度学习模型"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 6.5, "capZh": "前6.5秒原曲，在39个onset处叠加高频标记"},
+    {"startSec": 6.5, "endSec": 15.5, "capZh": "onset切片按音高升序拼接，92Hz抬到458Hz"},
+    {"startSec": 15.5, "endSec": 23.9, "capZh": "按156.4BPM的384ms周期门控并加低频拍点"}
+  ],
+  "signatureZh": "同一段真实音乐先被 aubio 量出 115 个起音、156.4 BPM 和 930 帧可信基频，再用这三组数字决定打点位置、切片顺序和节奏门控。",
+  "chooseWhenZh": "要做离线、无模型依赖的 onset/BPM/单音高分析，并拿分析结果去切片、对齐或做节奏化处理时选它；需要多音/和弦识别或端到端生成时不要选它。",
+  "contrastWith": ["MTG__essentia", "libAudioFlux__audioFlux", "tyiannak__pyAudioAnalysis"],
+  "evidenceZh": "venv_vts(Python 3.11) 内 aubio 0.4.9：onset('default',1024,512) 检出 115 个起音；tempo('default') 给出 156.42 BPM / 48 拍；pitch('yin') 1722 帧中 930 帧可信（中位 386Hz，86-1752Hz）。产物逐项复核：A 段 onset 处 2.5-5kHz 能量为非 onset 的 15.59 倍；B 段前/后半中位基频 105Hz→426Hz；C 段 384ms 周期自相关 0.220；verify_audio.ps1 PASS（峰值 -1.94 dBFS、RMS -15.00 dBFS、频谱非空度 96.68%）。",
+  "limitsZh": "aubio 只做单声道、单基频假设，对混音里同时发声的和声只能给出主峰，930/1722 帧可信说明另一半帧不可用；156.4 BPM 可能是实际 78 BPM 的二倍频误判；A 段的高频标记是为让检测结果可听而额外合成的，并非原曲内容；B 段是按音高排序的拼接，不是连贯乐句。"
+}

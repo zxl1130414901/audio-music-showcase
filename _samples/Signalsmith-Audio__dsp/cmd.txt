@@ -1,0 +1,9 @@
+# Signalsmith DSP 头文件库演示（C++ / MSVC 手编，不改仓库文件）
+# 1) 编译：build_signalsmith.ps1 内联设置 MSVC 14.43 + Windows SDK 10.0.22621 的 INCLUDE/LIB/PATH
+powershell -File F:\coding音乐\_tmp\batchB\build_signalsmith.ps1
+#    cl /nologo /std:c++17 /O2 /EHsc /I F:\coding音乐\Signalsmith-Audio__dsp signalsmith_demo.cpp
+#    demo：0-6s 琶音 + BiquadStatic lowpassQ(2.6k) / 6-13s 300→8kHz 指数扫频 / 13-20s 和弦 + peakDbQ(1kHz,+9dB) + Delay 乒乓
+# 2) 运行并转统一规格
+F:\coding音乐\_tmp\batchB\signalsmith_demo.exe F:\coding音乐\_tmp\batchB\signalsmith_out.wav
+powershell -File F:\coding音乐\_tmp\batchB\make_sample.ps1 -Src F:\coding音乐\_tmp\batchB\signalsmith_out.wav -OutDir F:\coding音乐\_samples\Signalsmith-Audio__dsp -StartSec 0 -DurationSec 20
+powershell -File F:\coding音乐\_env\verify_audio.ps1 -Path F:\coding音乐\_samples\Signalsmith-Audio__dsp\sample.wav

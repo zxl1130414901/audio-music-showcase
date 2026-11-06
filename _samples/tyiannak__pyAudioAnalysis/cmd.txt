@@ -1,0 +1,15 @@
+# pyAudioAnalysis 样例：说话人分离(2人) + 静音切除 -> 对话集锦
+# 环境：F:\coding音乐\_env\venv\Scripts\python.exe（numpy/scipy/soundfile/sklearn/hmmlearn 已就绪）
+# 素材：仓库自带 pyAudioAnalysis/data/diarizationExample.wav(41.98s) 与 diarizationExample2.wav(22.3s)
+
+& "F:\coding音乐\_env\venv\Scripts\python.exe" "F:\coding音乐\_tmp\batchA\src\paa_demo.py"
+# 脚本内部：
+#   audioBasicIO.read_audio_file -> 16kHz mono
+#   audioSegmentation.speaker_diarization(n_speakers=2, mid_window=1.0, mid_step=0.1) -> 回合标签
+#   audioSegmentation.labels_to_segments(cls, 0.1) -> 回合边界
+#   audioSegmentation.silence_removal(sig, 16000, 0.05, 0.05, 0.5, 0.3) -> 收紧段内边界
+#   逐段 RMS 对齐(0.13) + 0.15s/0.35s 交叉淡化拼接 + 0.6s 淡入/1.0s 淡出
+#   scipy.signal.resample_poly(x, 441, 160) 16k->44.1k，soundfile 写 PCM_16
+
+# 收尾（波形/频谱/规格/校验）
+& "F:\coding音乐\_env\venv\Scripts\python.exe" "F:\coding音乐\_tmp\batchA\finish_sample.py" "F:\coding音乐\_samples\tyiannak__pyAudioAnalysis\sample.wav" "F:\coding音乐\_tmp\batchA\meta_paa.json" "0.5:19.5"

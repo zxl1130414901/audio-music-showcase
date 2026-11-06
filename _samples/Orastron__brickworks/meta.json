@@ -1,0 +1,54 @@
+{
+  "id": "Orastron__brickworks",
+  "status": "ok",
+  "signatureZh": "脉冲波打进高 Q 状态变量滤波器，酸味扫频带金属共振，两条轻微失谐声部撑出立体声宽度",
+  "chooseWhenZh": "要用一堆 C 头文件把振荡器/滤波器/包络逐块拼成合成器或效果链、又不想背插件框架时选它",
+  "contrastWith": [
+    "grame-cncm__faust"
+  ],
+  "capabilitiesZh": [
+    "纯 C 头文件的逐块 DSP 图：相位发生器→脉冲振荡器→抗锯齿→SVF 谐振滤波→ADSR→增益",
+    "实时改 cutoff/Q/ADSR 参数即可听到滤波扫频与音色变化",
+    "两路失谐声部按不同权重做左右声像，得到有宽度的立体声输出"
+  ],
+  "segments": [
+    {
+      "startSec": 0,
+      "endSec": 4,
+      "capZh": "低音铺底与首句：A2 脉冲波经低 cutoff（180Hz）滤波，音色暗、共振轻微"
+    },
+    {
+      "startSec": 4,
+      "endSec": 8,
+      "capZh": "中速琶音：cutoff 从 300 推到 900Hz，SQ 从 5 升到 9，锯齿扫频感逐渐明显"
+    },
+    {
+      "startSec": 8,
+      "endSec": 13,
+      "capZh": "快速酸味琶音：Q 拉到 14–15、cutoff 冲到 2.6kHz，脉冲波被滤出尖锐金属哨音"
+    },
+    {
+      "startSec": 13,
+      "endSec": 17,
+      "capZh": "滤波器扫频下行：cutoff 从 2.6kHz 快速落回 220Hz，声音从刺耳收成闷响"
+    },
+    {
+      "startSec": 17,
+      "endSec": 20,
+      "capZh": "收束：断门一次再补两个短音，ADSR 释放把尾音自然衰减干净"
+    }
+  ],
+  "evidenceZh": "用 zig c++ 编译自写 harness bw_synth.cpp，直接 #include 仓库 include/ 下的 bw_phase_gen/bw_osc_pulse/bw_osc_filt/bw_svf/bw_env_gen/bw_gain，按 128 样本块推 DSP，ADSR=15/120/42/300ms，脉冲宽度 0.42/0.55，两路失谐 1.25%，乐谱逐事件改 MIDI 音高/cutoff/Q；渲染 20s 后 +7dB 归一。",
+  "limitsZh": "仓库示例都是插件工程（需要 make.json 与 VST3/LV2 宿主），没有现成离线渲染入口，必须自写 harness；引擎本质是单声部，和弦要靠多实例；GPLv3 许可，商用需注意；SVF 起始瞬态会在 10ms 内冲顶，必须淡入处理。",
+  "spec": {
+    "durationSec": 20.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 3528078
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    61 ms] 验收文件：F:\\coding音乐\\_samples\\Orastron__brickworks\\sample.wav\n[   114 ms] 文件大小：3,445.4 KB\n[   239 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=2 时长=20.000 s 码率=1411 kbps (104 ms)\n[   519 ms] 幅度统计：峰值=-1.47 dBFS  RMS=-13.71 dBFS  样本数=882000 (259 ms)\n[   732 ms] 频谱检测：非背景像素占比=91.89%  阈值=2.00%  结果=有能量 (212 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\Orastron__brickworks\\sample.wav\n编码 / 声道 : pcm_s16le / 2\n采样率      : 44100 Hz\n时长        : 20.000 s\n峰值        : -1.47 dBFS\nRMS         : -13.71 dBFS\n频谱非空度  : 91.89%（阈值 2.00%）\n总耗时      : 737 ms\n判定        : PASS  -> 有声音"
+  }
+}

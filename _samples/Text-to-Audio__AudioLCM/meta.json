@@ -1,0 +1,17 @@
+{
+  "id": "Text-to-Audio__AudioLCM",
+  "owner": "Text-to-Audio",
+  "repo": "AudioLCM",
+  "status": "skipped",
+  "blockerZh": "卡在权重获取带宽上，不是代码跑不起来：本仓库必需权重共约 11.3GB（audiolcm.ckpt 实测 5.86GB、CLAP_weights_2022.pth 2.17GB、t5-v1_1-large 2.9GB（仓库只有 pytorch_model.bin）、BigVGAN best_netG.pt 0.42GB、bert-base-uncased 0.41GB）。实测 hf-mirror 前 2.2GB 用 201 秒（≈11MB/s），随后掉到 ≈1.1MB/s（主权重每 22 秒才 25MB），25 分钟累计只落 3.2GB，剩余 8.4GB 还需 80–90 分钟，远超单仓库 30 分钟上限。另外 8GB 显存也不够一把梭：LCM 主干 + autoencoder ≈5.5GB、BigVGAN ≈0.42GB，CLAP/BERT 0.41GB 与 T5-large 编码器 3.1GB 必须下放 CPU 才能跑（已写好在 CPU 侧编码的加载脚本）。",
+  "whatItWouldNeed": "完整 11.5GB 权重 + 稳定的 ≥10MB/s 带宽（或断点续传分多次拉）+ 8GB 显存（需把 CLAP/T5 条件编码器放 CPU 才勉强容纳）；代码侧还要打两个兼容补丁：torch.load 需 weights_only=False，CLAPWrapper 依赖已被 torch 2.6 移除的 torch._six（需注入兼容壳）。",
+  "alternativePath": "已落的 3.2GB 在 F:\\coding音乐\\_models\\AudioLCM（CLAP 2.33GB、BigVGAN 0.42GB、bert 0.41GB），可用 `python F:\\coding音乐\\_tmp\\C1\\dl2.py` 断点续传补齐后再执行 `python F:\\coding音乐\\_tmp\\C1\\lcm_run.py`；或换 ≥12GB 显存机器一次跑完；只要短音效/音乐也可先用已落盘的 Stability-AI__stable-audio-tools、hkchengrex__MMAudio。",
+  "capabilitiesZh": [
+    "文本到音频（AudioCaps 风格音效/环境声），用 LCM（Latent Consistency Model）只需 2 步采样，比常规扩散快一个数量级",
+    "Latent 空间在 20×312 的 mel 潜变量上做一致性采样，再由 BigVGAN 16kHz 声码器还原波形",
+    "结构提示（struct_caption）与原始描述（ori_caption）双路条件拼接，可分别控制内容与结构"
+  ],
+  "chooseWhenZh": "需要「文字→音效/短音频」且要秒级出结果（2 步采样）时选它；要整首带人声的歌曲、或只想生成 20 秒以上高保真音乐时不该选它（单段只有约 5 秒 16kHz）。",
+  "contrastWith": ["Stability-AI__stable-audio-tools", "haoheliu__AudioLDM", "hkchengrex__MMAudio"],
+  "progressZh": "已完成环境验证：私有 libs（transformers 4.46.3 + hub 0.26.2）装到 _tmp/C1/pylibs 不动共享 venv；数据 3.2GB 已落 _models；加载脚本 lcm_run.py 已写好（含 torch._six 兼容壳、weights_only=False、CLAP/T5 路径重映射到本地权重、条件编码器 CPU 化、三段拼接 + 重采样 44.1kHz）。"
+}

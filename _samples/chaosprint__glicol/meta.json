@@ -1,0 +1,29 @@
+{
+  "id": "chaosprint__glicol",
+  "owner": "chaosprint",
+  "repo": "glicol",
+  "status": "ok",
+  "spec": {
+    "durationSec": 28.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "codec": "pcm_s16le",
+    "bytes": 4939278
+  },
+  "capabilitiesZh": [
+    "Rust 音频引擎把实时文本代码编译成声音，支持 pattern_synth 定序器与 sin/mul 等信号链节点",
+    "可在播放中途热替换代码（update_with_code），每个时间点即一次 live-coding 编辑",
+    "不依赖模型权重，纯 CPU 逐块合成，可离线用 next_block 精确渲染成 WAV"
+  ],
+  "signatureZh": "代码即乐谱：正弦音被 pattern_synth 切成等距琶音，音色极简、节奏精确到采样块。",
+  "segments": [
+    { "startSec": 0.0, "endSec": 8.0, "capZh": "建立动机，稀疏的两音正弦给出低音与高音的对话式主题" },
+    { "startSec": 8.0, "endSec": 16.0, "capZh": "热替换代码切入八音上行琶音，展示 pattern_synth 定序与节奏控制" },
+    { "startSec": 16.0, "endSec": 23.0, "capZh": "琶音转为下行并提高音量，形成段落对比与情绪回落" },
+    { "startSec": 23.0, "endSec": 28.0, "capZh": "长音低音收束，把前面密集的音符收进一个稳定尾音" }
+  ],
+  "evidenceZh": "renderer/Cargo.toml 依赖 path=F:/coding音乐/chaosprint__glicol/rs/main；cargo build --release 后执行 glicol_render.exe renderer/score.txt out.wav 28 44100；乐谱用 4 个 @秒 cue 调 update_with_code；再 post.py --gain 20 --fade 1.5。",
+  "limitsZh": "无权重、显存 0MB。短板：仓库没有现成离线导出器，必须另写 Rust harness 才能出 WAV；内置振荡器只有 sin 等基础节点，音色单薄，没有采样器的颗粒与质感；pattern_synth 语法严格（事件逗号分隔、分数位置 + MIDI 号 + span），写错即 ParseFloatError；原始渲染电平仅 -23dB 峰值，需 +20dB 补偿。",
+  "chooseWhenZh": "要用几行可版本管理的代码确定性地产出电子音乐片段、且要求逐块可复现时选它；要写实音色或按文字描述生成声音则选 MMAudio，要成品编曲则选 MilkyTracker。",
+  "contrastWith": ["milkytracker__MilkyTracker", "hkchengrex__MMAudio"]
+}

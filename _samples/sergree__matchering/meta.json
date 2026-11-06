@@ -1,0 +1,27 @@
+{
+  "id": "sergree__matchering",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 22.0,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le"
+  },
+  "capabilitiesZh": [
+    "参考曲母带匹配：把目标混音的 RMS、频响、峰值、立体声宽度对齐到参考曲",
+    "批量统一多首作品的听感与响度，适合专辑/EP 快速母带",
+    "纯 CPU 处理，无需 GPU 与权重，长音频按秒级消耗时间"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 5.5, "capZh": "引子只留和弦铺底，验证弱动态段被匹配后仍不糊不炸"},
+    {"startSec": 5.5, "endSec": 11.0, "capZh": "低音与底鼓起进入，低频与响度向参考曲靠拢"},
+    {"startSec": 11.0, "endSec": 16.5, "capZh": "琶音动机加全编制，峰值与立体声宽度对齐参考"},
+    {"startSec": 16.5, "endSec": 22.0, "capZh": "织体收束，检查限幅器在尾段是否泵浦或压扁"}
+  ],
+  "signatureZh": "同一段干混音被整体推向参考曲的亮度与响度，层次还在、尾段不泵浦。",
+  "chooseWhenZh": "当你要让作品听感对齐某首参考歌、而不是生成新声音时选它；只有 CPU、需要批量统一整张专辑母带时更该选它。",
+  "contrastWith": ["Stability-AI__stable-audio-tools", "Anjok07__ultimatevocalremovergui"],
+  "evidenceZh": "pip 源清华源安装 matchering 2.0.6 成功；对 22 s 合成曲（target 干声 RMS -28.9 dB / reference 成品 RMS -14.0 dB）执行 mg.process，输出 44.1 kHz 立体声 22 s，verify_audio.ps1 判定 PASS（峰值 -0.63 dBFS、RMS -13.88 dBFS、频谱非空 92.77%）。",
+  "limitsZh": "MP3 读取需要系统 ffmpeg（本机已具备）；匹配效果依赖参考曲质量，参考本身过载会把目标也推爆；CPU 渲染，长音频耗时随长度线性上升。"
+}

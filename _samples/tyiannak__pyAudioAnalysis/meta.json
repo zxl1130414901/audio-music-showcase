@@ -1,0 +1,49 @@
+{
+  "id": "tyiannak__pyAudioAnalysis",
+  "status": "ok",
+  "capabilitiesZh": [
+    "两人说话人分离（KMeans 聚类 + HMM 时序平滑）",
+    "基于 SVM 概率的静音/事件切除",
+    "短时-中时特征提取与片段级内容分析"
+  ],
+  "segments": [
+    {
+      "startSec": 0.0,
+      "endSec": 8.05,
+      "capZh": "开场 A 先独白立住语气，B 立刻短句回应，分离器把两人切成干净交替的回合"
+    },
+    {
+      "startSec": 8.05,
+      "endSec": 13.95,
+      "capZh": "中段 A 连续四秒长句撑住主体，句间静音被切除，拼接处没有留白"
+    },
+    {
+      "startSec": 13.95,
+      "endSec": 17.7,
+      "capZh": "换到第二条录音，B 先开口、A 应答，验证同一套参数跨素材仍可用"
+    },
+    {
+      "startSec": 17.7,
+      "endSec": 20.7,
+      "capZh": "短句快速往复后淡出收束，各段音量已对齐，结尾没有塌成一片静音"
+    }
+  ],
+  "evidenceZh": "全部声音取自仓库自带 diarizationExample.wav 与 diarizationExample2.wav；回合边界由 speaker_diarization(n_speakers=2, mid_step=0.1) 给出，段内再由 silence_removal 收紧，逐段 RMS 对齐后以 0.15s（跨素材 0.35s）交叉淡化拼接。选段脚本 F:\\coding音乐\\_tmp\\batchA\\src\\paa_demo.py",
+  "limitsZh": "只做分析不合成，输出是重剪的既有录音而非新音频；依赖 16kHz 单声道预处理；仓库自带 SVM 模型来自 sklearn 0.24，在 1.9 下可跑但会告警",
+  "signatureZh": "把一段长录音按“谁在说”自动剪成对话集锦，一声不造，全靠切片与边界判断",
+  "chooseWhenZh": "需要给会议、访谈录音做几十秒快速预览，或验证 VAD / 说话人切分参数是否靠谱时选它",
+  "contrastWith": [
+    "JorenSix__TarsosDSP"
+  ],
+  "spec": {
+    "durationSec": 20.7,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "bytes": 1825784
+  },
+  "verify": {
+    "exitCode": 0,
+    "logZh": "[    67 ms] 验收文件：F:\\coding音乐\\_samples\\tyiannak__pyAudioAnalysis\\sample.wav\n[   116 ms] 文件大小：1,783.0 KB\n[   232 ms] 探测完成：编码=pcm_s16le 采样率=44100 Hz 声道=1 时长=20.700 s 码率=706 kbps (98 ms)\n[   365 ms] 幅度统计：峰值=-0.73 dBFS  RMS=-17.90 dBFS  样本数=912870 (110 ms)\n[   524 ms] 频谱检测：非背景像素占比=76.51%  阈值=2.00%  结果=有能量 (157 ms)\n\n================ 验收结果 ================\n文件        : F:\\coding音乐\\_samples\\tyiannak__pyAudioAnalysis\\sample.wav\n编码 / 声道 : pcm_s16le / 1\n采样率      : 44100 Hz\n时长        : 20.700 s\n峰值        : -0.73 dBFS\nRMS         : -17.90 dBFS\n频谱非空度  : 76.51%（阈值 2.00%）\n总耗时      : 529 ms\n判定        : PASS  -> 有声音"
+  }
+}

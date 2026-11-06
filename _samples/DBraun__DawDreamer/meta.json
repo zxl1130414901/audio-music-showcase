@@ -1,0 +1,28 @@
+{
+  "id": "DBraun__DawDreamer",
+  "status": "ok",
+  "spec": {
+    "file": "sample.wav",
+    "durationSec": 19.82,
+    "sampleRate": 44100,
+    "channels": 2,
+    "format": "pcm_s16le"
+  },
+  "capabilitiesZh": [
+    "用 Faust DSP 源码搭出可编程音频图（本例四个声部：铺底、低音、主音、噪声打击）",
+    "JUCE 内置加法混音、滤波、延迟、混响节点串联，不需要任何 VST 也能离线出声",
+    "按段落修改参数再逐段 render，可实现编曲式动态结构；也能挂 VST2/VST3 乐器与效果器",
+    "Python 直接拿 float32 多声道缓冲，便于接自动化分析或再处理"
+  ],
+  "segments": [
+    {"startSec": 0.0, "endSec": 5.0, "capZh": "Am 和弦铺底单独陈述动机，锯齿波加慢速颤音"},
+    {"startSec": 5.0, "endSec": 10.0, "capZh": "转 F 和弦，低音与噪声打击进入，形成节奏层"},
+    {"startSec": 10.0, "endSec": 15.0, "capZh": "转 C 和弦，颤音主音加入，四声部全开的高潮段"},
+    {"startSec": 15.0, "endSec": 19.8, "capZh": "转 G 和弦收束，主音衰减、打击变轻，混响留尾"}
+  ],
+  "signatureZh": "一段四段式合成小品：锯齿铺底与颤音主音在段落间换和弦、加声部，混响与延迟把电子质感拉满。",
+  "chooseWhenZh": "当你要用代码精确搭信号链（Faust/内置滤波/延迟/混响）并离线成批渲染，或要在 Python 里挂 VST 批量出音频时选它；它比 pedalboard 更接近 DAW 图结构，但比 web-synth 更可控可脚本化。",
+  "contrastWith": ["sergree__matchering", "Ameobea__web-synth"],
+  "evidenceZh": "pip 下载到 cp313 win_amd64 预编译 wheel（dawdreamer 0.9.0，23.1 MB）并安装成功；四个 Faust DSP 编译通过，engine.render 分 4 段共渲染 19.82 s，verify_audio.ps1 判定 PASS（峰值 -1.11 dBFS、RMS -14.07 dBFS、频谱非空 83.35%）。",
+  "limitsZh": "Faust 的 fi.bandpass(2, 2200, 1.2) 在本机输出 NaN，改用 lowpass；ReverbProcessor 默认 dry_level=0 会整体静音，必须手动设 dry_level=1；VST 路径未验证（本机无插件）；中文路径下 Faust 编译报错会触发 UnicodeDecodeError，错误信息不可读。"
+}
